@@ -1,0 +1,6 @@
+management:
+  endpoints:
+    web:
+      cors:
+        allowed-origins: https://msz-games.web.app
+        allowed-methods: GET
