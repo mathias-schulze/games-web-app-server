@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,8 @@ public class FirebaseService {
 	@Autowired
 	private FirebaseProps firebaseProps;
 	
+	private FirebaseApp firebaseApp;
+	
 	@Getter
 	private FirebaseAuth firebaseAuth;
 	
@@ -41,10 +44,16 @@ public class FirebaseService {
 			    .setDatabaseUrl(firebaseProps.getFirestore().getDatabaseUrl())
 			    .build();
 		
-		FirebaseApp.initializeApp(options);
+		firebaseApp = FirebaseApp.initializeApp(options);
 		
 		firebaseAuth = FirebaseAuth.getInstance();
 		firestore = FirestoreClient.getFirestore();
+	}
+	
+	@PreDestroy
+	private void shutdown() throws Exception {
+		firebaseApp.delete();
+		firestore.close();
 	}
 	
 	/**
