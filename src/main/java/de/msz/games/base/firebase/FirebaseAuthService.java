@@ -1,8 +1,8 @@
 package de.msz.games.base.firebase;
 
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import javax.annotation.PostConstruct;
@@ -34,7 +34,7 @@ public class FirebaseAuthService {
 	
 	private Firestore firestore;
 	
-	private Set<String> verifiedUsers = new HashSet<>();
+	private Map<String, String> verifiedUsers = new HashMap<>();
 	
 	@PostConstruct
 	private void init() {
@@ -42,40 +42,48 @@ public class FirebaseAuthService {
 		firestore = firebaseService.getFirestore();
 	}
 	
-	public boolean verifyIdToken(String idToken) {
+	public String verifyIdToken(String idToken) {
 		
-		if (verifiedUsers.contains(idToken)) {
-			return true;
+		String verifiedUser = verifiedUsers.get(idToken);
+		if (verifiedUser != null) {
+			return verifiedUser;
 		}
 		
 		FirebaseToken decodedToken;
 		try {
 			decodedToken = firebaseAuth.verifyIdToken(idToken);
-			if (isUserVerified(decodedToken) ) {
-				verifiedUsers.add(idToken);
-				return true;
+			Optional<String> uid = Optional.ofNullable(getVerifiedUser(decodedToken));
+			if (uid.isPresent()) {
+				verifiedUsers.put(idToken, uid.get());
+				return uid.get();
 			} else {
-				return false;
+				return null;
 			}
 		} catch (FirebaseAuthException e) {
-			return false;
+			return null;
 		}
 	}
 	
-	private boolean isUserVerified(FirebaseToken token) {
+	private String getVerifiedUser(FirebaseToken token) {
 		
-		ApiFuture<DocumentSnapshot> future = firestore.collection(USERS).document(token.getUid()).get();
+		String uid = token.getUid();
+		
+		ApiFuture<DocumentSnapshot> future = firestore.collection(USERS).document(uid).get();
 		DocumentSnapshot documentSnapshot;
 		try {
 			documentSnapshot = future.get();
 			if (!documentSnapshot.exists()) {
-				return false;
+				return null;
 			}
 		} catch (InterruptedException | ExecutionException e) {
 			log.error("error on getting user data", e);
-			return false;
+			return null;
 		}
 		
-		return Optional.ofNullable((Boolean)documentSnapshot.get(VERIFIED)).orElse(false);
+		if (Optional.ofNullable((Boolean)documentSnapshot.get(VERIFIED)).isPresent()) {
+			return uid;
+		}
+		
+		return null;
 	}
 }
