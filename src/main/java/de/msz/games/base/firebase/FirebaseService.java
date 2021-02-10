@@ -74,7 +74,8 @@ public class FirebaseService {
 	public static enum FirestoreCollectionName {
 		
 		USERS("users"),
-		GAMES("games");
+		GAMES("games"),
+		COUNTERS("counters");
 		
 		@Getter
 		private final String name;

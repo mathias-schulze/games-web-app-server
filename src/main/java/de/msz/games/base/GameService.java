@@ -15,6 +15,7 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
 
+import de.msz.games.base.Counter.CounterName;
 import de.msz.games.base.firebase.FirebaseService;
 import de.msz.games.base.firebase.FirebaseService.FirestoreCollectionName;
 
@@ -29,6 +30,9 @@ public class GameService {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private Counter counter;
+	
 	@PostConstruct
 	private void init() {
 		firestore = firebaseService.getFirestore();
@@ -37,6 +41,8 @@ public class GameService {
 	public String createNewGame(Game game) throws InterruptedException, ExecutionException {
 		
 		Map<String, Object> newGameValues = new HashMap<>();
+		newGameValues.put("no", "" + counter.getNextValue(CounterName.GAME));
+		newGameValues.put("created", "" + System.currentTimeMillis());
 		newGameValues.put("game", "" + game.getParameter().getId());
 		newGameValues.put("stage", "" + Stage.NEW.name());
 		
