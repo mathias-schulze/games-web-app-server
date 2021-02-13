@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -14,13 +15,15 @@ import org.springframework.stereotype.Component;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.FieldValue;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QuerySnapshot;
 
 import de.msz.games.base.Counter.CounterName;
+import de.msz.games.base.PlayerService.Player;
 import de.msz.games.base.firebase.FirebaseService;
 import de.msz.games.base.firebase.FirebaseService.FirestoreCollectionName;
+import lombok.Builder;
 import lombok.Data;
 
 @Component
@@ -33,6 +36,9 @@ public class GameService {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private PlayerService playerService;
 	
 	@Autowired
 	private Counter counter;
@@ -68,26 +74,37 @@ public class GameService {
 					.orderBy("created")
 					.get();
 		
-		List<ActiveGame> activeGames = new ArrayList<>();
-		
-		for (DocumentSnapshot gameDocument : activeGamesFuture.get().getDocuments()) {
-			String id = gameDocument.getId();
-			Long no = gameDocument.getLong("no");
-			Long created = gameDocument.getLong("created");
-			Game game = Game.valueOf(gameDocument.getString("game"));
+		return activeGamesFuture.get().getDocuments().stream().map(gameDocument -> {
 			
-			activeGames.add(new ActiveGame(id, no, created, game.getParameter().getName()));
-		}
-		
-		return activeGames;
+			@SuppressWarnings("unchecked")
+			List<Player> players = playerService.getPlayers((List<String>) gameDocument.get("players"));
+			
+			return ActiveGame.builder()
+					.id(gameDocument.getId())
+					.no(gameDocument.getLong("no"))
+					.created(gameDocument.getLong("created"))
+					.game(Game.valueOf(gameDocument.getString("game")).getParameter().getName())
+					.players(players)
+					.build();
+			
+		}).collect(Collectors.toList());
 	}
 	
 	@Data
+	@Builder
 	public static class ActiveGame {
 		
 		private final String id;
 		private final Long no;
 		private final Long created;
 		private final String game;
+		private final List<Player> players;
+	}
+	
+	public void joinGame(String id) throws InterruptedException, ExecutionException {
+		
+		firestore.collection(FirestoreCollectionName.GAMES.getName()).document(id)
+			.update("players", FieldValue.arrayUnion(userService.getCurrentUser()))
+			.get();
 	}
 }
