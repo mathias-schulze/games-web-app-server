@@ -1,0 +1,10 @@
+[
+    {
+        "Name": "Fire Gem",
+        "Text": "Gain 2 Gold. <hr> Sacrifice:\nGain 3 Combat.",
+        "Cost": 2,
+        "Type": "ITEM",
+        "Quantity": 16,
+        "Image": "BAS-EN-081-fire-gem.jpg"
+    }
+]

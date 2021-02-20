@@ -1,0 +1,515 @@
+[
+    {
+        "Name": "Arkus, Imperial Dragon",
+        "Text": "Expend:\nGain 5 Combat.\nDraw a card. <hr> Imperial:\nGain 6 Health.",
+        "Cost": 8,
+        "Defense": 6,
+        "Faction": "IMPERIAL",
+        "Type": "GUARD",
+        "Quantity": 1,
+        "Image": "BAS-EN-001-arkus-imperial-dragon.jpg"
+    },
+    {
+        "Name": "Close Ranks",
+        "Text": "Gain 5 Combat.\n+2 Combat for each champion you have in play. <hr> Imperial:\nGain 6 Health.",
+        "Cost": 3,
+        "Faction": "IMPERIAL",
+        "Type": "ACTION",
+        "Quantity": 1,
+        "Image": "BAS-EN-002-close-ranks.jpg"
+    },
+    {
+        "Name": "Command",
+        "Text": "Gain 2 Gold. Gain 3 Combat. Gain 4 Health.\nDraw a card. <hr> <i>\"Follow me!\"</i>",
+        "Cost": 5,
+        "Faction": "IMPERIAL",
+        "Type": "ACTION",
+        "Quantity": 1,
+        "Image": "BAS-EN-003-command.jpg"
+    },
+    {
+        "Name": "Darian, War Mage",
+        "Text": "Expend:\nGain 3 Combat. <i>or</i> Gain 4 Health. <hr> <i>The orcs mocked the man�s gibberish at first, but they soon learned to respect Dragontongue.</i>",
+        "Cost": 4,
+        "Defense": 5,
+        "Faction": "IMPERIAL",
+        "Type": "CHAMPION",
+        "Quantity": 1,
+        "Image": "BAS-EN-004-darian-war-mage.jpg"
+    },
+    {
+        "Name": "Domination",
+        "Text": "Gain 6 Combat. Gain 6 Health.\nDraw a card. <hr> Imperial:\nPrepare a champion.",
+        "Cost": 7,
+        "Faction": "IMPERIAL",
+        "Type": "ACTION",
+        "Quantity": 1,
+        "Image": "BAS-EN-005-domination.jpg"
+    },
+    {
+        "Name": "Cristov, the Just",
+        "Text": "Expend:\nGain 2 Combat. Gain 3 Health. <hr> Imperial:\nDraw a card.",
+        "Cost": 5,
+        "Defense": 5,
+        "Faction": "IMPERIAL",
+        "Type": "GUARD",
+        "Quantity": 1,
+        "Image": "BAS-EN-006-cristov-the-just.jpg"
+    },
+    {
+        "Name": "Kraka, High Priest",
+        "Text": "Expend:\nGain 2 Health.\nDraw a card. <hr> Imperial:\nGain 2 Health for each champion you have in play.",
+        "Cost": 6,
+        "Defense": 6,
+        "Faction": "IMPERIAL",
+        "Type": "CHAMPION",
+        "Quantity": 1,
+        "Image": "BAS-EN-007-kraka-high-priest.jpg"
+    },
+    {
+        "Name": "Man-at-Arms",
+        "Text": "Expend:\nGain 2 Combat.\n+1 Combat for each other guard you have in play.",
+        "Cost": 3,
+        "Defense": 4,
+        "Faction": "IMPERIAL",
+        "Type": "GUARD",
+        "Quantity": 2,
+        "Image": "BAS-EN-008-man-at-arms.jpg"
+    },
+    {
+        "Name": "Master Weyan",
+        "Text": "Expend:\nGain 3 Combat.\n+1 Combat for each other champion you have in play.",
+        "Cost": 4,
+        "Defense": 4,
+        "Faction": "IMPERIAL",
+        "Type": "GUARD",
+        "Quantity": 1,
+        "Image": "BAS-EN-010-master-weyan.jpg"
+    },
+    {
+        "Name": "Rally the Troops",
+        "Text": "Gain 5 Combat. Gain 5 Health. <hr> Imperial:\nPrepare a champion.",
+        "Cost": 4,
+        "Faction": "IMPERIAL",
+        "Type": "ACTION",
+        "Quantity": 1,
+        "Image": "BAS-EN-011-rally-the-troops.jpg"
+    },
+    {
+        "Name": "Recruit",
+        "Text": "Gain 2 Gold. Gain 3 Health.\n+1 Health for each champion you have in play. <hr> Imperial:\nGain 1 Gold.",
+        "Cost": 2,
+        "Faction": "IMPERIAL",
+        "Type": "ACTION",
+        "Quantity": 3,
+        "Image": "BAS-EN-012-recruit.jpg"
+    },
+    {
+        "Name": "Tithe Priest",
+        "Text": "Expend:\nGain 1 Gold.\n<i>or</i>\nGain 1 Health for each champion you have in play.",
+        "Cost": 2,
+        "Defense": 3,
+        "Faction": "IMPERIAL",
+        "Type": "CHAMPION",
+        "Quantity": 2,
+        "Image": "BAS-EN-015-tithe-priest.jpg"
+    },
+    {
+        "Name": "Taxation",
+        "Text": "Gain 2 Gold. <hr> Imperial:\nGain 6 Health.",
+        "Cost": 1,
+        "Faction": "IMPERIAL",
+        "Type": "ACTION",
+        "Quantity": 3,
+        "Image": "BAS-EN-017-taxation.jpg"
+    },
+    {
+        "Name": "Word of Power",
+        "Text": "Draw two cards. <hr> Imperial:\nGain 5 Health. <hr> Sacrifice:\nGain 5 Combat.",
+        "Cost": 6,
+        "Faction": "IMPERIAL",
+        "Type": "ACTION",
+        "Quantity": 1,
+        "Image": "BAS-EN-020-word-of-power.jpg"
+    },
+    {
+        "Name": "Borg, Ogre Mercenary",
+        "Text": "Expend:\nGain 4 Combat. <hr> <i>Ogres and the Guild have a shared respect for money and violence.</i>",
+        "Cost": 6,
+        "Defense": 6,
+        "Faction": "GUILD",
+        "Type": "GUARD",
+        "Quantity": 1,
+        "Image": "BAS-EN-021-borg-ogre-mercenary.jpg"
+    },
+    {
+        "Name": "Bribe",
+        "Text": "Gain 3 Gold. <hr> Guild:\nPut the next action you acquire this turn on top of your deck.",
+        "Cost": 3,
+        "Faction": "GUILD",
+        "Type": "ACTION",
+        "Quantity": 3,
+        "Image": "BAS-EN-022-bribe.jpg"
+    },
+    {
+        "Name": "Death Threat",
+        "Text": "Gain 1 Combat.\nDraw a card. <hr> Guild:\nStun target champion.",
+        "Cost": 3,
+        "Faction": "GUILD",
+        "Type": "ACTION",
+        "Quantity": 1,
+        "Image": "BAS-EN-025-death-threat.jpg"
+    },
+    {
+        "Name": "Deception",
+        "Text": "Gain 2 Gold.\nDraw a card. <hr> Guild:\nPut the next card you acquire this turn into your hand.",
+        "Cost": 5,
+        "Faction": "GUILD",
+        "Type": "ACTION",
+        "Quantity": 1,
+        "Image": "BAS-EN-026-deception.jpg"
+    },
+    {
+        "Name": "Fire Bomb",
+        "Text": "Gain 8 Combat.\nStun target champion. Draw a card. <hr> Sacrifice:\nGain 5 Combat.",
+        "Cost": 8,
+        "Faction": "GUILD",
+        "Type": "ACTION",
+        "Quantity": 1,
+        "Image": "BAS-EN-027-fire-bomb.jpg"
+    },
+    {
+        "Name": "Hit Job",
+        "Text": "Gain 7 Combat. <hr> Guild:\nStun target champion.",
+        "Cost": 4,
+        "Faction": "GUILD",
+        "Type": "ACTION",
+        "Quantity": 1,
+        "Image": "BAS-EN-028-hit-job.jpg"
+    },
+    {
+        "Name": "Intimidation",
+        "Text": "Gain 5 Combat. <hr> Guild:\nGain 2 Gold.",
+        "Cost": 2,
+        "Faction": "GUILD",
+        "Type": "ACTION",
+        "Quantity": 2,
+        "Image": "BAS-EN-029-intimidation.jpg"
+    },
+    {
+        "Name": "Myros, Guild Mage",
+        "Text": "Expend:\nGain 3 Gold. <hr> Guild:\nGain 4 Combat.",
+        "Cost": 5,
+        "Defense": 3,
+        "Faction": "GUILD",
+        "Type": "GUARD",
+        "Quantity": 1,
+        "Image": "BAS-EN-031-myros-guild-mage.jpg"
+    },
+    {
+        "Name": "Parov, the Enforcer",
+        "Text": "Expend:\nGain 3 Combat. <hr> Guild:\nDraw a card.",
+        "Cost": 5,
+        "Defense": 5,
+        "Faction": "GUILD",
+        "Type": "GUARD",
+        "Quantity": 1,
+        "Image": "BAS-EN-032-parov-the-enforcer.jpg"
+    },
+    {
+        "Name": "Profit",
+        "Text": "Gain 2 Gold. <hr> Guild:\nGain 4 Combat.",
+        "Cost": 1,
+        "Faction": "GUILD",
+        "Type": "ACTION",
+        "Quantity": 3,
+        "Image": "BAS-EN-033-profit.jpg"
+    },
+    {
+        "Name": "Rake, Master Assassin",
+        "Text": "Expend:\nGain 4 Combat.\nYou may stun target champion. <hr> <i>His name keeps men of power awake at night.</i>",
+        "Cost": 7,
+        "Defense": 7,
+        "Faction": "GUILD",
+        "Type": "CHAMPION",
+        "Quantity": 1,
+        "Image": "BAS-EN-036-rake-master-assassin.jpg"
+    },
+    {
+        "Name": "Rasmus, the Smuggler",
+        "Text": "Expend:\nGain 2 Gold. <hr> Guild:\nPut the next card you acquire this turn on top of your deck.",
+        "Cost": 4,
+        "Defense": 5,
+        "Faction": "GUILD",
+        "Type": "CHAMPION",
+        "Quantity": 1,
+        "Image": "BAS-EN-037-rasmus-the-smuggler.jpg"
+    },
+    {
+        "Name": "Smash and Grab",
+        "Text": "Gain 6 Combat.\nYou may put a card from your discard pile on top of your deck.",
+        "Cost": 6,
+        "Faction": "GUILD",
+        "Type": "ACTION",
+        "Quantity": 1,
+        "Image": "BAS-EN-038-smash-and-grab.jpg"
+    },
+    {
+        "Name": "Street Thug",
+        "Text": "Expend:\nGain 1 Gold. <i>or</i> Gain 2 Combat. <hr> <i>�Give me your gold, or I�ll give you my knife.�</i>",
+        "Cost": 3,
+        "Defense": 4,
+        "Faction": "GUILD",
+        "Type": "CHAMPION",
+        "Quantity": 2,
+        "Image": "BAS-EN-039-street-thug.jpg"
+    },
+    {
+        "Name": "Cult Priest",
+        "Text": "Expend:\nGain 1 Gold. <i>or</i> Gain 1 Combat. <hr> Necros:\nGain 4 Combat.",
+        "Cost": 3,
+        "Defense": 4,
+        "Faction": "NECROS",
+        "Type": "CHAMPION",
+        "Quantity": 2,
+        "Image": "BAS-EN-041-cult-priest.jpg"
+    },
+    {
+        "Name": "Dark Energy",
+        "Text": "Gain 7 Combat. <hr> Necros:\nDraw a card.",
+        "Cost": 4,
+        "Faction": "NECROS",
+        "Type": "ACTION",
+        "Quantity": 1,
+        "Image": "BAS-EN-043-dark-energy.jpg"
+    },
+    {
+        "Name": "Dark Reward",
+        "Text": "Gain 3 Gold.\nYou may sacrifice a card in your hand or discard pile. <hr> Necros:\nGain 6 Combat.",
+        "Cost": 5,
+        "Faction": "NECROS",
+        "Type": "ACTION",
+        "Quantity": 1,
+        "Image": "BAS-EN-044-dark-reward.jpg"
+    },
+    {
+        "Name": "Death Cultist",
+        "Text": "Expend:\nGain 2 Combat. <hr> <i>They live for death.</i>",
+        "Cost": 2,
+        "Defense": 3,
+        "Faction": "NECROS",
+        "Type": "GUARD",
+        "Quantity": 2,
+        "Image": "BAS-EN-045-death-cultist.jpg"
+    },
+    {
+        "Name": "Death Touch",
+        "Text": "Gain 2 Combat.\nYou may sacrifice a card in your hand or discard pile. <hr> Necros:\nGain 2 Combat.",
+        "Cost": 1,
+        "Faction": "NECROS",
+        "Type": "ACTION",
+        "Quantity": 3,
+        "Image": "BAS-EN-047-death-touch.jpg"
+    },
+    {
+        "Name": "Rayla, Endweaver",
+        "Text": "Expend:\nGain 3 Combat. <hr> Necros:\nDraw a card.",
+        "Cost": 4,
+        "Defense": 4,
+        "Faction": "NECROS",
+        "Type": "CHAMPION",
+        "Quantity": 1,
+        "Image": "BAS-EN-050-rayla-endweaver.jpg"
+    },
+    {
+        "Name": "Influence",
+        "Text": "Gain 3 Gold. <hr> Sacrifice:\nGain 3 Combat.",
+        "Cost": 2,
+        "Faction": "NECROS",
+        "Type": "ACTION",
+        "Quantity": 3,
+        "Image": "BAS-EN-051-influence.jpg"
+    },
+    {
+        "Name": "Krythos, Master Vampire",
+        "Text": "Expend:\nGain 3 Combat.\nYou may sacrifice a card in your hand or discard pile.\nIf you do, gain an additional 3 Combat.",
+        "Cost": 7,
+        "Defense": 6,
+        "Faction": "NECROS",
+        "Type": "CHAMPION",
+        "Quantity": 1,
+        "Image": "BAS-EN-054-krythos-master-vampire.jpg"
+    },
+    {
+        "Name": "Life Drain",
+        "Text": "Gain 8 Combat.\nYou may sacrifice a card in your hand or discard pile. <hr> Necros:\nDraw a card.",
+        "Cost": 6,
+        "Faction": "NECROS",
+        "Type": "ACTION",
+        "Quantity": 1,
+        "Image": "BAS-EN-055-life-drain.jpg"
+    },
+    {
+        "Name": "Lys, the Unseen",
+        "Text": "Expend:\nGain 2 Combat.\nYou may sacrifice a card in your hand or discard pile.\nIf you do, gain an additional 2 Combat.",
+        "Cost": 6,
+        "Defense": 5,
+        "Faction": "NECROS",
+        "Type": "GUARD",
+        "Quantity": 1,
+        "Image": "BAS-EN-056-lys-the-unseen.jpg"
+    },
+    {
+        "Name": "The Rot",
+        "Text": "Gain 4 Combat.\nYou may sacrifice a card in your hand or discard pile. <hr> Necros:\nGain 3 Combat.",
+        "Cost": 3,
+        "Faction": "NECROS",
+        "Type": "ACTION",
+        "Quantity": 2,
+        "Image": "BAS-EN-057-the-rot.jpg"
+    },
+    {
+        "Name": "Tyrannor, the Devourer",
+        "Text": "Expend:\nGain 4 Combat.\nmay sacrifice up to two cards in your hand and/or discard pile. <hr> Necros:\nDraw a card.",
+        "Cost": 8,
+        "Defense": 6,
+        "Faction": "NECROS",
+        "Type": "GUARD",
+        "Quantity": 1,
+        "Image": "BAS-EN-059-tyrannor-the-devourer.jpg"
+    },
+    {
+        "Name": "Varrick, the Necromancer",
+        "Text": "Expend:\nTake a champion from your discard pile and put it on top of your deck. <hr> Necros:\nDraw a card.",
+        "Cost": 5,
+        "Defense": 3,
+        "Faction": "NECROS",
+        "Type": "CHAMPION",
+        "Quantity": 1,
+        "Image": "BAS-EN-060-varrick-the-necromancer.jpg"
+    },
+    {
+        "Name": "Broelyn, Loreweaver",
+        "Text": "Expend:\nGain 2 Gold. <hr> Wild:\nTarget opponent discards a card.",
+        "Cost": 4,
+        "Defense": 6,
+        "Faction": "WILD",
+        "Type": "CHAMPION",
+        "Quantity": 1,
+        "Image": "BAS-EN-061-broelyn-loreweaver.jpg"
+    },
+    {
+        "Name": "Cron, the Berserker",
+        "Text": "Expend:\nGain 5 Combat. <hr> Wild:\nDraw a card.",
+        "Cost": 6,
+        "Defense": 6,
+        "Faction": "WILD",
+        "Type": "CHAMPION",
+        "Quantity": 1,
+        "Image": "BAS-EN-062-cron-the-berserker.jpg"
+    },
+    {
+        "Name": "Dire Wolf",
+        "Text": "Expend:\nGain 3 Combat. <hr> Wild:\nGain 4 Combat.",
+        "Cost": 5,
+        "Defense": 5,
+        "Faction": "WILD",
+        "Type": "GUARD",
+        "Quantity": 1,
+        "Image": "BAS-EN-063-dire-wolf.jpg"
+    },
+    {
+        "Name": "Elven Curse",
+        "Text": "Gain 6 Combat.\nTarget opponent discards a card. <hr> Wild:\nGain 3 Combat.",
+        "Cost": 3,
+        "Faction": "WILD",
+        "Type": "ACTION",
+        "Quantity": 2,
+        "Image": "BAS-EN-064-elven-curse.jpg"
+    },
+    {
+        "Name": "Elven Gift",
+        "Text": "Gain 2 Gold.\nYou may draw a card. If you do, discard a card. <hr> Wild:\nGain 4 Combat.",
+        "Cost": 2,
+        "Faction": "WILD",
+        "Type": "ACTION",
+        "Quantity": 3,
+        "Image": "BAS-EN-066-elven-gift.jpg"
+    },
+    {
+        "Name": "Grak, Storm Giant",
+        "Text": "Expend:\nGain 6 Combat.\nYou may draw a card. If you do, discard a card. <hr> Wild:\nDraw a card, then discard a card.",
+        "Cost": 8,
+        "Defense": 7,
+        "Faction": "WILD",
+        "Type": "GUARD",
+        "Quantity": 1,
+        "Image": "BAS-EN-069-grak-storm-giant.jpg"
+    },
+    {
+        "Name": "Nature's Bounty",
+        "Text": "Gain 4 Gold. <hr> Wild:\nTarget opponent discards a card. <hr> Sacrifice:\nGain 4 Combat.",
+        "Cost": 4,
+        "Faction": "WILD",
+        "Type": "ACTION",
+        "Quantity": 1,
+        "Image": "BAS-EN-070-natures-bounty.jpg"
+    },
+    {
+        "Name": "Orc Grunt",
+        "Text": "Expend:\nGain 2 Combat. <hr> Wild:\nDraw a card.",
+        "Cost": 3,
+        "Defense": 3,
+        "Faction": "WILD",
+        "Type": "GUARD",
+        "Quantity": 2,
+        "Image": "BAS-EN-071-orc-grunt.jpg"
+    },
+    {
+        "Name": "Rampage",
+        "Text": "Gain 6 Combat.\nYou may draw up to two cards, then discard that many cards.",
+        "Cost": 6,
+        "Faction": "WILD",
+        "Type": "ACTION",
+        "Quantity": 1,
+        "Image": "BAS-EN-073-rampage.jpg"
+    },
+    {
+        "Name": "Torgen Rocksplitter",
+        "Text": "Expend:\nGain 4 Combat.\nTarget opponent discards a card.",
+        "Cost": 7,
+        "Defense": 7,
+        "Faction": "WILD",
+        "Type": "GUARD",
+        "Quantity": 1,
+        "Image": "BAS-EN-074-torgen-rocksplitter.jpg"
+    },
+    {
+        "Name": "Spark",
+        "Text": "Gain 3 Combat.\nTarget opponent discards a card. <hr> Wild:\nGain 2 Combat.",
+        "Cost": 1,
+        "Faction": "WILD",
+        "Type": "ACTION",
+        "Quantity": 3,
+        "Image": "BAS-EN-075-spark.jpg"
+    },
+    {
+        "Name": "Wolf Form",
+        "Text": "Gain 8 Combat.\nTarget opponent discards a card. <hr> Sacrifice:\nTarget opponent discards a card.",
+        "Cost": 5,
+        "Faction": "WILD",
+        "Type": "ACTION",
+        "Quantity": 1,
+        "Image": "BAS-EN-078-wolf-form.jpg"
+    },
+    {
+        "Name": "Wolf Shaman",
+        "Text": "Expend:\nGain 2 Combat.\n+1 Combat for each other Wild card you have in play.",
+        "Cost": 2,
+        "Defense": 4,
+        "Faction": "WILD",
+        "Type": "CHAMPION",
+        "Quantity": 2,
+        "Image": "BAS-EN-079-wolf-shaman.jpg"
+    }
+]
