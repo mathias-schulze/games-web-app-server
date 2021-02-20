@@ -71,4 +71,9 @@ public class GamesController {
 	public void joinGame(@PathVariable("id") String id) throws InterruptedException, ExecutionException {
 		gameService.joinGame(id);
 	}
+	
+	@PostMapping("/{id}/start")
+	public void startGame(@PathVariable("id") String id) throws InterruptedException, ExecutionException {
+		gameService.startGame(id);
+	}
 }

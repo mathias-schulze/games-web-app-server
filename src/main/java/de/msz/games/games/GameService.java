@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.FieldValue;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QuerySnapshot;
@@ -42,6 +43,9 @@ public class GameService {
 	
 	@Autowired
 	private PlayerService playerService;
+	
+	@Autowired
+	private GameTableServiceFactory gameTableServiceFactory;
 	
 	@Autowired
 	private Counter counter;
@@ -109,5 +113,19 @@ public class GameService {
 		firestore.collection(FirestoreCollectionName.GAMES.getName()).document(id)
 			.update("players", FieldValue.arrayUnion(userService.getCurrentUser()))
 			.get();
+	}
+	
+	public void startGame(String id) throws InterruptedException, ExecutionException {
+		
+		DocumentReference gameDocumentRef = firestore.collection(FirestoreCollectionName.GAMES.getName()).document(id);
+		DocumentSnapshot gameDocument = gameDocumentRef.get().get();
+		
+		Game game = Game.valueOf(gameDocument.getString("game"));
+		
+		GameTableService gameTableService = gameTableServiceFactory.getService(game);
+		GameTable table = gameTableService.createTable(gameDocument);
+		gameTableService.storeTable(gameDocumentRef, table);
+		
+		gameDocumentRef.update("stage", Stage.RUNNING.name()).get();
 	}
 }
