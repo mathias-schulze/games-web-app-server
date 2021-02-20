@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,26 +99,36 @@ public class HeroRealmsTableService extends GameTableService {
 	private static void storePlayerView(CollectionReference tableViews, String playerId, HeroRealmsTable table)
 			throws InterruptedException, ExecutionException {
 		
-		Map<String, PlayerArea> playerAreasCopy = table.getPlayerAreas().values().stream().map(area -> {
-			
-			boolean visible = area.getPlayerId().equals(playerId);
-			
-			return area.toBuilder()
-					.hand(visible ? area.getHand() : Collections.emptyList())
-					.handSize(area.getHand().size())
-					.deck(createHiddenDeck(area.getDeck().getSize()))
-					.discardPile(createHiddenDeck(area.getDiscardPile().getSize()))
-					.build();
-			
-		}).collect(Collectors.toMap(PlayerArea::getPlayerId, Function.identity()));
-		
-		HeroRealmsTable tableCopy = table.toBuilder()
+		HeroRealmsTablePlayerView tableCopy = HeroRealmsTablePlayerView.builder()
+				.players(table.getPlayers())
+				.fireGemsDeck(table.getFireGemsDeck())
+				.market(table.getMarket())
 				.marketDeck(createHiddenDeck(table.getMarketDeck().getSize()))
 				.sacrificePile(createHiddenDeck(table.getSacrificePile().getSize()))
-				.playerAreas(playerAreasCopy)
 				.build();
 		
+		PlayerArea sourceArea = table.getPlayerAreas().get(playerId);
+		tableCopy.setOwnPlayerArea(createPlayerAreaView(sourceArea, true));
+		
+		tableCopy.setOtherPlayerAreas(table.getOtherPlayersSorted(sourceArea.getPosition()).stream()
+			.map(player -> {
+				PlayerArea source = table.getPlayerAreas().get(player.getId());
+				return createPlayerAreaView(source, false);
+			})
+			.collect(Collectors.toList())
+		);
+		
 		tableViews.document(playerId).set(tableCopy).get();
+	}
+	
+	private static PlayerArea createPlayerAreaView(PlayerArea sourceArea, boolean own) {
+		
+		return sourceArea.toBuilder()
+			.hand(own ? sourceArea.getHand() : Collections.emptyList())
+			.handSize(sourceArea.getHand().size())
+			.deck(createHiddenDeck(sourceArea.getDeck().getSize()))
+			.discardPile(createHiddenDeck(sourceArea.getDiscardPile().getSize()))
+			.build();
 	}
 	
 	private static Deck<HeroRealmsCard> createHiddenDeck(int size) {
