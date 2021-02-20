@@ -1,0 +1,144 @@
+package de.msz.games.games.herorealms;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.google.cloud.firestore.CollectionReference;
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
+
+import de.msz.games.base.firebase.FirebaseService;
+import de.msz.games.base.firebase.FirebaseService.FirestoreCollectionName;
+import de.msz.games.games.Deck;
+import de.msz.games.games.GameTable;
+import de.msz.games.games.GameTableService;
+import de.msz.games.games.herorealms.HeroRealmsTable.PlayerArea;
+import de.msz.games.games.player.PlayerService;
+import de.msz.games.games.player.PlayerService.Player;
+
+@Service
+public class HeroRealmsTableService extends GameTableService {
+	
+	private static final int HEALTH_START = 50;
+	
+	@Autowired
+	private transient HeroRealmsService heroRealmsService;
+	
+	@Autowired
+	public HeroRealmsTableService(FirebaseService firebaseService, PlayerService playerService) {
+		super(firebaseService, playerService);
+	}
+	
+	@Override
+	public HeroRealmsTable loadTable(DocumentSnapshot gameDocument) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public HeroRealmsTable createTable(DocumentSnapshot gameDocument) {
+		
+		List<Player> players = getPlayers(gameDocument, true);
+		
+		HeroRealmsTable table = new HeroRealmsTable(players);
+		
+		table.setFireGemsDeck(heroRealmsService.createFireGemsDeck());
+		table.setSacrificePile(new Deck<>());
+		
+		Deck<HeroRealmsCard> marketDeck = heroRealmsService.createMarketDeck();
+		List<HeroRealmsCard> market = new ArrayList<>(5);
+		for (int i=0; i<5; i++) {
+			market.add(marketDeck.draw());
+		}
+		table.setMarketDeck(marketDeck);
+		table.setMarket(market);
+		
+		int position = 0;
+		table.setPlayerAreas(new HashMap<>());
+		for (Player player : players) {
+			PlayerArea area = new PlayerArea(player.getId(), position++);
+			area.setHealth(HEALTH_START);
+			
+			area.setDeck(heroRealmsService.createStartingDeck());
+			area.setHand(new ArrayList<>());
+			for (int i=0; i<getNoOfCardsStart(area.getPosition(), players.size()); i++) {
+				area.getHand().add(area.getDeck().draw());
+			}
+			
+			area.setDiscardPile(new Deck<>());
+			area.setPlayedCards(new ArrayList<>());
+			area.setChampions(new ArrayList<>());
+			
+			table.getPlayerAreas().put(player.getId(), area);
+		}
+		
+		return table;
+	}
+	
+	@Override
+	public void storeTable(DocumentReference gameDocumentRef, GameTable table)
+			throws InterruptedException, ExecutionException {
+		
+		HeroRealmsTable heroRealmsTable = (HeroRealmsTable) table;
+		
+		CollectionReference tableViews = gameDocumentRef.collection(FirestoreCollectionName.TABLE_VIEWS.getName());
+		tableViews.document("full").set(heroRealmsTable).get();
+		
+		for (Player player : table.getPlayers()) {
+			storePlayerView(tableViews, player.getId(), heroRealmsTable);
+		}
+	}
+	
+	private static void storePlayerView(CollectionReference tableViews, String playerId, HeroRealmsTable table)
+			throws InterruptedException, ExecutionException {
+		
+		Map<String, PlayerArea> playerAreasCopy = table.getPlayerAreas().values().stream().map(area -> {
+			
+			boolean visible = area.getPlayerId().equals(playerId);
+			
+			return area.toBuilder()
+					.hand(visible ? area.getHand() : Collections.emptyList())
+					.handSize(area.getHand().size())
+					.deck(createHiddenDeck(area.getDeck().getSize()))
+					.discardPile(createHiddenDeck(area.getDiscardPile().getSize()))
+					.build();
+			
+		}).collect(Collectors.toMap(PlayerArea::getPlayerId, Function.identity()));
+		
+		HeroRealmsTable tableCopy = table.toBuilder()
+				.marketDeck(createHiddenDeck(table.getMarketDeck().getSize()))
+				.sacrificePile(createHiddenDeck(table.getSacrificePile().getSize()))
+				.playerAreas(playerAreasCopy)
+				.build();
+		
+		tableViews.document(playerId).set(tableCopy).get();
+	}
+	
+	private static Deck<HeroRealmsCard> createHiddenDeck(int size) {
+		Deck<HeroRealmsCard> deck = new Deck<>();
+		deck.setSize(size);
+		return deck;
+	}
+	
+	private static int getNoOfCardsStart(int position, int noOfPlayers) {
+		
+		if (position == 0) {
+			return 3;
+		}
+		
+		if (position == 1 && noOfPlayers > 2) {
+			return  4;
+		}
+		
+		return 5;
+	}
+}
