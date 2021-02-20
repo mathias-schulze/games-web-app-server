@@ -1,4 +1,4 @@
-package de.msz.games.base;
+package de.msz.games.games;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.msz.games.base.Game.GameParameter;
-import de.msz.games.base.GameService.ActiveGame;
+import de.msz.games.games.Game.GameParameter;
+import de.msz.games.games.GameService.ActiveGame;
 import lombok.Data;
 
 @RestController

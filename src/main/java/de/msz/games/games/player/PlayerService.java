@@ -1,4 +1,4 @@
-package de.msz.games.base;
+package de.msz.games.games.player;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;

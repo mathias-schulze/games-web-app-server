@@ -1,4 +1,4 @@
-package de.msz.games.base;
+package de.msz.games.games;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,10 +19,13 @@ import com.google.cloud.firestore.FieldValue;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QuerySnapshot;
 
+import de.msz.games.base.Counter;
 import de.msz.games.base.Counter.CounterName;
-import de.msz.games.base.PlayerService.Player;
+import de.msz.games.base.UserService;
 import de.msz.games.base.firebase.FirebaseService;
 import de.msz.games.base.firebase.FirebaseService.FirestoreCollectionName;
+import de.msz.games.games.player.PlayerService;
+import de.msz.games.games.player.PlayerService.Player;
 import lombok.Builder;
 import lombok.Data;
 

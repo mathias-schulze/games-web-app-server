@@ -1,4 +1,4 @@
-package de.msz.games.base;
+package de.msz.games.games;
 
 public enum Stage {
 	

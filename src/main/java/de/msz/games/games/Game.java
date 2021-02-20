@@ -1,4 +1,4 @@
-package de.msz.games.base;
+package de.msz.games.games;
 
 import lombok.Builder;
 import lombok.Value;
@@ -15,7 +15,7 @@ public enum Game {
 				.id(id)
 				.name(name)
 				.image(image)
-				.minPlayer(2).maxPlayer(4)
+				.minPlayer(minPlayer).maxPlayer(maxPlayer)
 				.build();
 	}
 	
