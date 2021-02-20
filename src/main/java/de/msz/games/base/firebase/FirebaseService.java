@@ -38,16 +38,18 @@ public class FirebaseService {
 	@PostConstruct
 	private void init() throws IOException {
 		
-		GoogleCredentials credentials = GoogleCredentials.fromStream(getServiceAccount());
-		FirebaseOptions options = FirebaseOptions.builder()
-			    .setCredentials(credentials)
-			    .setDatabaseUrl(firebaseProps.getFirestore().getDatabaseUrl())
-			    .build();
-		
-		firebaseApp = FirebaseApp.initializeApp(options);
-		
-		firebaseAuth = FirebaseAuth.getInstance();
-		firestore = FirestoreClient.getFirestore();
+		try (InputStream serviceAccount = getServiceAccount()) {
+			GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
+			FirebaseOptions options = FirebaseOptions.builder()
+				    .setCredentials(credentials)
+				    .setDatabaseUrl(firebaseProps.getFirestore().getDatabaseUrl())
+				    .build();
+			
+			firebaseApp = FirebaseApp.initializeApp(options);
+			
+			firebaseAuth = FirebaseAuth.getInstance();
+			firestore = FirestoreClient.getFirestore();
+		}
 	}
 	
 	@PreDestroy
@@ -75,7 +77,8 @@ public class FirebaseService {
 		
 		USERS("users"),
 		GAMES("games"),
-		COUNTERS("counters");
+		COUNTERS("counters"),
+		TABLE_VIEWS("table_views");
 		
 		@Getter
 		private final String name;

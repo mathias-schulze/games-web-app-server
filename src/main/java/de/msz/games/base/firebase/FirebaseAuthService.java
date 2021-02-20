@@ -56,10 +56,10 @@ public class FirebaseAuthService {
 			if (uid.isPresent()) {
 				verifiedUsers.put(idToken, uid.get());
 				return uid.get();
-			} else {
-				return null;
 			}
-		} catch (FirebaseAuthException e) {
+			
+			return null;
+		} catch (@SuppressWarnings("unused") FirebaseAuthException e) {
 			return null;
 		}
 	}
