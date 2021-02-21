@@ -20,6 +20,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder=true)
 public class HeroRealmsTable extends GameTable {
 	
+	private String cardBack;
+	
 	private FireGemsDeck fireGemsDeck;
 	
 	private List<HeroRealmsCard> market;

@@ -17,6 +17,7 @@ import com.google.cloud.firestore.DocumentSnapshot;
 import de.msz.games.base.firebase.FirebaseService;
 import de.msz.games.base.firebase.FirebaseService.FirestoreCollectionName;
 import de.msz.games.games.Deck;
+import de.msz.games.games.Game;
 import de.msz.games.games.GameTable;
 import de.msz.games.games.GameTableService;
 import de.msz.games.games.herorealms.HeroRealmsTable.PlayerArea;
@@ -49,6 +50,7 @@ public class HeroRealmsTableService extends GameTableService {
 		
 		HeroRealmsTable table = new HeroRealmsTable(players);
 		
+		table.setCardBack(Game.HERO_REALMS.getParameter().getImage());
 		table.setFireGemsDeck(heroRealmsService.createFireGemsDeck());
 		table.setSacrificePile(new Deck<>());
 		
@@ -101,6 +103,7 @@ public class HeroRealmsTableService extends GameTableService {
 		
 		HeroRealmsTablePlayerView tableCopy = HeroRealmsTablePlayerView.builder()
 				.players(table.getPlayers())
+				.cardBack(table.getCardBack())
 				.fireGemsDeck(table.getFireGemsDeck())
 				.market(table.getMarket())
 				.marketDeck(createHiddenDeck(table.getMarketDeck().getSize()))
