@@ -65,7 +65,7 @@ public class HeroRealmsTableService extends GameTableService {
 		int position = 0;
 		table.setPlayerAreas(new HashMap<>());
 		for (Player player : players) {
-			PlayerArea area = new PlayerArea(player.getId(), position++);
+			PlayerArea area = new PlayerArea(player, position++);
 			area.setHealth(HEALTH_START);
 			
 			area.setDeck(heroRealmsService.createStartingDeck());

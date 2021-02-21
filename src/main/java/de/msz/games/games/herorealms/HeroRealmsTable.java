@@ -44,6 +44,8 @@ public class HeroRealmsTable extends GameTable {
 		
 		private String playerId;
 		
+		private String playerName;
+		
 		private int position;
 		
 		private int health;
@@ -64,8 +66,9 @@ public class HeroRealmsTable extends GameTable {
 		
 		private List<HeroRealmsCard> champions;
 		
-		public PlayerArea(String playerId, int position) {
-			this.playerId = playerId;
+		public PlayerArea(Player player, int position) {
+			this.playerId = player.getId();
+			this.playerName = player.getName();
 			this.position = position;
 		}
 	}
