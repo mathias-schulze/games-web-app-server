@@ -22,6 +22,8 @@ public class HeroRealmsTable extends GameTable {
 	
 	private String cardBack;
 	
+	private String emptyDeck;
+	
 	private FireGemsDeck fireGemsDeck;
 	
 	private List<HeroRealmsCard> market;

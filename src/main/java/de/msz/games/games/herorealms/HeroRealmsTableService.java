@@ -51,6 +51,7 @@ public class HeroRealmsTableService extends GameTableService {
 		HeroRealmsTable table = new HeroRealmsTable(players);
 		
 		table.setCardBack(Game.HERO_REALMS.getParameter().getImage());
+		table.setEmptyDeck("extern/hero_realms/hero_realms_empty.jpg");
 		table.setFireGemsDeck(heroRealmsService.createFireGemsDeck());
 		table.setSacrificePile(new Deck<>());
 		
@@ -104,6 +105,7 @@ public class HeroRealmsTableService extends GameTableService {
 		HeroRealmsTablePlayerView tableCopy = HeroRealmsTablePlayerView.builder()
 				.players(table.getPlayers())
 				.cardBack(table.getCardBack())
+				.emptyDeck(table.getEmptyDeck())
 				.fireGemsDeck(table.getFireGemsDeck())
 				.market(table.getMarket())
 				.marketDeck(createHiddenDeck(table.getMarketDeck().getSize()))
