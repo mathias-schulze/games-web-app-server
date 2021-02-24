@@ -48,6 +48,8 @@ public class HeroRealmsTable extends GameTable {
 		
 		private String playerName;
 		
+		private boolean active;
+		
 		private int position;
 		
 		private int health;

@@ -67,6 +67,7 @@ public class HeroRealmsTableService extends GameTableService {
 		table.setPlayerAreas(new HashMap<>());
 		for (Player player : players) {
 			PlayerArea area = new PlayerArea(player, position++);
+			area.setActive(area.getPosition() == 0);
 			area.setHealth(HEALTH_START);
 			
 			area.setDeck(heroRealmsService.createStartingDeck());
@@ -104,6 +105,7 @@ public class HeroRealmsTableService extends GameTableService {
 		
 		HeroRealmsTablePlayerView tableCopy = HeroRealmsTablePlayerView.builder()
 				.players(table.getPlayers())
+				.activePlayer(table.getActivePlayer())
 				.cardBack(table.getCardBack())
 				.emptyDeck(table.getEmptyDeck())
 				.fireGemsDeck(table.getFireGemsDeck())
@@ -129,6 +131,7 @@ public class HeroRealmsTableService extends GameTableService {
 	private static PlayerArea createPlayerAreaView(PlayerArea sourceArea, boolean own) {
 		
 		return sourceArea.toBuilder()
+			.active(sourceArea.isActive())
 			.hand(own ? sourceArea.getHand() : Collections.emptyList())
 			.handSize(sourceArea.getHand().size())
 			.deck(createHiddenDeck(sourceArea.getDeck().getSize()))

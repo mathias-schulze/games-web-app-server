@@ -3,17 +3,24 @@ package de.msz.games.games;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections4.CollectionUtils;
+
 import de.msz.games.games.player.PlayerService.Player;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
 @Data
-@AllArgsConstructor
 @SuperBuilder(toBuilder=true)
 public abstract class GameTable {
 	
 	private final List<Player> players;
+	
+	private Player activePlayer;
+	
+	protected GameTable(List<Player> players) {
+		this.players = players;
+		this.activePlayer = CollectionUtils.isEmpty(players) ? null : players.get(0);
+	}
 	
 	/**
 	 * Creates a list of the players sorted like they are sitting on a table clockwise starting from the current players
