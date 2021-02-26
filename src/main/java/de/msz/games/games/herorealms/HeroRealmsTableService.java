@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -21,8 +22,8 @@ import de.msz.games.games.Game;
 import de.msz.games.games.GameTable;
 import de.msz.games.games.GameTableService;
 import de.msz.games.games.herorealms.HeroRealmsTable.PlayerArea;
+import de.msz.games.games.player.Player;
 import de.msz.games.games.player.PlayerService;
-import de.msz.games.games.player.PlayerService.Player;
 
 @Service
 public class HeroRealmsTableService extends GameTableService {
@@ -38,9 +39,14 @@ public class HeroRealmsTableService extends GameTableService {
 	}
 	
 	@Override
-	public HeroRealmsTable loadTable(DocumentSnapshot gameDocument) {
-		// TODO Auto-generated method stub
-		return null;
+	public HeroRealmsTable loadTable(DocumentReference gameDocumentRef) throws InterruptedException, ExecutionException {
+		
+		DocumentSnapshot gameDocument = 
+				gameDocumentRef.collection(FirestoreCollectionName.TABLE_VIEWS.getName()).document("full").get().get();
+		
+		Map<String, Object> data = gameDocument.getData();
+		
+		return HeroRealmsTable.from(data);
 	}
 	
 	@Override
@@ -71,8 +77,9 @@ public class HeroRealmsTableService extends GameTableService {
 			area.setHealth(HEALTH_START);
 			
 			area.setDeck(heroRealmsService.createStartingDeck());
-			area.setHand(new ArrayList<>());
-			for (int i=0; i<getNoOfCardsStart(area.getPosition(), players.size()); i++) {
+			area.setHandSize(getNoOfCardsStart(area.getPosition(), players.size()));
+			area.setHand(new ArrayList<>(area.getHandSize()));
+			for (int i=0; i<area.getHandSize(); i++) {
 				area.getHand().add(area.getDeck().draw());
 			}
 			

@@ -1,10 +1,12 @@
 package de.msz.games.games.herorealms;
 
+import java.util.Map;
+
 import de.msz.games.games.Card;
 import lombok.Builder;
-import lombok.Value;
+import lombok.Data;
 
-@Value
+@Data
 @Builder
 public class HeroRealmsCard implements Card {
 
@@ -14,4 +16,19 @@ public class HeroRealmsCard implements Card {
     private HeroRealmsFaction faction;
     private HeroRealmsCardType type;
     private String image;
+    
+    public static HeroRealmsCard from(Map<String, Object> map) {
+    	
+    	String factionString = (String) map.get("faction");
+    	HeroRealmsFaction faction = (factionString == null) ? null : HeroRealmsFaction.valueOf(factionString);
+    	
+		return HeroRealmsCard.builder()
+    		.name((String) map.get("name"))
+    		.cost(Long.valueOf((long) map.get("cost")).intValue())
+    		.defense(Long.valueOf((long) map.get("defense")).intValue())
+    		.faction(faction)
+    		.type(HeroRealmsCardType.valueOf((String) map.get("type")))
+    		.image((String) map.get("image"))
+    		.build();
+    }
 }

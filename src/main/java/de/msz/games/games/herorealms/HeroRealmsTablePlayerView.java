@@ -2,7 +2,7 @@ package de.msz.games.games.herorealms;
 
 import java.util.List;
 
-import de.msz.games.games.player.PlayerService.Player;
+import de.msz.games.games.player.Player;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

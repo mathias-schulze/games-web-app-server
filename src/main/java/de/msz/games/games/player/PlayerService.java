@@ -15,8 +15,6 @@ import com.google.cloud.firestore.Firestore;
 
 import de.msz.games.base.firebase.FirebaseService;
 import de.msz.games.base.firebase.FirebaseService.FirestoreCollectionName;
-import lombok.Builder;
-import lombok.Data;
 
 @Component
 public class PlayerService {
@@ -54,13 +52,5 @@ public class PlayerService {
 					.name(e.getMessage())
 					.build();
 		}
-	}
-	
-	@Data
-	@Builder
-	public static class Player {
-		
-		private final String id;
-		private final String name;
 	}
 }

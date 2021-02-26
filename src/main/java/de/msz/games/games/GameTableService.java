@@ -12,8 +12,8 @@ import com.google.cloud.firestore.Firestore;
 
 import de.msz.games.base.firebase.FirebaseService;
 import de.msz.games.base.firebase.FirebaseService.FirestoreCollectionName;
+import de.msz.games.games.player.Player;
 import de.msz.games.games.player.PlayerService;
-import de.msz.games.games.player.PlayerService.Player;
 
 public abstract class GameTableService {
 	
@@ -29,7 +29,8 @@ public abstract class GameTableService {
 		this.playerService = playerService;
 	}
 	
-	public abstract GameTable loadTable(DocumentSnapshot gameDocument);
+	public abstract GameTable loadTable(DocumentReference gameDocumentRef)
+			throws InterruptedException, ExecutionException;
 	
 	public abstract GameTable createTable(DocumentSnapshot gameDocument);
 	
@@ -58,15 +59,18 @@ public abstract class GameTableService {
 			return gameTable;
 		}
 		
-		return loadGame(id);
+		gameTable = loadGame(id);
+		cache.put(id, gameTable);
+		
+		return gameTable;
 	}
 	
 	private GameTable loadGame(String id) throws InterruptedException, ExecutionException {
 		
-		DocumentSnapshot gameDocument = 
-				firestore.collection(FirestoreCollectionName.GAMES.getName()).document(id).get().get();
+		DocumentReference gameDocumentRef = 
+				firestore.collection(FirestoreCollectionName.GAMES.getName()).document(id);
 		
-		return null;
+		return loadTable(gameDocumentRef);
 	}
 	
 	private static class GameTableCache extends LinkedHashMap<String, GameTable> {

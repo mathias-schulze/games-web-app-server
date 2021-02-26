@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
 
-import de.msz.games.games.player.PlayerService.Player;
+import de.msz.games.games.player.Player;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 

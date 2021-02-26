@@ -25,8 +25,8 @@ import de.msz.games.base.Counter.CounterName;
 import de.msz.games.base.UserService;
 import de.msz.games.base.firebase.FirebaseService;
 import de.msz.games.base.firebase.FirebaseService.FirestoreCollectionName;
+import de.msz.games.games.player.Player;
 import de.msz.games.games.player.PlayerService;
-import de.msz.games.games.player.PlayerService.Player;
 import lombok.Builder;
 import lombok.Data;
 
