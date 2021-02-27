@@ -34,7 +34,15 @@ public abstract class GameTableService {
 	
 	public abstract GameTable createTable(DocumentSnapshot gameDocument);
 	
-	public abstract void storeTable(DocumentReference gameDocumentRef, GameTable table)
+	public final void storeTable(String gameId, GameTable table) throws InterruptedException, ExecutionException {
+		
+		DocumentReference gameDocumentRef = 
+				firestore.collection(FirestoreCollectionName.GAMES.getName()).document(gameId);
+		
+		storeTable(gameDocumentRef, table);
+	}
+	
+	protected abstract void storeTable(DocumentReference gameDocumentRef, GameTable table)
 			throws InterruptedException, ExecutionException;
 	
 	protected List<Player> getPlayers(DocumentSnapshot gameDocument, boolean shuffle) {
