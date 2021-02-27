@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.4.2'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id "org.sonarqube" version "3.1.1"
 }
 
 group = 'de.msz'
@@ -43,4 +44,12 @@ dependencies {
 
 test {
 	useJUnitPlatform()
+}
+
+sonarqube {
+  properties {
+    property "sonar.projectKey", "mathias-schulze_games-web-app-server"
+    property "sonar.organization", "mathias-schulze"
+    property "sonar.host.url", "https://sonarcloud.io"
+  }
 }
