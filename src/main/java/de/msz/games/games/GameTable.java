@@ -39,6 +39,7 @@ public abstract class GameTable {
 		} else {
 			List<Player> playersBefore = players.subList(0, currentPlayerPosition);
 			List<Player> playersAfter = players.subList(currentPlayerPosition+1, players.size());
+			otherPlayersSorted.clear();
 			otherPlayersSorted.addAll(playersAfter);
 			otherPlayersSorted.addAll(playersBefore);
 		}
