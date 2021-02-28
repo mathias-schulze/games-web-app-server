@@ -4,27 +4,47 @@
         "Text": "Gain 1 Gold.",
         "Type": "ITEM",
         "Quantity": 7,
-        "Image": "extern/hero_realms/BAS-EN-097-gold.jpg"
+        "Image": "extern/hero_realms/BAS-EN-097-gold.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "GOLD", "Value": 1 }
+            ]
+        }
     },
     {
         "Name": "Shortsword",
         "Text": "Gain 2 Combat.",
         "Type": "ITEM",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-125-shortsword.jpg"
+        "Image": "extern/hero_realms/BAS-EN-125-shortsword.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 2 }
+            ]
+        }
     },
     {
         "Name": "Dagger",
         "Text": "Gain 1 Combat.",
         "Type": "ITEM",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-129-dagger.jpg"
+        "Image": "extern/hero_realms/BAS-EN-129-dagger.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 1 }
+            ]
+        }
     },
     {
         "Name": "Ruby",
         "Text": "Gain 2 Gold.",
         "Type": "ITEM",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-133-ruby.jpg"
+        "Image": "extern/hero_realms/BAS-EN-133-ruby.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "GOLD", "Value": 2 }
+            ]
+        }
     }
 ]

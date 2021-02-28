@@ -7,7 +7,19 @@
         "Faction": "IMPERIAL",
         "Type": "GUARD",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-001-arkus-imperial-dragon.jpg"
+        "Image": "extern/hero_realms/BAS-EN-001-arkus-imperial-dragon.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 5 },
+                { "Type": "DRAW_CARD" }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "HEALTH", "Value": 6 }
+            ]
+        }
+        
     },
     {
         "Name": "Close Ranks",
@@ -16,7 +28,18 @@
         "Faction": "IMPERIAL",
         "Type": "ACTION",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-002-close-ranks.jpg"
+        "Image": "extern/hero_realms/BAS-EN-002-close-ranks.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 5 },
+                { "Type": "COMBAT_EACH_CHAMPION", "Value": 2 }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "HEALTH", "Value": 6 }
+            ]
+        }
     },
     {
         "Name": "Command",
@@ -25,7 +48,15 @@
         "Faction": "IMPERIAL",
         "Type": "ACTION",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-003-command.jpg"
+        "Image": "extern/hero_realms/BAS-EN-003-command.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "GOLD", "Value": 2 },
+                { "Type": "COMBAT", "Value": 3 },
+                { "Type": "HEALTH", "Value": 4 },
+                { "Type": "DRAW_CARD" }
+            ]
+        }
     },
     {
         "Name": "Darian, War Mage",
@@ -35,7 +66,14 @@
         "Faction": "IMPERIAL",
         "Type": "CHAMPION",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-004-darian-war-mage.jpg"
+        "Image": "extern/hero_realms/BAS-EN-004-darian-war-mage.jpg",
+        "PrimaryAbility": {
+            "Linkage": "OR",
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 3 },
+                { "Type": "HEALTH", "Value": 4 }
+            ]
+        }
     },
     {
         "Name": "Domination",
@@ -44,7 +82,19 @@
         "Faction": "IMPERIAL",
         "Type": "ACTION",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-005-domination.jpg"
+        "Image": "extern/hero_realms/BAS-EN-005-domination.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 6 },
+                { "Type": "HEALTH", "Value": 6 },
+                { "Type": "DRAW_CARD" }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "PREPARE_CHAMPION" }
+            ]
+        }
     },
     {
         "Name": "Cristov, the Just",
@@ -54,7 +104,18 @@
         "Faction": "IMPERIAL",
         "Type": "GUARD",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-006-cristov-the-just.jpg"
+        "Image": "extern/hero_realms/BAS-EN-006-cristov-the-just.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 2 },
+                { "Type": "HEALTH", "Value": 3 }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "DRAW_CARD" }
+            ]
+        }
     },
     {
         "Name": "Kraka, High Priest",
@@ -64,7 +125,18 @@
         "Faction": "IMPERIAL",
         "Type": "CHAMPION",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-007-kraka-high-priest.jpg"
+        "Image": "extern/hero_realms/BAS-EN-007-kraka-high-priest.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "HEALTH", "Value": 3 },
+                { "Type": "DRAW_CARD" }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "HEALTH_EACH_CHAMPION", "Value": 2 }
+            ]
+        }
     },
     {
         "Name": "Man-at-Arms",
@@ -74,7 +146,13 @@
         "Faction": "IMPERIAL",
         "Type": "GUARD",
         "Quantity": 2,
-        "Image": "extern/hero_realms/BAS-EN-008-man-at-arms.jpg"
+        "Image": "extern/hero_realms/BAS-EN-008-man-at-arms.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 2 },
+                { "Type": "COMBAT_EACH_GUARD", "Value": 1 }
+            ]
+        }
     },
     {
         "Name": "Master Weyan",
@@ -84,7 +162,13 @@
         "Faction": "IMPERIAL",
         "Type": "GUARD",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-010-master-weyan.jpg"
+        "Image": "extern/hero_realms/BAS-EN-010-master-weyan.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 3 },
+                { "Type": "COMBAT_EACH_CHAMPION", "Value": 1 }
+            ]
+        }
     },
     {
         "Name": "Rally the Troops",
@@ -93,7 +177,18 @@
         "Faction": "IMPERIAL",
         "Type": "ACTION",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-011-rally-the-troops.jpg"
+        "Image": "extern/hero_realms/BAS-EN-011-rally-the-troops.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 5 },
+                { "Type": "HEALTH", "Value": 5 }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "PREPARE_CHAMPION" }
+            ]
+        }
     },
     {
         "Name": "Recruit",
@@ -102,7 +197,19 @@
         "Faction": "IMPERIAL",
         "Type": "ACTION",
         "Quantity": 3,
-        "Image": "extern/hero_realms/BAS-EN-012-recruit.jpg"
+        "Image": "extern/hero_realms/BAS-EN-012-recruit.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "GOLD", "Value": 2 },
+                { "Type": "HEALTH", "Value": 3 },
+                { "Type": "HEALTH_EACH_CHAMPION", "Value": 1 }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "GOLD", "Value": 1 }
+            ]
+        }
     },
     {
         "Name": "Tithe Priest",
@@ -112,7 +219,14 @@
         "Faction": "IMPERIAL",
         "Type": "CHAMPION",
         "Quantity": 2,
-        "Image": "extern/hero_realms/BAS-EN-015-tithe-priest.jpg"
+        "Image": "extern/hero_realms/BAS-EN-015-tithe-priest.jpg",
+        "PrimaryAbility": {
+            "Linkage": "OR",
+            "Abilities": [
+                { "Type": "GOLD", "Value": 1 },
+                { "Type": "HEALTH_EACH_CHAMPION", "Value": 1 }
+            ]
+        }
     },
     {
         "Name": "Taxation",
@@ -121,7 +235,17 @@
         "Faction": "IMPERIAL",
         "Type": "ACTION",
         "Quantity": 3,
-        "Image": "extern/hero_realms/BAS-EN-017-taxation.jpg"
+        "Image": "extern/hero_realms/BAS-EN-017-taxation.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "GOLD", "Value": 2 }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "HEALTH", "Value": 6 }
+            ]
+        }
     },
     {
         "Name": "Word of Power",
@@ -130,7 +254,22 @@
         "Faction": "IMPERIAL",
         "Type": "ACTION",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-020-word-of-power.jpg"
+        "Image": "extern/hero_realms/BAS-EN-020-word-of-power.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "DRAW_CARD", "Value": 2 }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "HEALTH", "Value": 5 }
+            ]
+        },
+        "SacrificeAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 5 }
+            ]
+        }
     },
     {
         "Name": "Borg, Ogre Mercenary",
@@ -140,7 +279,12 @@
         "Faction": "GUILD",
         "Type": "GUARD",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-021-borg-ogre-mercenary.jpg"
+        "Image": "extern/hero_realms/BAS-EN-021-borg-ogre-mercenary.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 4 }
+            ]
+        }
     },
     {
         "Name": "Bribe",
@@ -149,7 +293,17 @@
         "Faction": "GUILD",
         "Type": "ACTION",
         "Quantity": 3,
-        "Image": "extern/hero_realms/BAS-EN-022-bribe.jpg"
+        "Image": "extern/hero_realms/BAS-EN-022-bribe.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "GOLD", "Value": 3 }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "NEXT_ACTION_TOP_DECK" }
+            ]
+        }
     },
     {
         "Name": "Death Threat",
@@ -158,7 +312,18 @@
         "Faction": "GUILD",
         "Type": "ACTION",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-025-death-threat.jpg"
+        "Image": "extern/hero_realms/BAS-EN-025-death-threat.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 1 },
+                { "Type": "DRAW_CARD", "Value": 3 }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "STUN_TARGET_CHAMPION" }
+            ]
+        }
     },
     {
         "Name": "Deception",
@@ -167,7 +332,18 @@
         "Faction": "GUILD",
         "Type": "ACTION",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-026-deception.jpg"
+        "Image": "extern/hero_realms/BAS-EN-026-deception.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "GOLD", "Value": 2 },
+                { "Type": "DRAW_CARD", "Value": 3 }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "NEXT_ACQUIRE_HAND" }
+            ]
+        }
     },
     {
         "Name": "Fire Bomb",
@@ -176,7 +352,19 @@
         "Faction": "GUILD",
         "Type": "ACTION",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-027-fire-bomb.jpg"
+        "Image": "extern/hero_realms/BAS-EN-027-fire-bomb.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 8 },
+                { "Type": "STUN_TARGET_CHAMPION" },
+                { "Type": "DRAW_CARD" }
+            ]
+        },
+        "SacrificeAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 5 }
+            ]
+        }
     },
     {
         "Name": "Hit Job",
@@ -185,7 +373,17 @@
         "Faction": "GUILD",
         "Type": "ACTION",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-028-hit-job.jpg"
+        "Image": "extern/hero_realms/BAS-EN-028-hit-job.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 7 }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "STUN_TARGET_CHAMPION" }
+            ]
+        }
     },
     {
         "Name": "Intimidation",
@@ -194,7 +392,17 @@
         "Faction": "GUILD",
         "Type": "ACTION",
         "Quantity": 2,
-        "Image": "extern/hero_realms/BAS-EN-029-intimidation.jpg"
+        "Image": "extern/hero_realms/BAS-EN-029-intimidation.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 5 }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "GOLD", "Value": 2 }
+            ]
+        }
     },
     {
         "Name": "Myros, Guild Mage",
@@ -204,7 +412,17 @@
         "Faction": "GUILD",
         "Type": "GUARD",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-031-myros-guild-mage.jpg"
+        "Image": "extern/hero_realms/BAS-EN-031-myros-guild-mage.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "GOLD", "Value": 3 }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 4 }
+            ]
+        }
     },
     {
         "Name": "Parov, the Enforcer",
@@ -214,7 +432,17 @@
         "Faction": "GUILD",
         "Type": "GUARD",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-032-parov-the-enforcer.jpg"
+        "Image": "extern/hero_realms/BAS-EN-032-parov-the-enforcer.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 3 }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "DRAW_CARD" }
+            ]
+        }
     },
     {
         "Name": "Profit",
@@ -223,7 +451,17 @@
         "Faction": "GUILD",
         "Type": "ACTION",
         "Quantity": 3,
-        "Image": "extern/hero_realms/BAS-EN-033-profit.jpg"
+        "Image": "extern/hero_realms/BAS-EN-033-profit.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "GOLD", "Value": 2 }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 4 }
+            ]
+        }
     },
     {
         "Name": "Rake, Master Assassin",
@@ -233,7 +471,13 @@
         "Faction": "GUILD",
         "Type": "CHAMPION",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-036-rake-master-assassin.jpg"
+        "Image": "extern/hero_realms/BAS-EN-036-rake-master-assassin.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 4 },
+                { "Type": "STUN_TARGET_CHAMPION" }
+            ]
+        }
     },
     {
         "Name": "Rasmus, the Smuggler",
@@ -243,7 +487,17 @@
         "Faction": "GUILD",
         "Type": "CHAMPION",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-037-rasmus-the-smuggler.jpg"
+        "Image": "extern/hero_realms/BAS-EN-037-rasmus-the-smuggler.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "GOLD", "Value": 2 }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "NEXT_ACQUIRE_TOP_DECK" }
+            ]
+        }
     },
     {
         "Name": "Smash and Grab",
@@ -252,7 +506,12 @@
         "Faction": "GUILD",
         "Type": "ACTION",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-038-smash-and-grab.jpg"
+        "Image": "extern/hero_realms/BAS-EN-038-smash-and-grab.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "PUT_CARD_DISCARD_PILE_TOP_DECK" }
+            ]
+        }
     },
     {
         "Name": "Street Thug",
@@ -262,7 +521,14 @@
         "Faction": "GUILD",
         "Type": "CHAMPION",
         "Quantity": 2,
-        "Image": "extern/hero_realms/BAS-EN-039-street-thug.jpg"
+        "Image": "extern/hero_realms/BAS-EN-039-street-thug.jpg",
+        "PrimaryAbility": {
+            "Linkage": "OR",
+            "Abilities": [
+                { "Type": "GOLD", "Value": 1 },
+                { "Type": "COMBAT", "Value": 2 }
+            ]
+        }
     },
     {
         "Name": "Cult Priest",
@@ -272,7 +538,19 @@
         "Faction": "NECROS",
         "Type": "CHAMPION",
         "Quantity": 2,
-        "Image": "extern/hero_realms/BAS-EN-041-cult-priest.jpg"
+        "Image": "extern/hero_realms/BAS-EN-041-cult-priest.jpg",
+        "PrimaryAbility": {
+            "Linkage": "OR",
+            "Abilities": [
+                { "Type": "GOLD", "Value": 1 },
+                { "Type": "COMBAT", "Value": 1 }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 4 }
+            ]
+        }
     },
     {
         "Name": "Dark Energy",
@@ -281,7 +559,17 @@
         "Faction": "NECROS",
         "Type": "ACTION",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-043-dark-energy.jpg"
+        "Image": "extern/hero_realms/BAS-EN-043-dark-energy.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 7 }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "DRAW_CARD" }
+            ]
+        }
     },
     {
         "Name": "Dark Reward",
@@ -290,7 +578,18 @@
         "Faction": "NECROS",
         "Type": "ACTION",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-044-dark-reward.jpg"
+        "Image": "extern/hero_realms/BAS-EN-044-dark-reward.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "GOLD", "Value": 3 },
+                { "Type": "SACRIFICE_HAND_OR_DISCARD_PILE" }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 6 }
+            ]
+        }
     },
     {
         "Name": "Death Cultist",
@@ -300,7 +599,12 @@
         "Faction": "NECROS",
         "Type": "GUARD",
         "Quantity": 2,
-        "Image": "extern/hero_realms/BAS-EN-045-death-cultist.jpg"
+        "Image": "extern/hero_realms/BAS-EN-045-death-cultist.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 2 }
+            ]
+        }
     },
     {
         "Name": "Death Touch",
@@ -309,7 +613,18 @@
         "Faction": "NECROS",
         "Type": "ACTION",
         "Quantity": 3,
-        "Image": "extern/hero_realms/BAS-EN-047-death-touch.jpg"
+        "Image": "extern/hero_realms/BAS-EN-047-death-touch.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 2 },
+                { "Type": "SACRIFICE_HAND_OR_DISCARD_PILE" }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 2 }
+            ]
+        }
     },
     {
         "Name": "Rayla, Endweaver",
@@ -319,7 +634,17 @@
         "Faction": "NECROS",
         "Type": "CHAMPION",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-050-rayla-endweaver.jpg"
+        "Image": "extern/hero_realms/BAS-EN-050-rayla-endweaver.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 3 }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "DRAW_CARD" }
+            ]
+        }
     },
     {
         "Name": "Influence",
@@ -328,7 +653,18 @@
         "Faction": "NECROS",
         "Type": "ACTION",
         "Quantity": 3,
-        "Image": "extern/hero_realms/BAS-EN-051-influence.jpg"
+        "Image": "extern/hero_realms/BAS-EN-051-influence.jpg",
+        "PrimaryAbility": {
+            "Linkage": "OR",
+            "Abilities": [
+                { "Type": "GOLD", "Value": 3 }
+            ]
+        },
+        "SacrificeAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 3 }
+            ]
+        }
     },
     {
         "Name": "Krythos, Master Vampire",
@@ -338,7 +674,13 @@
         "Faction": "NECROS",
         "Type": "CHAMPION",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-054-krythos-master-vampire.jpg"
+        "Image": "extern/hero_realms/BAS-EN-054-krythos-master-vampire.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 3 },
+                { "Type": "SACRIFICE_HAND_OR_DISCARD_PILE_COMBAT", "Value": 3 }
+            ]
+        }
     },
     {
         "Name": "Life Drain",
@@ -347,7 +689,18 @@
         "Faction": "NECROS",
         "Type": "ACTION",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-055-life-drain.jpg"
+        "Image": "extern/hero_realms/BAS-EN-055-life-drain.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 8 },
+                { "Type": "SACRIFICE_HAND_OR_DISCARD_PILE" }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "DRAW_CARD" }
+            ]
+        }
     },
     {
         "Name": "Lys, the Unseen",
@@ -357,7 +710,13 @@
         "Faction": "NECROS",
         "Type": "GUARD",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-056-lys-the-unseen.jpg"
+        "Image": "extern/hero_realms/BAS-EN-056-lys-the-unseen.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 2 },
+                { "Type": "SACRIFICE_HAND_OR_DISCARD_PILE_COMBAT", "Value": 2 }
+            ]
+        }
     },
     {
         "Name": "The Rot",
@@ -366,7 +725,18 @@
         "Faction": "NECROS",
         "Type": "ACTION",
         "Quantity": 2,
-        "Image": "extern/hero_realms/BAS-EN-057-the-rot.jpg"
+        "Image": "extern/hero_realms/BAS-EN-057-the-rot.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 4 },
+                { "Type": "SACRIFICE_HAND_OR_DISCARD_PILE" }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "DRAW_CARD" }
+            ]
+        }
     },
     {
         "Name": "Tyrannor, the Devourer",
@@ -376,7 +746,18 @@
         "Faction": "NECROS",
         "Type": "GUARD",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-059-tyrannor-the-devourer.jpg"
+        "Image": "extern/hero_realms/BAS-EN-059-tyrannor-the-devourer.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 4 },
+                { "Type": "SACRIFICE_HAND_OR_DISCARD_PILE", "Value": 2 }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 3 }
+            ]
+        }
     },
     {
         "Name": "Varrick, the Necromancer",
@@ -386,7 +767,17 @@
         "Faction": "NECROS",
         "Type": "CHAMPION",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-060-varrick-the-necromancer.jpg"
+        "Image": "extern/hero_realms/BAS-EN-060-varrick-the-necromancer.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "PUT_CHAMPION_DISCARD_PILE_TOP_DECK" }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "DRAW_CARD" }
+            ]
+        }
     },
     {
         "Name": "Broelyn, Loreweaver",
@@ -396,7 +787,17 @@
         "Faction": "WILD",
         "Type": "CHAMPION",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-061-broelyn-loreweaver.jpg"
+        "Image": "extern/hero_realms/BAS-EN-061-broelyn-loreweaver.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "GOLD", "Value": 2 }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "OPPONENT_DISCARD_CARD" }
+            ]
+        }
     },
     {
         "Name": "Cron, the Berserker",
@@ -406,7 +807,17 @@
         "Faction": "WILD",
         "Type": "CHAMPION",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-062-cron-the-berserker.jpg"
+        "Image": "extern/hero_realms/BAS-EN-062-cron-the-berserker.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 5 }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "DRAW_CARD" }
+            ]
+        }
     },
     {
         "Name": "Dire Wolf",
@@ -416,7 +827,17 @@
         "Faction": "WILD",
         "Type": "GUARD",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-063-dire-wolf.jpg"
+        "Image": "extern/hero_realms/BAS-EN-063-dire-wolf.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 3 }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 4 }
+            ]
+        }
     },
     {
         "Name": "Elven Curse",
@@ -425,7 +846,18 @@
         "Faction": "WILD",
         "Type": "ACTION",
         "Quantity": 2,
-        "Image": "extern/hero_realms/BAS-EN-064-elven-curse.jpg"
+        "Image": "extern/hero_realms/BAS-EN-064-elven-curse.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 6 },
+                { "Type": "OPPONENT_DISCARD_CARD" }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 3 }
+            ]
+        }
     },
     {
         "Name": "Elven Gift",
@@ -434,7 +866,18 @@
         "Faction": "WILD",
         "Type": "ACTION",
         "Quantity": 3,
-        "Image": "extern/hero_realms/BAS-EN-066-elven-gift.jpg"
+        "Image": "extern/hero_realms/BAS-EN-066-elven-gift.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "GOLD", "Value": 2 },
+                { "Type": "DRAW_DISCARD_CARD" }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 4 }
+            ]
+        }
     },
     {
         "Name": "Grak, Storm Giant",
@@ -444,7 +887,18 @@
         "Faction": "WILD",
         "Type": "GUARD",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-069-grak-storm-giant.jpg"
+        "Image": "extern/hero_realms/BAS-EN-069-grak-storm-giant.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 6 },
+                { "Type": "DRAW_DISCARD_CARD" }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "DRAW_DISCARD_CARD" }
+            ]
+        }
     },
     {
         "Name": "Nature's Bounty",
@@ -453,7 +907,22 @@
         "Faction": "WILD",
         "Type": "ACTION",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-070-natures-bounty.jpg"
+        "Image": "extern/hero_realms/BAS-EN-070-natures-bounty.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "GOLD", "Value": 4 }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "OPPONENT_DISCARD_CARD" }
+            ]
+        },
+        "SacrificeAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 4 }
+            ]
+        }
     },
     {
         "Name": "Orc Grunt",
@@ -463,7 +932,17 @@
         "Faction": "WILD",
         "Type": "GUARD",
         "Quantity": 2,
-        "Image": "extern/hero_realms/BAS-EN-071-orc-grunt.jpg"
+        "Image": "extern/hero_realms/BAS-EN-071-orc-grunt.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 2 }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "DRAW_CARD" }
+            ]
+        }
     },
     {
         "Name": "Rampage",
@@ -472,7 +951,13 @@
         "Faction": "WILD",
         "Type": "ACTION",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-073-rampage.jpg"
+        "Image": "extern/hero_realms/BAS-EN-073-rampage.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 6 },
+                { "Type": "DRAW_DISCARD_CARD", "Value": 2 }
+            ]
+        }
     },
     {
         "Name": "Torgen Rocksplitter",
@@ -482,7 +967,13 @@
         "Faction": "WILD",
         "Type": "GUARD",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-074-torgen-rocksplitter.jpg"
+        "Image": "extern/hero_realms/BAS-EN-074-torgen-rocksplitter.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 4 },
+                { "Type": "OPPONENT_DISCARD_CARD" }
+            ]
+        }
     },
     {
         "Name": "Spark",
@@ -491,7 +982,18 @@
         "Faction": "WILD",
         "Type": "ACTION",
         "Quantity": 3,
-        "Image": "extern/hero_realms/BAS-EN-075-spark.jpg"
+        "Image": "extern/hero_realms/BAS-EN-075-spark.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 3 },
+                { "Type": "OPPONENT_DISCARD_CARD" }
+            ]
+        },
+        "AllyAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 2 }
+            ]
+        }
     },
     {
         "Name": "Wolf Form",
@@ -500,7 +1002,18 @@
         "Faction": "WILD",
         "Type": "ACTION",
         "Quantity": 1,
-        "Image": "extern/hero_realms/BAS-EN-078-wolf-form.jpg"
+        "Image": "extern/hero_realms/BAS-EN-078-wolf-form.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 8 },
+                { "Type": "OPPONENT_DISCARD_CARD" }
+            ]
+        },
+        "SacrificeAbility": {
+            "Abilities": [
+                { "Type": "OPPONENT_DISCARD_CARD" }
+            ]
+        }
     },
     {
         "Name": "Wolf Shaman",
@@ -510,6 +1023,12 @@
         "Faction": "WILD",
         "Type": "CHAMPION",
         "Quantity": 2,
-        "Image": "extern/hero_realms/BAS-EN-079-wolf-shaman.jpg"
+        "Image": "extern/hero_realms/BAS-EN-079-wolf-shaman.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 2 },
+                { "Type": "COMBAT_EACH_FACTION", "Value": 1 }
+            ]
+        }
     }
 ]

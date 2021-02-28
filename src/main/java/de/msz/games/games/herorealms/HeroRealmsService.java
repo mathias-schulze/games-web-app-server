@@ -4,19 +4,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.collections4.map.HashedMap;
+import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.msz.games.games.Deck;
-import lombok.Setter;
+import de.msz.games.games.herorealms.config.HeroRealmsJsonAbility;
+import de.msz.games.games.herorealms.config.HeroRealmsJsonAbilitySet;
+import de.msz.games.games.herorealms.config.HeroRealmsJsonCard;
+import org.mapstruct.Mapping;
 
 @Service
 public class HeroRealmsService {
@@ -24,19 +28,32 @@ public class HeroRealmsService {
 	@Autowired
 	private ResourceLoader resourceLoader;
 	
-	private JsonCard fireGem;
-	private JsonCard[] marketDeck;
-	private JsonCard[] startingDeck;
+	@Autowired
+	private JsonConfigMapper jsonConfigMapper;
+	
+	private HeroRealmsJsonCard fireGem;
+	private HeroRealmsJsonCard[] marketDeck;
+	private HeroRealmsJsonCard[] startingDeck;
+	
+	private static Map<String, HeroRealmsCardAbilities> cardAbilities = new HashedMap<>();
 	
 	@PostConstruct
 	private void init() {
 		fireGem = readCards("classpath:games/hero_realms/cards/fire_gems_deck.json")[0];
 		marketDeck = readCards("classpath:games/hero_realms/cards/market_deck.json");
 		startingDeck = readCards("classpath:games/hero_realms/cards/starting_deck.json");
+		
+		addCardAbilities(fireGem);
+		for (HeroRealmsJsonCard marketDeckCard : marketDeck) {
+			addCardAbilities(marketDeckCard);
+		}
+		for (HeroRealmsJsonCard startingDeckCard : startingDeck) {
+			addCardAbilities(startingDeckCard);
+		}
 	}
 	
 	public FireGemsDeck createFireGemsDeck() {
-		return (new FireGemsDeck(fireGem.quantity, createCard(fireGem)));
+		return (new FireGemsDeck(fireGem.getQuantity(), jsonConfigMapper.jsonCardToCard(fireGem)));
 	}
 	
 	public Deck<HeroRealmsCard> createMarketDeck() {
@@ -47,12 +64,12 @@ public class HeroRealmsService {
 		return createDeck(startingDeck);
 	}
 	
-	private static Deck<HeroRealmsCard> createDeck(JsonCard[] jsonCards) {
+	private Deck<HeroRealmsCard> createDeck(HeroRealmsJsonCard[] jsonCards) {
 		
 		List<HeroRealmsCard> cards = new ArrayList<>();
-		for (JsonCard jsonCard : jsonCards) {
-			for (int i=0; i<jsonCard.quantity; i++) {
-				cards.add(createCard(jsonCard));
+		for (HeroRealmsJsonCard jsonCard : jsonCards) {
+			for (int i=0; i<jsonCard.getQuantity(); i++) {
+				cards.add(jsonConfigMapper.jsonCardToCard(jsonCard));
 			}
 		}
 		
@@ -61,41 +78,42 @@ public class HeroRealmsService {
 		return deck;
 	}
 	
-	private static HeroRealmsCard createCard(JsonCard jsonCard) {
+	private void addCardAbilities(HeroRealmsJsonCard jsonCard) {
 		
-		return HeroRealmsCard.builder()
-			.name(jsonCard.name)
-			.cost(jsonCard.cost)
-			.defense(jsonCard.defense)
-			.faction(jsonCard.faction == null ? null : HeroRealmsFaction.valueOf(jsonCard.faction))
-			.type(HeroRealmsCardType.valueOf(jsonCard.type))
-			.image(jsonCard.image)
-			.build();
+		cardAbilities.put(jsonCard.getName(), HeroRealmsCardAbilities.builder()
+				.primaryAbility(jsonConfigMapper.jsonAbilitySetToAbilitySet(jsonCard.getPrimaryAbility()))
+				.allyAbility(jsonConfigMapper.jsonAbilitySetToAbilitySet(jsonCard.getAllyAbility()))
+				.sacrificeAbility(jsonConfigMapper.jsonAbilitySetToAbilitySet(jsonCard.getSacrificeAbility()))
+				.build()
+		);
 	}
 	
-	private JsonCard[] readCards(String filename) {
+	private HeroRealmsJsonCard[] readCards(String filename) {
 		
 		ObjectMapper mapper = new ObjectMapper();
 		
 		try (InputStream jsonFile = resourceLoader.getResource(filename).getInputStream()) {
 			
-			return mapper.readValue(jsonFile, JsonCard[].class);
+			return mapper.readValue(jsonFile, HeroRealmsJsonCard[].class);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	
-	@JsonIgnoreProperties(ignoreUnknown = true)
-	@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-	@Setter
-	private static class JsonCard {
+	@Mapper(componentModel = "spring")
+	public interface JsonConfigMapper {
 		
-        String name;
-        int cost = 0;
-        int defense = 0;
-        String faction;
-        String type;
-        int quantity;
-        String image;
+		HeroRealmsCard jsonCardToCard(HeroRealmsJsonCard source);
+		@Mapping(target = "allyAbility", ignore = true)
+		@Mapping(target = "primaryAbility", ignore = true)
+		@Mapping(target = "quantity", ignore = true)
+		@Mapping(target = "sacrificeAbility", ignore = true)
+		HeroRealmsJsonCard cardToJsonCard(HeroRealmsCard destination);
+		
+		HeroRealmsAbilitySet jsonAbilitySetToAbilitySet(HeroRealmsJsonAbilitySet source);
+		HeroRealmsJsonAbilitySet abilitySetToJsonAbilitySet(HeroRealmsAbilitySet destination);
+		
+		HeroRealmsAbility jsonAbilityToAbility(HeroRealmsJsonAbility source);
+		HeroRealmsJsonAbility abilityToJsonAbility(HeroRealmsAbility destination);
 	}
 }

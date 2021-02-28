@@ -5,6 +5,16 @@
         "Cost": 2,
         "Type": "ITEM",
         "Quantity": 16,
-        "Image": "extern/hero_realms/BAS-EN-081-fire-gem.jpg"
+        "Image": "extern/hero_realms/BAS-EN-081-fire-gem.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "GOLD", "Value": 2 }
+            ]
+        },
+        "SacrificeAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 3 }
+            ]
+        }
     }
 ]

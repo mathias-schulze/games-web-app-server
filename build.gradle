@@ -3,6 +3,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 	id "org.sonarqube" version "3.1.1"
+	id "com.diffplug.eclipse.apt" version "3.28.2"
 }
 
 group = 'de.msz'
@@ -21,6 +22,9 @@ repositories {
 
 dependencies {
     def jacksonVersion = '2.12.1'
+    def mapstructVersion = '1.4.2.Final'
+    def lombokVersion = '1.18.16'
+    def lombokMapstructBindingVersion = '0.2.0'
     
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -31,13 +35,16 @@ dependencies {
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: jacksonVersion
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion
     implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
-    
-	compileOnly 'org.projectlombok:lombok'
+    implementation group: 'org.mapstruct', name: 'mapstruct', version: mapstructVersion
+	implementation group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+    implementation group: 'org.projectlombok', name: 'lombok-mapstruct-binding', version: lombokMapstructBindingVersion
 	
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-	annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor group: 'org.mapstruct', name: 'mapstruct-processor', version: mapstructVersion
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+    annotationProcessor group: 'org.projectlombok', name: 'lombok-mapstruct-binding', version: lombokMapstructBindingVersion
 	
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
