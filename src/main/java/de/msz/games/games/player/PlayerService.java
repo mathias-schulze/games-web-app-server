@@ -47,6 +47,8 @@ public class PlayerService {
 					.name(playersFuture.get().getString("name"))
 					.build();
 		} catch (InterruptedException | ExecutionException e) {
+			Thread.currentThread().interrupt();
+			
 			return Player.builder()
 					.id(id)
 					.name(e.getMessage())

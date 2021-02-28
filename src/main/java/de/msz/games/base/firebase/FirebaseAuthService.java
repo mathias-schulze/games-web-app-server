@@ -77,6 +77,7 @@ public class FirebaseAuthService {
 			}
 		} catch (InterruptedException | ExecutionException e) {
 			log.error("error on getting user data", e);
+			Thread.currentThread().interrupt();
 			return null;
 		}
 		

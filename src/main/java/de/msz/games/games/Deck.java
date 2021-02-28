@@ -42,15 +42,13 @@ public class Deck<T extends Card> {
 	@SuppressWarnings("unchecked")
 	public static <T extends Card> Deck<T> from(Map<String, Object> map, Class<T> clazz) {
 		
-		int size = Long.valueOf((long) map.get("size")).intValue();
-		
 		List<T> cards = ((List<Map<String, Object>>) map.get("cards")).stream()
 				.map(card -> Card.from(card, clazz))
 				.collect(Collectors.toList());
 		
 		Deck<T> deck = new Deck<>();
 		deck.setCards(cards);
-		deck.setSize(size);
+		deck.setSize((int) map.get("size"));
 		
 		return deck;
 	}

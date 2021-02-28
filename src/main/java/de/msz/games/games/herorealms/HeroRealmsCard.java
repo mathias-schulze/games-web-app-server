@@ -25,8 +25,8 @@ public class HeroRealmsCard implements Card {
     	
 		return HeroRealmsCard.builder()
     		.name((String) map.get("name"))
-    		.cost(Long.valueOf((long) map.get("cost")).intValue())
-    		.defense(Long.valueOf((long) map.get("defense")).intValue())
+    		.cost((int) map.get("cost"))
+    		.defense((int) map.get("defense"))
     		.faction(faction)
     		.type(HeroRealmsCardType.valueOf((String) map.get("type")))
     		.image((String) map.get("image"))
