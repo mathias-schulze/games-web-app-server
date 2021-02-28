@@ -27,7 +27,7 @@ public class HeroRealmsTable extends GameTable {
 	
 	private String emptyDeck;
 	
-	private FireGemsDeck fireGemsDeck;
+	private Deck<HeroRealmsCard> fireGemsDeck;
 	
 	private List<HeroRealmsCard> market;
 	
@@ -61,7 +61,7 @@ public class HeroRealmsTable extends GameTable {
 				.activePlayer(Player.from((Map<String, Object>) map.get("activePlayer")))
 				.cardBack((String) map.get("cardBack"))
 				.emptyDeck((String) map.get("emptyDeck"))
-				.fireGemsDeck(FireGemsDeck.fromSub((Map<String, Object>) map.get("fireGemsDeck")))
+				.fireGemsDeck(Deck.from((Map<String, Object>) map.get("fireGemsDeck"), HeroRealmsCard.class))
 				.market(market)
 				.marketDeck(Deck.from((Map<String, Object>) map.get("marketDeck"), HeroRealmsCard.class))
 				.sacrificePile(Deck.from((Map<String, Object>) map.get("sacrificePile"), HeroRealmsCard.class))

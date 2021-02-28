@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 
@@ -31,7 +32,7 @@ public class HeroRealmsService {
 	@Autowired
 	private JsonConfigMapper jsonConfigMapper;
 	
-	private HeroRealmsJsonCard fireGem;
+	private HeroRealmsJsonCard[] fireGemDeck;
 	private HeroRealmsJsonCard[] marketDeck;
 	private HeroRealmsJsonCard[] startingDeck;
 	
@@ -39,11 +40,13 @@ public class HeroRealmsService {
 	
 	@PostConstruct
 	private void init() {
-		fireGem = readCards("classpath:games/hero_realms/cards/fire_gems_deck.json")[0];
+		fireGemDeck = readCards("classpath:games/hero_realms/cards/fire_gems_deck.json");
 		marketDeck = readCards("classpath:games/hero_realms/cards/market_deck.json");
 		startingDeck = readCards("classpath:games/hero_realms/cards/starting_deck.json");
 		
-		addCardAbilities(fireGem);
+		for (HeroRealmsJsonCard fireGemDeckCard : fireGemDeck) {
+			addCardAbilities(fireGemDeckCard);
+		}
 		for (HeroRealmsJsonCard marketDeckCard : marketDeck) {
 			addCardAbilities(marketDeckCard);
 		}
@@ -52,8 +55,8 @@ public class HeroRealmsService {
 		}
 	}
 	
-	public FireGemsDeck createFireGemsDeck() {
-		return (new FireGemsDeck(fireGem.getQuantity(), jsonConfigMapper.jsonCardToCard(fireGem)));
+	public Deck<HeroRealmsCard> createFireGemsDeck() {
+		return createDeck(fireGemDeck);
 	}
 	
 	public Deck<HeroRealmsCard> createMarketDeck() {
@@ -69,7 +72,9 @@ public class HeroRealmsService {
 		List<HeroRealmsCard> cards = new ArrayList<>();
 		for (HeroRealmsJsonCard jsonCard : jsonCards) {
 			for (int i=0; i<jsonCard.getQuantity(); i++) {
-				cards.add(jsonConfigMapper.jsonCardToCard(jsonCard));
+				HeroRealmsCard card = jsonConfigMapper.jsonCardToCard(jsonCard);
+				card.setId(UUID.randomUUID().toString());
+				cards.add(card);
 			}
 		}
 		
@@ -103,6 +108,7 @@ public class HeroRealmsService {
 	@Mapper(componentModel = "spring")
 	public interface JsonConfigMapper {
 		
+		@Mapping(target = "id", ignore = true)
 		HeroRealmsCard jsonCardToCard(HeroRealmsJsonCard source);
 		@Mapping(target = "allyAbility", ignore = true)
 		@Mapping(target = "primaryAbility", ignore = true)

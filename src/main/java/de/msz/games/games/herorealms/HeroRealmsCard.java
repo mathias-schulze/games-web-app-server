@@ -9,7 +9,8 @@ import lombok.Data;
 @Data
 @Builder
 public class HeroRealmsCard implements Card {
-
+	
+	private String id;
     private String name;
     private int cost;
     private int defense;
