@@ -48,7 +48,7 @@ public class Deck<T extends Card> {
 		
 		Deck<T> deck = new Deck<>();
 		deck.setCards(cards);
-		deck.setSize((int) map.get("size"));
+		deck.setSize(((Long) map.get("size")).intValue());
 		
 		return deck;
 	}
