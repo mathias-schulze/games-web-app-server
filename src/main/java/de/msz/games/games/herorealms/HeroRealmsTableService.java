@@ -15,6 +15,7 @@ import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 
+import de.msz.games.base.UserService;
 import de.msz.games.base.firebase.FirebaseService;
 import de.msz.games.base.firebase.FirebaseService.FirestoreCollectionName;
 import de.msz.games.games.Deck;
@@ -34,8 +35,8 @@ public class HeroRealmsTableService extends GameTableService {
 	private transient HeroRealmsService heroRealmsService;
 	
 	@Autowired
-	public HeroRealmsTableService(FirebaseService firebaseService, PlayerService playerService) {
-		super(firebaseService, playerService);
+	public HeroRealmsTableService(FirebaseService firebaseService, PlayerService playerService, UserService userService) {
+		super(firebaseService, playerService, userService);
 	}
 	
 	@Override

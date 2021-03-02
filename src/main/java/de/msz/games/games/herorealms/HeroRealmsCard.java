@@ -24,6 +24,7 @@ public class HeroRealmsCard implements Card {
     	HeroRealmsFaction faction = (factionString == null) ? null : HeroRealmsFaction.valueOf(factionString);
     	
 		return HeroRealmsCard.builder()
+			.id((String) map.get("id"))
     		.name((String) map.get("name"))
     		.cost(((Long) map.get("cost")).intValue())
     		.defense(((Long) map.get("defense")).intValue())

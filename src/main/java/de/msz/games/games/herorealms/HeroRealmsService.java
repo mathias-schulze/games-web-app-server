@@ -11,6 +11,7 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.collections4.map.HashedMap;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,6 @@ import de.msz.games.games.Deck;
 import de.msz.games.games.herorealms.config.HeroRealmsJsonAbility;
 import de.msz.games.games.herorealms.config.HeroRealmsJsonAbilitySet;
 import de.msz.games.games.herorealms.config.HeroRealmsJsonCard;
-import org.mapstruct.Mapping;
 
 @Service
 public class HeroRealmsService {
@@ -36,7 +36,7 @@ public class HeroRealmsService {
 	private HeroRealmsJsonCard[] marketDeck;
 	private HeroRealmsJsonCard[] startingDeck;
 	
-	private static Map<String, HeroRealmsCardAbilities> cardAbilities = new HashedMap<>();
+	private Map<String, HeroRealmsCardAbilities> cardAbilities = new HashedMap<>();
 	
 	@PostConstruct
 	private void init() {
@@ -121,5 +121,9 @@ public class HeroRealmsService {
 		
 		HeroRealmsAbility jsonAbilityToAbility(HeroRealmsJsonAbility source);
 		HeroRealmsJsonAbility abilityToJsonAbility(HeroRealmsAbility destination);
+	}
+	
+	public HeroRealmsCardAbilities getCardAbilities(String cardName) {
+		return cardAbilities.get(cardName);
 	}
 }

@@ -10,6 +10,7 @@ import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 
+import de.msz.games.base.UserService;
 import de.msz.games.base.firebase.FirebaseService;
 import de.msz.games.base.firebase.FirebaseService.FirestoreCollectionName;
 import de.msz.games.games.player.Player;
@@ -23,10 +24,13 @@ public abstract class GameTableService {
 	
 	protected PlayerService playerService;
 	
-	public GameTableService(FirebaseService firebaseService, PlayerService playerService) {
+	private UserService userService;
+	
+	public GameTableService(FirebaseService firebaseService, PlayerService playerService, UserService userService) {
 		
 		this.firestore = firebaseService.getFirestore();
 		this.playerService = playerService;
+		this.userService = userService;
 	}
 	
 	public abstract GameTable loadTable(DocumentReference gameDocumentRef)
@@ -96,4 +100,17 @@ public abstract class GameTableService {
 			return size() > CACHE_SIZE;
 		}
 	}
+	
+	/**
+	 * Checks if the user is the active player.
+	 * 
+	 * @throws IllegalCallerException if the user is not the active player
+	 */
+	public void checkIsPlayerActive(GameTable table) throws IllegalCallerException {
+		
+		if (!table.getActivePlayer().getId().equals(userService.getCurrentUser())) {
+			throw new IllegalCallerException("user is not active");
+		}
+	}
+
 }

@@ -1,9 +1,9 @@
 package de.msz.games.games.herorealms;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 @Builder
 public class HeroRealmsCardAbilities {
 	
