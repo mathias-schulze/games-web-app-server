@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.msz.games.games.herorealms.HeroRealmsActionsService.NotEnoughGoldException;
 import lombok.Data;
 
 @RestController
@@ -30,16 +31,39 @@ public class HeroRealmsController {
 		tableService.storeTable(gameId, table);
 	}
 	
+	@Data
+	public static class PlayCardRequest {
+		private String cardId;
+	}
+	
+	@PostMapping("/{gameId}/buy_market_card")
+	public void buyMarketCard(@PathVariable("gameId") String gameId, @RequestBody BuyMarketCardRequest buyMarketCardRequest)
+			throws InterruptedException, ExecutionException, NotEnoughGoldException {
+		
+		HeroRealmsTable table = (HeroRealmsTable) tableService.getGameTable(gameId);
+		actionsService.buyMarketCard(table, buyMarketCardRequest.getCardId());
+		tableService.storeTable(gameId, table);
+	}
+	
+	@Data
+	public static class BuyMarketCardRequest {
+		private String cardId;
+	}
+	
+	@PostMapping("/{gameId}/buy_fire_gem")
+	public void buyFireGem(@PathVariable("gameId") String gameId)
+			throws InterruptedException, ExecutionException, NotEnoughGoldException {
+		
+		HeroRealmsTable table = (HeroRealmsTable) tableService.getGameTable(gameId);
+		actionsService.buyFireGem(table);
+		tableService.storeTable(gameId, table);
+	}
+	
 	@PostMapping("/{gameId}/end_turn")
 	public void endTurn(@PathVariable("gameId") String gameId) throws InterruptedException, ExecutionException {
 		
 		HeroRealmsTable table = (HeroRealmsTable) tableService.getGameTable(gameId);
 		actionsService.endTurn(table);
 		tableService.storeTable(gameId, table);
-	}
-	
-	@Data
-	public static class PlayCardRequest {
-		private String cardId;
 	}
 }

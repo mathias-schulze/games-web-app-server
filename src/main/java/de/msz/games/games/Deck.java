@@ -39,6 +39,15 @@ public class Deck<T extends Card> {
 		size = cards.size();
 	}
 	
+	public List<T> getCards() {
+		return Collections.unmodifiableList(cards);
+	}
+	
+	public void addCard(T card) {
+		cards.add(card);
+		size = cards.size();
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static <T extends Card> Deck<T> from(Map<String, Object> map, Class<T> clazz) {
 		

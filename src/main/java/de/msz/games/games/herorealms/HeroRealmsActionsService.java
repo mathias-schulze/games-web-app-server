@@ -6,6 +6,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import de.msz.games.games.Deck;
 import de.msz.games.games.herorealms.HeroRealmsTable.PlayerArea;
 import de.msz.games.games.player.Player;
 
@@ -76,6 +77,59 @@ public class HeroRealmsActionsService {
 				break;
 			default:
 				throw new NotImplementedException();
+		}
+	}
+	
+	void buyMarketCard(HeroRealmsTable table, String cardId) throws NotEnoughGoldException {
+		
+		heroRealmsTableService.checkIsPlayerActive(table);
+		
+		List<HeroRealmsCard> market = table.getMarket();
+		HeroRealmsCard card = market.stream()
+				.filter(marketCard -> marketCard.getId().equals(cardId))
+				.findAny()
+				.orElseThrow(() -> new IllegalArgumentException("unknown card '" + cardId + "'"));
+		
+		Player activePlayer = table.getActivePlayer();
+		PlayerArea playerArea = table.getPlayerAreas().get(activePlayer.getId());
+		
+		if (playerArea.getGold() < card.getCost()) {
+			throw new NotEnoughGoldException(playerArea.getGold(), card.getCost());
+		}
+		playerArea.setGold(playerArea.getGold()-card.getCost());
+		
+		market.set(market.indexOf(card), table.getMarketDeck().draw());
+		
+		playerArea.getDiscardPile().addCard(card);
+	}
+	
+	void buyFireGem(HeroRealmsTable table) throws NotEnoughGoldException {
+		
+		heroRealmsTableService.checkIsPlayerActive(table);
+		
+		Deck<HeroRealmsCard> fireGemsDeck = table.getFireGemsDeck();
+		if (fireGemsDeck.getSize() == 0) {
+			throw new IllegalArgumentException("fire gems deck is empty");
+		}
+		
+		Player activePlayer = table.getActivePlayer();
+		PlayerArea playerArea = table.getPlayerAreas().get(activePlayer.getId());
+		
+		HeroRealmsCard card = fireGemsDeck.getCards().get(0);
+		if (playerArea.getGold() < card.getCost()) {
+			throw new NotEnoughGoldException(playerArea.getGold(), card.getCost());
+		}
+		playerArea.setGold(playerArea.getGold()-card.getCost());
+		
+		playerArea.getDiscardPile().addCard(fireGemsDeck.draw());
+	}
+	
+	public static class NotEnoughGoldException extends Exception {
+		
+		private static final long serialVersionUID = 1L;
+		
+		public NotEnoughGoldException(int gold, int cost) {
+			super("not enough gold (" + gold + "), cost: " + cost);
 		}
 	}
 	
