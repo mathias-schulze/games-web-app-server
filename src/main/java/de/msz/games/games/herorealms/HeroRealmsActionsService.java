@@ -76,6 +76,9 @@ public class HeroRealmsActionsService {
 			case COMBAT:
 				area.setCombat(area.getCombat()+ability.getValue());
 				break;
+			case DRAW_CARD:
+				area.getHand().addAll(area.getDeck().draw(ability.getValue()));
+				break;
 			default:
 				throw new NotImplementedException();
 		}
