@@ -1,5 +1,6 @@
 package de.msz.games.games.herorealms;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.NotImplementedException;
@@ -138,19 +139,57 @@ public class HeroRealmsActionsService {
 		heroRealmsTableService.checkIsPlayerActive(table);
 		
 		Player activePlayer = table.getActivePlayer();
-		table.getPlayerAreas().get(activePlayer.getId()).setActive(false);
+		PlayerArea playerArea = table.getPlayerAreas().get(activePlayer.getId());
+		playerArea.setActive(false);
+		playerArea.setGold(0);
+		playerArea.setCombat(0);
+		
+		Deck<HeroRealmsCard> discardPile = playerArea.getDiscardPile();
+		
+		List<HeroRealmsCard> playedCards = playerArea.getPlayedCards();
+		discardPile.addCards(playedCards);
+		playedCards.clear();
+		
+		List<HeroRealmsCard> hand = playerArea.getHand();
+		discardPile.addCards(hand);
+		hand.clear();
+		
+		hand.addAll(draw(playerArea, 5));
+		
+		activateNextPlayer(table, activePlayer);
+	}
+	
+	private static List<HeroRealmsCard> draw(PlayerArea playerArea, int number) {
+		
+		Deck<HeroRealmsCard> deck = playerArea.getDeck();
+		
+		List<HeroRealmsCard> cards = new ArrayList<>(deck.draw(number));
+		
+		int missingCards = (number - cards.size());
+		if (missingCards > 0) {
+			Deck<HeroRealmsCard> discardPile = playerArea.getDiscardPile();
+			deck.setCards(discardPile.getCards(), true);
+			discardPile.clear();
+			
+			cards.addAll(deck.draw(missingCards));
+		}
+		
+		return cards;
+	}
+	
+	private static void activateNextPlayer(HeroRealmsTable table, Player activePlayer) {
 		
 		List<Player> allPlayers = table.getPlayers();
 		
-		int indexActivePlayer = allPlayers.indexOf(activePlayer);
-		if (indexActivePlayer == allPlayers.size()-1) {
-			indexActivePlayer = 0;
+		int indexNextPlayer = allPlayers.indexOf(activePlayer);
+		if (indexNextPlayer == allPlayers.size()-1) {
+			indexNextPlayer = 0;
 		} else {
-			indexActivePlayer++;
+			indexNextPlayer++;
 		}
 		
-		activePlayer = allPlayers.get(indexActivePlayer);
-		table.setActivePlayer(activePlayer);
-		table.getPlayerAreas().get(activePlayer.getId()).setActive(true);
+		Player nextPlayer = allPlayers.get(indexNextPlayer);
+		table.setActivePlayer(nextPlayer);
+		table.getPlayerAreas().get(nextPlayer.getId()).setActive(true);
 	}
 }

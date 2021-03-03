@@ -1,9 +1,11 @@
 package de.msz.games.games;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.Data;
@@ -25,18 +27,28 @@ public class Deck<T extends Card> {
 		return null;
 	}
 	
+	public List<T> draw(int number) {
+		
+		List<T> drawedCards = new ArrayList<>(number);
+		for (int i=0; i<number; i++) {
+			Optional.ofNullable(draw()).ifPresent(card -> drawedCards.add(card));
+		}
+		
+		return drawedCards;
+	}
+	
 	public final void setCards(List<T> cards) {
 		setCards(cards, false);
 	}
 	
 	public final void setCards(List<T> cards, boolean shuffle) {
 		
-		if (shuffle) {
-			Collections.shuffle(cards);
-		}
-		
 		this.cards = new LinkedList<>(cards);
 		size = cards.size();
+		
+		if (shuffle) {
+			Collections.shuffle(this.cards);
+		}
 	}
 	
 	public List<T> getCards() {
@@ -46,6 +58,16 @@ public class Deck<T extends Card> {
 	public void addCard(T card) {
 		cards.add(card);
 		size = cards.size();
+	}
+	
+	public void addCards(List<T> newCards) {
+		cards.addAll(newCards);
+		size = cards.size();
+	}
+	
+	public void clear() {
+		cards.clear();
+		size = 0;
 	}
 	
 	@SuppressWarnings("unchecked")
