@@ -316,7 +316,7 @@
         "PrimaryAbility": {
             "Abilities": [
                 { "Type": "COMBAT", "Value": 1 },
-                { "Type": "DRAW_CARD", "Value": 3 }
+                { "Type": "DRAW_CARD" }
             ]
         },
         "AllyAbility": {
@@ -336,7 +336,7 @@
         "PrimaryAbility": {
             "Abilities": [
                 { "Type": "GOLD", "Value": 2 },
-                { "Type": "DRAW_CARD", "Value": 3 }
+                { "Type": "DRAW_CARD" }
             ]
         },
         "AllyAbility": {
@@ -655,7 +655,6 @@
         "Quantity": 3,
         "Image": "extern/hero_realms/BAS-EN-051-influence.jpg",
         "PrimaryAbility": {
-            "Linkage": "OR",
             "Abilities": [
                 { "Type": "GOLD", "Value": 3 }
             ]
