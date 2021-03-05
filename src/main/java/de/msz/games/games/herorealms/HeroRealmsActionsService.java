@@ -3,16 +3,20 @@ package de.msz.games.games.herorealms;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import de.msz.games.base.NotificationService;
+import de.msz.games.base.NotificationService.NotificationType;
 import de.msz.games.games.Deck;
 import de.msz.games.games.herorealms.HeroRealmsTable.PlayerArea;
 import de.msz.games.games.player.Player;
 
 @Service
 public class HeroRealmsActionsService {
+	
+	@Autowired
+	private NotificationService notificationService;
 	
 	@Autowired
 	private HeroRealmsService heroRealmsService;
@@ -55,16 +59,17 @@ public class HeroRealmsActionsService {
 		processCardAbilities(area, cardAbilities.getPrimaryAbility());
 	}
 	
-	private static void processCardAbilities(PlayerArea area, HeroRealmsAbilitySet abilitieSet) {
+	private void processCardAbilities(PlayerArea area, HeroRealmsAbilitySet abilitieSet) {
 		
 		if (abilitieSet.getLinkage() == HeroRealmsAbilityLinkage.OR) {
-			throw new NotImplementedException();
+			notificationService.addNotification(NotificationType.ERROR, 
+					"ability linkage OR not implemented");
 		}
 		
 		abilitieSet.getAbilities().forEach(ability -> processCardAbility(area, ability));
 	}
 	
-	private static void processCardAbility(PlayerArea area, HeroRealmsAbility ability) {
+	private void processCardAbility(PlayerArea area, HeroRealmsAbility ability) {
 		
 		switch (ability.getType()) {
 			case HEALTH:
@@ -80,11 +85,12 @@ public class HeroRealmsActionsService {
 				area.getHand().addAll(area.getDeck().draw(ability.getValue()));
 				break;
 			default:
-				throw new NotImplementedException();
+				notificationService.addNotification(NotificationType.ERROR, 
+						"ability " + ability.getType() + " not implemented");
 		}
 	}
 	
-	void buyMarketCard(HeroRealmsTable table, String cardId) throws NotEnoughGoldException {
+	void buyMarketCard(HeroRealmsTable table, String cardId) {
 		
 		heroRealmsTableService.checkIsPlayerActive(table);
 		
@@ -98,7 +104,9 @@ public class HeroRealmsActionsService {
 		PlayerArea playerArea = table.getPlayerAreas().get(activePlayer.getId());
 		
 		if (playerArea.getGold() < card.getCost()) {
-			throw new NotEnoughGoldException(playerArea.getGold(), card.getCost());
+			notificationService.addNotification(NotificationType.WARNING, 
+					"nicht genug Gold (Preis: " + card.getCost() + ", Gold: " + playerArea.getGold() + ")");
+			return;
 		}
 		playerArea.setGold(playerArea.getGold()-card.getCost());
 		
@@ -107,7 +115,7 @@ public class HeroRealmsActionsService {
 		playerArea.getDiscardPile().addCard(card);
 	}
 	
-	void buyFireGem(HeroRealmsTable table) throws NotEnoughGoldException {
+	void buyFireGem(HeroRealmsTable table) {
 		
 		heroRealmsTableService.checkIsPlayerActive(table);
 		
@@ -121,20 +129,13 @@ public class HeroRealmsActionsService {
 		
 		HeroRealmsCard card = fireGemsDeck.getCards().get(0);
 		if (playerArea.getGold() < card.getCost()) {
-			throw new NotEnoughGoldException(playerArea.getGold(), card.getCost());
+			notificationService.addNotification(NotificationType.WARNING, 
+					"nicht genug Gold (Preis: " + card.getCost() + ", Gold: " + playerArea.getGold() + ")");
+			return;
 		}
 		playerArea.setGold(playerArea.getGold()-card.getCost());
 		
 		playerArea.getDiscardPile().addCard(fireGemsDeck.draw());
-	}
-	
-	public static class NotEnoughGoldException extends Exception {
-		
-		private static final long serialVersionUID = 1L;
-		
-		public NotEnoughGoldException(int gold, int cost) {
-			super("not enough gold (" + gold + "), cost: " + cost);
-		}
 	}
 	
 	void endTurn(HeroRealmsTable table) {
