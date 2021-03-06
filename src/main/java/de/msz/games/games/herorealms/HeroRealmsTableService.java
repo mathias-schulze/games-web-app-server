@@ -143,7 +143,7 @@ public class HeroRealmsTableService extends GameTableService {
 			.hand(own ? sourceArea.getHand() : Collections.emptyList())
 			.handSize(sourceArea.getHand().size())
 			.deck(createHiddenDeck(sourceArea.getDeck().getSize()))
-			.discardPile(createHiddenDeck(sourceArea.getDiscardPile().getSize()))
+			.discardPile(sourceArea.getDiscardPile())
 			.build();
 	}
 	
