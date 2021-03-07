@@ -90,6 +90,32 @@ public class HeroRealmsActionsService {
 		}
 	}
 	
+	void attack(HeroRealmsTable table, String playerId, int value) {
+		
+		heroRealmsTableService.checkIsPlayerActive(table);
+		
+		Player activePlayer = table.getActivePlayer();
+		PlayerArea activePlayerArea = table.getPlayerAreas().get(activePlayer.getId());
+		PlayerArea otherPlayerArea = table.getPlayerAreas().get(playerId);
+		
+		if (hasGuard(otherPlayerArea)) {
+			notificationService.addNotification(NotificationType.WARNING, 
+					"Kein Angriff möglich! Es ist ein Wächter vorhanden!");
+			return;
+		}
+		
+		activePlayerArea.setCombat(activePlayerArea.getCombat() - value);
+		otherPlayerArea.setHealth(otherPlayerArea.getHealth() - value);
+	}
+	
+	private static boolean hasGuard(PlayerArea playerArea) {
+		
+		return playerArea.getChampions().stream()
+				.filter(champion -> champion.getType() == HeroRealmsCardType.GUARD)
+				.findAny()
+				.isPresent();
+	}
+	
 	void buyMarketCard(HeroRealmsTable table, String cardId) {
 		
 		heroRealmsTableService.checkIsPlayerActive(table);

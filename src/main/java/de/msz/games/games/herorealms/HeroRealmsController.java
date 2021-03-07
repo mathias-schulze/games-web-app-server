@@ -40,6 +40,24 @@ public class HeroRealmsController {
 		private String cardId;
 	}
 	
+	@PostMapping("/{gameId}/attack")
+	@ResponseBody
+	public NotificationResponse playCard(@PathVariable("gameId") String gameId,
+			@RequestBody AttackRequest attackRequest) throws InterruptedException, ExecutionException {
+		
+		HeroRealmsTable table = (HeroRealmsTable) tableService.getGameTable(gameId);
+		actionsService.attack(table, attackRequest.getPlayerId(), attackRequest.getValue());
+		tableService.storeTable(gameId, table);
+		
+		return (new NotificationResponse());
+	}
+	
+	@Data
+	public static class AttackRequest {
+		private String playerId;
+		private int value;
+	}
+	
 	@PostMapping("/{gameId}/buy_market_card")
 	public NotificationResponse buyMarketCard(@PathVariable("gameId") String gameId,
 			@RequestBody BuyMarketCardRequest buyMarketCardRequest)
