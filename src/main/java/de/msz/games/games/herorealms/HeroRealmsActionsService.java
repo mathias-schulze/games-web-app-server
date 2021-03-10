@@ -90,7 +90,7 @@ public class HeroRealmsActionsService {
 		}
 	}
 	
-	void attack(HeroRealmsTable table, String playerId, int value) {
+	void attack(HeroRealmsTable table, String playerId, String championId, int value) {
 		
 		heroRealmsTableService.checkIsPlayerActive(table);
 		
@@ -98,14 +98,37 @@ public class HeroRealmsActionsService {
 		PlayerArea activePlayerArea = table.getPlayerAreas().get(activePlayer.getId());
 		PlayerArea otherPlayerArea = table.getPlayerAreas().get(playerId);
 		
-		if (hasGuard(otherPlayerArea)) {
+		HeroRealmsCard champion = null;
+		if (championId != null) {
+			champion = otherPlayerArea.getChampions().stream()
+					.filter(championCard -> championCard.getId().equals(championId))
+					.findAny().orElse(null);
+			if (champion == null) {
+				notificationService.addNotification(NotificationType.ERROR, 
+						"unknown champion " + championId);
+				return;
+			}
+		}
+		
+		if (hasGuard(otherPlayerArea) && (champion == null || champion.getType() != HeroRealmsCardType.GUARD)) {
 			notificationService.addNotification(NotificationType.WARNING, 
 					"Kein Angriff möglich! Es ist ein Wächter vorhanden!");
 			return;
 		}
 		
+		if (champion != null && champion.getDefense() > value) {
+			notificationService.addNotification(NotificationType.WARNING, 
+					"Nicht genug Schaden (" + value + ") um Champion zu besiegen (" + champion.getDefense() + ")!");
+			return;
+		}
+		
 		activePlayerArea.setCombat(activePlayerArea.getCombat() - value);
-		otherPlayerArea.setHealth(otherPlayerArea.getHealth() - value);
+		if (champion == null) {
+			otherPlayerArea.setHealth(otherPlayerArea.getHealth() - value);
+		} else {
+			otherPlayerArea.getChampions().remove(champion);
+			otherPlayerArea.getDiscardPile().addCard(champion);
+		}
 	}
 	
 	private static boolean hasGuard(PlayerArea playerArea) {

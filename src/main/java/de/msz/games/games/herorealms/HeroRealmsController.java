@@ -46,7 +46,7 @@ public class HeroRealmsController {
 			@RequestBody AttackRequest attackRequest) throws InterruptedException, ExecutionException {
 		
 		HeroRealmsTable table = (HeroRealmsTable) tableService.getGameTable(gameId);
-		actionsService.attack(table, attackRequest.getPlayerId(), attackRequest.getValue());
+		actionsService.attack(table, attackRequest.getPlayerId(), attackRequest.getChampionId(), attackRequest.getValue());
 		tableService.storeTable(gameId, table);
 		
 		return (new NotificationResponse());
@@ -55,6 +55,7 @@ public class HeroRealmsController {
 	@Data
 	public static class AttackRequest {
 		private String playerId;
+		private String championId;
 		private int value;
 	}
 	
