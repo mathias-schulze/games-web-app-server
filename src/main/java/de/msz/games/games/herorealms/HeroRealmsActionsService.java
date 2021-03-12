@@ -26,31 +26,46 @@ public class HeroRealmsActionsService {
 	
 	void playCard(HeroRealmsTable table, String cardId) {
 		
-		synchronized (cardId) {
-			heroRealmsTableService.checkIsPlayerActive(table);
-			
-			Player activePlayer = table.getActivePlayer();
-			PlayerArea playerArea = table.getPlayerAreas().get(activePlayer.getId());
-			List<HeroRealmsCard> hand = playerArea.getHand();
-			HeroRealmsCard card = hand.stream()
-					.filter(handCard -> handCard.getId().equals(cardId))
-					.findAny()
-					.orElseThrow(() -> new IllegalArgumentException("unknown card '" + cardId + "'"));
-			
-			processCardAbilities(playerArea, card);
-			
-			hand.remove(card);
-			
-			switch (card.getType()) {
-				case CHAMPION:
-				case GUARD:
-					playerArea.getChampions().add(card);
-					break;
-				default:
-					playerArea.getPlayedCards().add(card);
-					break;
-			}
+		heroRealmsTableService.checkIsPlayerActive(table);
+		
+		Player activePlayer = table.getActivePlayer();
+		PlayerArea playerArea = table.getPlayerAreas().get(activePlayer.getId());
+		List<HeroRealmsCard> hand = playerArea.getHand();
+		HeroRealmsCard card = hand.stream()
+				.filter(handCard -> handCard.getId().equals(cardId))
+				.findAny()
+				.orElseThrow(() -> new IllegalArgumentException("unknown card '" + cardId + "'"));
+		
+		processCardAbilities(playerArea, card);
+		
+		hand.remove(card);
+		
+		switch (card.getType()) {
+			case CHAMPION:
+			case GUARD:
+				playerArea.getChampions().add(card);
+				card.setReady(false);
+				break;
+			default:
+				playerArea.getPlayedCards().add(card);
+				break;
 		}
+	}
+	
+	void playChampion(HeroRealmsTable table, String championId) {
+		
+		heroRealmsTableService.checkIsPlayerActive(table);
+		
+		Player activePlayer = table.getActivePlayer();
+		PlayerArea playerArea = table.getPlayerAreas().get(activePlayer.getId());
+		
+		HeroRealmsCard champion = playerArea.getChampions().stream()
+				.filter(championCard -> championCard.getId().equals(championId))
+				.findAny()
+				.orElseThrow(() -> new IllegalArgumentException("unknown champion '" + championId + "'"));
+		
+		processCardAbilities(playerArea, champion);
+		champion.setReady(false);
 	}
 	
 	private void processCardAbilities(PlayerArea area, HeroRealmsCard card) {
@@ -208,6 +223,8 @@ public class HeroRealmsActionsService {
 		hand.clear();
 		
 		hand.addAll(draw(playerArea, 5));
+		
+		playerArea.getChampions().forEach(champion -> champion.setReady(true));
 		
 		activateNextPlayer(table, activePlayer);
 	}

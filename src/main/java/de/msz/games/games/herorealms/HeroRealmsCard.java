@@ -17,6 +17,8 @@ public class HeroRealmsCard implements Card {
     private HeroRealmsFaction faction;
     private HeroRealmsCardType type;
     private String image;
+    @Builder.Default
+    private boolean ready = true;
     
     public static HeroRealmsCard from(Map<String, Object> map) {
     	
@@ -31,6 +33,7 @@ public class HeroRealmsCard implements Card {
     		.faction(faction)
     		.type(HeroRealmsCardType.valueOf((String) map.get("type")))
     		.image((String) map.get("image"))
+    		.ready((Boolean) map.get("ready"))
     		.build();
     }
 }
