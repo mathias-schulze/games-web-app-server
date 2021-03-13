@@ -2,7 +2,9 @@ package de.msz.games.games.herorealms;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,21 +66,72 @@ public class HeroRealmsActionsService {
 				.findAny()
 				.orElseThrow(() -> new IllegalArgumentException("unknown champion '" + championId + "'"));
 		
-		processCardAbilities(playerArea, champion);
 		champion.setReady(false);
+		processCardAbilities(playerArea, champion);
 	}
 	
 	private void processCardAbilities(PlayerArea area, HeroRealmsCard card) {
 		
 		HeroRealmsCardAbilities cardAbilities = heroRealmsService.getCardAbilities(card.getName());
 		processCardAbilities(area, cardAbilities.getPrimaryAbility());
+		
+		if (card.getFaction() != null) {
+			switch(card.getFaction()) {
+				case GUILD:
+					int factionCountGuild = area.getFactionCountGuild();
+					area.setFactionCountGuild(++factionCountGuild);
+					processAllyAbilities(area, cardAbilities, HeroRealmsFaction.GUILD, factionCountGuild);
+					break;
+				case IMPERIAL:
+					int factionCountImperial = area.getFactionCountImperial();
+					area.setFactionCountImperial(++factionCountImperial);
+					processAllyAbilities(area, cardAbilities, HeroRealmsFaction.IMPERIAL, factionCountImperial);
+					break;
+				case NECROS:
+					int factionCountNecros = area.getFactionCountNecros();
+					area.setFactionCountNecros(++factionCountNecros);
+					processAllyAbilities(area, cardAbilities, HeroRealmsFaction.NECROS, factionCountNecros);
+					break;
+				case WILD:
+					int factionCountWild = area.getFactionCountWild();
+					area.setFactionCountWild(++factionCountWild);
+					processAllyAbilities(area, cardAbilities, HeroRealmsFaction.WILD, factionCountWild);
+					break;
+				default:
+					break;
+			}
+		}
+	}
+	
+	private void processAllyAbilities(PlayerArea area, HeroRealmsCardAbilities cardAbilities, HeroRealmsFaction faction,
+			int factionCount) {
+		
+		if (factionCount > 1) {
+			processCardAbilities(area, cardAbilities.getAllyAbility());
+		}
+		
+		if (factionCount == 2) {
+			List<HeroRealmsCard> playedChampions = area.getChampions().stream()
+					.filter(champion -> champion.isReady()).collect(Collectors.toList());
+			ListUtils.union(playedChampions, area.getPlayedCards()).stream()
+				.filter(card -> card.getFaction() == faction)
+				.forEach(otherCard -> {
+					HeroRealmsCardAbilities otherCardAbilities = heroRealmsService.getCardAbilities(otherCard.getName());
+					processCardAbilities(area, otherCardAbilities.getAllyAbility());
+				});
+		}
 	}
 	
 	private void processCardAbilities(PlayerArea area, HeroRealmsAbilitySet abilitieSet) {
 		
+		if (abilitieSet == null) {
+			return;
+		}
+		
 		if (abilitieSet.getLinkage() == HeroRealmsAbilityLinkage.OR) {
 			notificationService.addNotification(NotificationType.ERROR, 
 					"ability linkage OR not implemented");
+			return;
 		}
 		
 		abilitieSet.getAbilities().forEach(ability -> processCardAbility(area, ability));
@@ -225,6 +278,11 @@ public class HeroRealmsActionsService {
 		hand.addAll(draw(playerArea, 5));
 		
 		playerArea.getChampions().forEach(champion -> champion.setReady(true));
+		
+		playerArea.setFactionCountGuild(0);
+		playerArea.setFactionCountImperial(0);
+		playerArea.setFactionCountNecros(0);
+		playerArea.setFactionCountWild(0);
 		
 		activateNextPlayer(table, activePlayer);
 	}

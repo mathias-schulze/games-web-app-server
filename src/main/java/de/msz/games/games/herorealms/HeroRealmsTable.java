@@ -101,6 +101,18 @@ public class HeroRealmsTable extends GameTable {
 		
 		private List<HeroRealmsCard> champions;
 		
+		@Builder.Default
+		private int factionCountGuild = 0;
+		
+		@Builder.Default
+		private int factionCountImperial = 0;
+		
+		@Builder.Default
+		private int factionCountNecros = 0;
+		
+		@Builder.Default
+		private int factionCountWild = 0;
+		
 		public PlayerArea(Player player, int position) {
 			this.playerId = player.getId();
 			this.playerName = player.getName();
