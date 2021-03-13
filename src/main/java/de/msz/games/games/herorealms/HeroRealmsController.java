@@ -59,7 +59,7 @@ public class HeroRealmsController {
 	
 	@PostMapping("/{gameId}/attack")
 	@ResponseBody
-	public NotificationResponse playCard(@PathVariable("gameId") String gameId,
+	public NotificationResponse attack(@PathVariable("gameId") String gameId,
 			@RequestBody AttackRequest attackRequest) throws InterruptedException, ExecutionException {
 		
 		HeroRealmsTable table = (HeroRealmsTable) tableService.getGameTable(gameId);

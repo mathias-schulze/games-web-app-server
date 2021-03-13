@@ -1,7 +1,6 @@
 package de.msz.games.games;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,7 +76,6 @@ public class GameService {
 		
 		ApiFuture<QuerySnapshot> activeGamesFuture = 
 				firestore.collection(FirestoreCollectionName.GAMES.getName())
-					.whereIn("stage", Arrays.asList(Stage.NEW.name(), Stage.RUNNING.name()))
 					.orderBy("created")
 					.get();
 		
@@ -127,5 +125,11 @@ public class GameService {
 		gameTableService.storeTable(gameDocumentRef, table);
 		
 		gameDocumentRef.update("stage", Stage.RUNNING.name()).get();
+	}
+	
+	public void endGame(String id) throws InterruptedException, ExecutionException {
+		
+		DocumentReference gameDocumentRef = firestore.collection(FirestoreCollectionName.GAMES.getName()).document(id);
+		gameDocumentRef.update("stage", Stage.FINISHED.name()).get();
 	}
 }

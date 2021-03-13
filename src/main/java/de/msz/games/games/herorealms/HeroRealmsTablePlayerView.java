@@ -19,7 +19,7 @@ public class HeroRealmsTablePlayerView extends HeroRealmsTable {
 	
 	private List<PlayerArea> otherPlayerAreas;
 	
-	HeroRealmsTablePlayerView(List<Player> players) {
-		super(players);
+	HeroRealmsTablePlayerView(String gameId, List<Player> players) {
+		super(gameId, players);
 	}
 }

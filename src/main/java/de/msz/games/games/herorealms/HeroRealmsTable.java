@@ -37,12 +37,12 @@ public class HeroRealmsTable extends GameTable {
 	
 	private Map<String, PlayerArea> playerAreas;
 	
-	HeroRealmsTable(List<Player> players) {
-		super(players);
+	HeroRealmsTable(String gameId, List<Player> players) {
+		super(gameId, players);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static HeroRealmsTable from(Map<String, Object> map) {
+	public static HeroRealmsTable from(String gameId, Map<String, Object> map) {
 		
 		List<Player> players = ((List<Object>)map.get("players")).stream()
 				.map(player -> Player.from((Map<String, Object>) player))
@@ -57,6 +57,7 @@ public class HeroRealmsTable extends GameTable {
 				.collect(Collectors.toMap(PlayerArea::getPlayerId, Function.identity()));
 		
 		return HeroRealmsTable.builder()
+				.gameId(gameId)
 				.players(players)
 				.activePlayer(Player.from((Map<String, Object>) map.get("activePlayer")))
 				.cardBack((String) map.get("cardBack"))

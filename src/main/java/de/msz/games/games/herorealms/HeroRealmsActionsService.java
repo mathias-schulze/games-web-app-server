@@ -3,6 +3,7 @@ package de.msz.games.games.herorealms;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.ListUtils;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import de.msz.games.base.NotificationService;
 import de.msz.games.base.NotificationService.NotificationType;
 import de.msz.games.games.Deck;
+import de.msz.games.games.GameService;
 import de.msz.games.games.herorealms.HeroRealmsTable.PlayerArea;
 import de.msz.games.games.player.Player;
 
@@ -21,6 +23,9 @@ public class HeroRealmsActionsService {
 	
 	@Autowired
 	private NotificationService notificationService;
+	
+	@Autowired
+	private GameService gameService;
 	
 	@Autowired
 	private HeroRealmsService heroRealmsService;
@@ -160,7 +165,8 @@ public class HeroRealmsActionsService {
 		}
 	}
 	
-	void attack(HeroRealmsTable table, String playerId, String championId, int value) {
+	void attack(HeroRealmsTable table, String playerId, String championId, int value)
+			throws InterruptedException, ExecutionException {
 		
 		heroRealmsTableService.checkIsPlayerActive(table);
 		
@@ -200,6 +206,9 @@ public class HeroRealmsActionsService {
 			otherPlayerArea.setHealth(newHealth);
 			if (newHealth <= 0) {
 				removeKilledPlayer(otherPlayerArea);
+				if (isEndOfGame(table)) {
+					gameService.endGame(table.getGameId());
+				}
 			}
 			
 			activePlayerArea.setCombat(activePlayerArea.getCombat() - attackPlayerValue);
@@ -222,6 +231,12 @@ public class HeroRealmsActionsService {
 		area.getDeck().clear();
 		area.getDiscardPile().clear();
 		area.getChampions().clear();
+	}
+	
+	private static boolean isEndOfGame(HeroRealmsTable table) {
+		
+		return (table.getPlayerAreas().values().stream()
+				.filter(area -> !area.isKilled()).count() == 1);
 	}
 	
 	private static boolean hasGuard(PlayerArea playerArea) {

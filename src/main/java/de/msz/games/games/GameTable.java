@@ -13,11 +13,14 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder=true)
 public abstract class GameTable {
 	
+	private final transient String gameId;
+	
 	private final List<Player> players;
 	
 	private Player activePlayer;
 	
-	protected GameTable(List<Player> players) {
+	protected GameTable(String gameId, List<Player> players) {
+		this.gameId = gameId;
 		this.players = players;
 		this.activePlayer = CollectionUtils.isEmpty(players) ? null : players.get(0);
 	}

@@ -47,7 +47,7 @@ public class HeroRealmsTableService extends GameTableService {
 		
 		Map<String, Object> data = gameDocument.getData();
 		
-		return HeroRealmsTable.from(data);
+		return HeroRealmsTable.from(gameDocumentRef.getId(), data);
 	}
 	
 	@Override
@@ -55,7 +55,7 @@ public class HeroRealmsTableService extends GameTableService {
 		
 		List<Player> players = getPlayers(gameDocument, true);
 		
-		HeroRealmsTable table = new HeroRealmsTable(players);
+		HeroRealmsTable table = new HeroRealmsTable(gameDocument.getId(), players);
 		
 		table.setCardBack(Game.HERO_REALMS.getParameter().getImage());
 		table.setEmptyDeck("extern/hero_realms/hero_realms_empty.jpg");
