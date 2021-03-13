@@ -81,6 +81,8 @@ public class HeroRealmsTable extends GameTable {
 		
 		private boolean active;
 		
+		private boolean killed;
+		
 		private int position;
 		
 		private int health;
@@ -138,6 +140,7 @@ public class HeroRealmsTable extends GameTable {
 					.playerId((String) map.get("playerId"))
 					.playerName((String) map.get("playerName"))
 					.active((boolean) map.get("active"))
+					.killed((boolean) map.get("killed"))
 					.position(((Long) map.get("position")).intValue())
 					.health(((Long) map.get("health")).intValue())
 					.combat(((Long) map.get("combat")).intValue())
@@ -148,6 +151,10 @@ public class HeroRealmsTable extends GameTable {
 					.deck(Deck.from((Map<String, Object>) map.get("deck"), HeroRealmsCard.class))
 					.discardPile(Deck.from((Map<String, Object>) map.get("discardPile"), HeroRealmsCard.class))
 					.champions(champions)
+					.factionCountGuild(((Long) map.get("factionCountGuild")).intValue())
+					.factionCountImperial(((Long) map.get("factionCountImperial")).intValue())
+					.factionCountNecros(((Long) map.get("factionCountNecros")).intValue())
+					.factionCountWild(((Long) map.get("factionCountWild")).intValue())
 					.build();
 		}
 	}

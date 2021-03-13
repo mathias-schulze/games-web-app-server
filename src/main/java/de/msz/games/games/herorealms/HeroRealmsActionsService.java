@@ -2,9 +2,11 @@ package de.msz.games.games.herorealms;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.ListUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -190,13 +192,36 @@ public class HeroRealmsActionsService {
 			return;
 		}
 		
-		activePlayerArea.setCombat(activePlayerArea.getCombat() - value);
 		if (champion == null) {
-			otherPlayerArea.setHealth(otherPlayerArea.getHealth() - value);
+			int health = otherPlayerArea.getHealth();
+			int attackPlayerValue = NumberUtils.min(health, value);
+			int newHealth = health - attackPlayerValue;
+			
+			otherPlayerArea.setHealth(newHealth);
+			if (newHealth <= 0) {
+				removeKilledPlayer(otherPlayerArea);
+			}
+			
+			activePlayerArea.setCombat(activePlayerArea.getCombat() - attackPlayerValue);
 		} else {
+			int defense = champion.getDefense();
+			int attackChampionValue = NumberUtils.min(defense, value);
+			
 			otherPlayerArea.getChampions().remove(champion);
 			otherPlayerArea.getDiscardPile().addCard(champion);
+			
+			activePlayerArea.setCombat(activePlayerArea.getCombat() - attackChampionValue);
 		}
+	}
+	
+	private static void removeKilledPlayer(PlayerArea area) {
+		
+		area.setKilled(true);
+		
+		area.getHand().clear();
+		area.getDeck().clear();
+		area.getDiscardPile().clear();
+		area.getChampions().clear();
 	}
 	
 	private static boolean hasGuard(PlayerArea playerArea) {
@@ -307,17 +332,30 @@ public class HeroRealmsActionsService {
 	
 	private static void activateNextPlayer(HeroRealmsTable table, Player activePlayer) {
 		
-		List<Player> allPlayers = table.getPlayers();
-		
-		int indexNextPlayer = allPlayers.indexOf(activePlayer);
-		if (indexNextPlayer == allPlayers.size()-1) {
-			indexNextPlayer = 0;
-		} else {
-			indexNextPlayer++;
-		}
-		
-		Player nextPlayer = allPlayers.get(indexNextPlayer);
+		Player nextPlayer = getNextPlayerAlive(table, activePlayer);
 		table.setActivePlayer(nextPlayer);
 		table.getPlayerAreas().get(nextPlayer.getId()).setActive(true);
+	}
+	
+	private static Player getNextPlayerAlive(HeroRealmsTable table, Player activePlayer) {
+		
+		List<Player> allPlayers = table.getPlayers();
+		Map<String, PlayerArea> playerAreas = table.getPlayerAreas();
+		int indexNextPlayer = allPlayers.indexOf(activePlayer);
+		
+		Player nextPlayer;
+		PlayerArea nextPlayerArea;
+		do {
+			if (indexNextPlayer == allPlayers.size()-1) {
+				indexNextPlayer = 0;
+			} else {
+				indexNextPlayer++;
+			}
+			
+			nextPlayer = allPlayers.get(indexNextPlayer);
+			nextPlayerArea = playerAreas.get(nextPlayer.getId());
+		} while (nextPlayerArea.isKilled());
+		
+		return nextPlayer;
 	}
 }
