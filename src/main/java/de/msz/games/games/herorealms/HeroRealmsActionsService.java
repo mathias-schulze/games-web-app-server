@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,29 +81,29 @@ public class HeroRealmsActionsService {
 	private void processCardAbilities(PlayerArea area, HeroRealmsCard card) {
 		
 		HeroRealmsCardAbilities cardAbilities = heroRealmsService.getCardAbilities(card.getName());
-		processCardAbilities(area, cardAbilities.getPrimaryAbility());
+		processCardAbilities(area, card, cardAbilities.getPrimaryAbility());
 		
 		if (card.getFaction() != null) {
 			switch(card.getFaction()) {
 				case GUILD:
 					int factionCountGuild = area.getFactionCountGuild();
 					area.setFactionCountGuild(++factionCountGuild);
-					processAllyAbilities(area, cardAbilities, HeroRealmsFaction.GUILD, factionCountGuild);
+					processAllyAbilities(area, card, cardAbilities, HeroRealmsFaction.GUILD, factionCountGuild);
 					break;
 				case IMPERIAL:
 					int factionCountImperial = area.getFactionCountImperial();
 					area.setFactionCountImperial(++factionCountImperial);
-					processAllyAbilities(area, cardAbilities, HeroRealmsFaction.IMPERIAL, factionCountImperial);
+					processAllyAbilities(area, card, cardAbilities, HeroRealmsFaction.IMPERIAL, factionCountImperial);
 					break;
 				case NECROS:
 					int factionCountNecros = area.getFactionCountNecros();
 					area.setFactionCountNecros(++factionCountNecros);
-					processAllyAbilities(area, cardAbilities, HeroRealmsFaction.NECROS, factionCountNecros);
+					processAllyAbilities(area, card, cardAbilities, HeroRealmsFaction.NECROS, factionCountNecros);
 					break;
 				case WILD:
 					int factionCountWild = area.getFactionCountWild();
 					area.setFactionCountWild(++factionCountWild);
-					processAllyAbilities(area, cardAbilities, HeroRealmsFaction.WILD, factionCountWild);
+					processAllyAbilities(area, card, cardAbilities, HeroRealmsFaction.WILD, factionCountWild);
 					break;
 				default:
 					break;
@@ -110,26 +111,26 @@ public class HeroRealmsActionsService {
 		}
 	}
 	
-	private void processAllyAbilities(PlayerArea area, HeroRealmsCardAbilities cardAbilities, HeroRealmsFaction faction,
-			int factionCount) {
+	private void processAllyAbilities(PlayerArea area, HeroRealmsCard card, HeroRealmsCardAbilities cardAbilities,
+			HeroRealmsFaction faction, int factionCount) {
 		
 		if (factionCount > 1) {
-			processCardAbilities(area, cardAbilities.getAllyAbility());
+			processCardAbilities(area, card, cardAbilities.getAllyAbility());
 		}
 		
 		if (factionCount == 2) {
 			List<HeroRealmsCard> playedChampions = area.getChampions().stream()
 					.filter(champion -> champion.isReady()).collect(Collectors.toList());
 			ListUtils.union(playedChampions, area.getPlayedCards()).stream()
-				.filter(card -> card.getFaction() == faction)
+				.filter(playedCard -> playedCard.getFaction() == faction)
 				.forEach(otherCard -> {
 					HeroRealmsCardAbilities otherCardAbilities = heroRealmsService.getCardAbilities(otherCard.getName());
-					processCardAbilities(area, otherCardAbilities.getAllyAbility());
+					processCardAbilities(area, card, otherCardAbilities.getAllyAbility());
 				});
 		}
 	}
 	
-	private void processCardAbilities(PlayerArea area, HeroRealmsAbilitySet abilitieSet) {
+	private void processCardAbilities(PlayerArea area, HeroRealmsCard card, HeroRealmsAbilitySet abilitieSet) {
 		
 		if (abilitieSet == null) {
 			return;
@@ -141,10 +142,10 @@ public class HeroRealmsActionsService {
 			return;
 		}
 		
-		abilitieSet.getAbilities().forEach(ability -> processCardAbility(area, ability));
+		abilitieSet.getAbilities().forEach(ability -> processCardAbility(area, card, ability));
 	}
 	
-	private void processCardAbility(PlayerArea area, HeroRealmsAbility ability) {
+	private void processCardAbility(PlayerArea area, HeroRealmsCard card, HeroRealmsAbility ability) {
 		
 		switch (ability.getType()) {
 			case HEALTH:
@@ -156,6 +157,21 @@ public class HeroRealmsActionsService {
 			case COMBAT:
 				area.setCombat(area.getCombat()+ability.getValue());
 				break;
+			case HEALTH_EACH_CHAMPION:
+				area.setHealth(area.getHealth() + (area.getChampions().size() * ability.getValue()));
+				break;
+			case COMBAT_EACH_CHAMPION:
+				addCombatEachChampion(area, card, ability.getValue(), false, false);
+				break;
+			case COMBAT_EACH_OTHER_CHAMPION:
+				addCombatEachChampion(area, card, ability.getValue(), false, true);
+				break;
+			case COMBAT_EACH_OTHER_GUARD:
+				addCombatEachChampion(area, card, ability.getValue(), true, true);
+				break;
+			case COMBAT_EACH_OTHER_FACTION:
+				addCombatEachOtherFaction(area, card, ability.getValue());
+				break;
 			case DRAW_CARD:
 				area.getHand().addAll(area.getDeck().draw(ability.getValue()));
 				break;
@@ -163,6 +179,29 @@ public class HeroRealmsActionsService {
 				notificationService.addNotification(NotificationType.ERROR, 
 						"ability " + ability.getType() + " not implemented");
 		}
+	}
+	
+	private static void addCombatEachChampion(PlayerArea area, HeroRealmsCard card, int value, boolean onlyGuard,
+			boolean onlyOther) {
+		
+		int combatValue = (int) (value * area.getChampions().stream()
+				.filter(champion -> !(onlyGuard && champion.getType() != HeroRealmsCardType.GUARD))
+				.filter(champion -> !(onlyOther && champion.getId().equals(card.getId())))
+				.count());
+		
+		area.setCombat(area.getCombat() + combatValue);
+	}
+	
+	private static void addCombatEachOtherFaction(PlayerArea area, HeroRealmsCard card, int value) {
+		
+		HeroRealmsFaction faction = card.getFaction();
+		
+		int combatValue = (int) (value * CollectionUtils.union(area.getChampions(), area.getPlayedCards()).stream()
+				.filter(otherCard -> faction == otherCard.getFaction())
+				.filter(otherCard -> !card.getId().equals(otherCard.getId()))
+				.count());
+		
+		area.setCombat(area.getCombat() + combatValue);
 	}
 	
 	void attack(HeroRealmsTable table, String playerId, String championId, int value)

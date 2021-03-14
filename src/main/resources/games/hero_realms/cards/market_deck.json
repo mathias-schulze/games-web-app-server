@@ -150,7 +150,7 @@
         "PrimaryAbility": {
             "Abilities": [
                 { "Type": "COMBAT", "Value": 2 },
-                { "Type": "COMBAT_EACH_GUARD", "Value": 1 }
+                { "Type": "COMBAT_EACH_OTHER_GUARD", "Value": 1 }
             ]
         }
     },
@@ -166,7 +166,7 @@
         "PrimaryAbility": {
             "Abilities": [
                 { "Type": "COMBAT", "Value": 3 },
-                { "Type": "COMBAT_EACH_CHAMPION", "Value": 1 }
+                { "Type": "COMBAT_EACH_OTHER_CHAMPION", "Value": 1 }
             ]
         }
     },
@@ -1026,7 +1026,7 @@
         "PrimaryAbility": {
             "Abilities": [
                 { "Type": "COMBAT", "Value": 2 },
-                { "Type": "COMBAT_EACH_FACTION", "Value": 1 }
+                { "Type": "COMBAT_EACH_OTHER_FACTION", "Value": 1 }
             ]
         }
     }
