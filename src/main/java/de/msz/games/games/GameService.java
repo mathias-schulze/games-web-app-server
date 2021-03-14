@@ -89,6 +89,7 @@ public class GameService {
 					.no(gameDocument.getLong("no"))
 					.created(gameDocument.getLong("created"))
 					.game(Game.valueOf(gameDocument.getString("game")).getParameter().getName())
+					.stage(Stage.valueOf(gameDocument.getString("stage")))
 					.players(players)
 					.build();
 			
@@ -103,6 +104,7 @@ public class GameService {
 		private final Long no;
 		private final Long created;
 		private final String game;
+		private final Stage stage;
 		private final List<Player> players;
 	}
 	
