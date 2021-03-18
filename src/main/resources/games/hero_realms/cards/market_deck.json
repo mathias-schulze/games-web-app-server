@@ -509,6 +509,7 @@
         "Image": "extern/hero_realms/BAS-EN-038-smash-and-grab.jpg",
         "PrimaryAbility": {
             "Abilities": [
+                { "Type": "COMBAT", "Value": 6 },
                 { "Type": "PUT_CARD_DISCARD_PILE_TOP_DECK" }
             ]
         }
@@ -733,7 +734,7 @@
         },
         "AllyAbility": {
             "Abilities": [
-                { "Type": "DRAW_CARD" }
+                { "Type": "COMBAT", "Value": 3 }
             ]
         }
     },
