@@ -3,6 +3,7 @@ package de.msz.games.games.herorealms;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -292,6 +293,7 @@ public class HeroRealmsActionsService {
 		
 		List<HeroRealmsCard> market = table.getMarket();
 		HeroRealmsCard card = market.stream()
+				.filter(Objects::nonNull)
 				.filter(marketCard -> marketCard.getId().equals(cardId))
 				.findAny()
 				.orElseThrow(() -> new IllegalArgumentException("unknown card '" + cardId + "'"));

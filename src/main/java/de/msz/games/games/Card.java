@@ -9,6 +9,10 @@ public interface Card {
 	@SuppressWarnings("unchecked")
 	public static <T extends Card> T from(Map<String, Object> map, Class<T> clazz) {
 		
+		if (map == null) {
+			return null;
+		}
+		
 		if (clazz == HeroRealmsCard.class) {
 			return (T) HeroRealmsCard.from(map);
 		}
