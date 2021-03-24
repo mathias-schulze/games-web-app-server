@@ -57,6 +57,18 @@ public class HeroRealmsController {
 		private String championId;
 	}
 	
+	@PostMapping("/{gameId}/sacrifice")
+	@ResponseBody
+	public NotificationResponse sacrifice(@PathVariable("gameId") String gameId,
+			@RequestBody PlayCardRequest playCardRequest) throws InterruptedException, ExecutionException {
+		
+		HeroRealmsTable table = (HeroRealmsTable) tableService.getGameTable(gameId);
+		actionsService.sacrifice(table, playCardRequest.getCardId());
+		tableService.storeTable(gameId, table);
+		
+		return (new NotificationResponse());
+	}
+	
 	@PostMapping("/{gameId}/attack")
 	@ResponseBody
 	public NotificationResponse attack(@PathVariable("gameId") String gameId,

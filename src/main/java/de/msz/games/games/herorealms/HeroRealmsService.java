@@ -74,6 +74,7 @@ public class HeroRealmsService {
 			for (int i=0; i<jsonCard.getQuantity(); i++) {
 				HeroRealmsCard card = jsonConfigMapper.jsonCardToCard(jsonCard);
 				card.setId(UUID.randomUUID().toString());
+				card.setSacrifice(jsonCard.getSacrificeAbility() != null);
 				cards.add(card);
 			}
 		}
@@ -109,6 +110,8 @@ public class HeroRealmsService {
 	public interface JsonConfigMapper {
 		
 		@Mapping(target = "id", ignore = true)
+		@Mapping(target = "ready", ignore = true)
+		@Mapping(target = "sacrifice", ignore = true)
 		HeroRealmsCard jsonCardToCard(HeroRealmsJsonCard source);
 		@Mapping(target = "allyAbility", ignore = true)
 		@Mapping(target = "primaryAbility", ignore = true)

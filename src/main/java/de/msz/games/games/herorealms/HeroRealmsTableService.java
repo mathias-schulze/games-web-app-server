@@ -119,7 +119,7 @@ public class HeroRealmsTableService extends GameTableService {
 				.fireGemsDeck(table.getFireGemsDeck())
 				.market(table.getMarket())
 				.marketDeck(createHiddenDeck(table.getMarketDeck().getSize()))
-				.sacrificePile(createHiddenDeck(table.getSacrificePile().getSize()))
+				.sacrificePile(table.getSacrificePile())
 				.build();
 		
 		PlayerArea sourceArea = table.getPlayerAreas().get(playerId);

@@ -79,6 +79,23 @@ public class HeroRealmsActionsService {
 		processCardAbilities(playerArea, champion);
 	}
 	
+	void sacrifice(HeroRealmsTable table, String cardId) {
+		
+		heroRealmsTableService.checkIsPlayerActive(table);
+		
+		Player activePlayer = table.getActivePlayer();
+		PlayerArea playerArea = table.getPlayerAreas().get(activePlayer.getId());
+		List<HeroRealmsCard> playedCards = playerArea.getPlayedCards();
+		HeroRealmsCard card = playedCards.stream()
+				.filter(playedCard -> playedCard.getId().equals(cardId))
+				.findAny()
+				.orElseThrow(() -> new IllegalArgumentException("unknown card '" + cardId + "'"));
+		
+		processSacrificeAbilities(playerArea, card);
+		playedCards.remove(card);
+		table.getSacrificePile().addCard(card);
+	}
+	
 	private void processCardAbilities(PlayerArea area, HeroRealmsCard card) {
 		
 		HeroRealmsCardAbilities cardAbilities = heroRealmsService.getCardAbilities(card.getName());
@@ -129,6 +146,18 @@ public class HeroRealmsActionsService {
 					processCardAbilities(area, card, otherCardAbilities.getAllyAbility());
 				});
 		}
+	}
+	
+	private void processSacrificeAbilities(PlayerArea area, HeroRealmsCard card) {
+		
+		HeroRealmsCardAbilities cardAbilities = heroRealmsService.getCardAbilities(card.getName());
+		HeroRealmsAbilitySet sacrificeAbilities = cardAbilities.getSacrificeAbility();
+		
+		if (sacrificeAbilities.getAbilities().isEmpty()) {
+			throw new IllegalArgumentException("no sacrifice ability for card '" + card.getId() + "'");
+		}
+		
+		processCardAbilities(area, card, sacrificeAbilities);
 	}
 	
 	private void processCardAbilities(PlayerArea area, HeroRealmsCard card, HeroRealmsAbilitySet abilitieSet) {

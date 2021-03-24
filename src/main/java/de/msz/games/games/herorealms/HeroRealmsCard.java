@@ -19,6 +19,8 @@ public class HeroRealmsCard implements Card {
     private String image;
     @Builder.Default
     private boolean ready = true;
+    @Builder.Default
+    private boolean sacrifice = false;
     
     public static HeroRealmsCard from(Map<String, Object> map) {
     	
@@ -34,6 +36,7 @@ public class HeroRealmsCard implements Card {
     		.type(HeroRealmsCardType.valueOf((String) map.get("type")))
     		.image((String) map.get("image"))
     		.ready((Boolean) map.get("ready"))
+    		.sacrifice((Boolean) map.get("sacrifice"))
     		.build();
     }
 }
