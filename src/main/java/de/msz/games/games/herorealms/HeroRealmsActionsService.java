@@ -2,8 +2,10 @@ package de.msz.games.games.herorealms;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -11,6 +13,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import de.msz.games.base.NotificationService;
@@ -34,6 +37,9 @@ public class HeroRealmsActionsService {
 	
 	@Autowired
 	private HeroRealmsTableService heroRealmsTableService;
+	
+	@Autowired
+	private MessageSource messageSource;
 	
 	void playCard(HeroRealmsTable table, String cardId) {
 		
@@ -62,7 +68,7 @@ public class HeroRealmsActionsService {
 				break;
 		}
 	}
-	
+
 	void playChampion(HeroRealmsTable table, String championId) {
 		
 		heroRealmsTableService.checkIsPlayerActive(table);
@@ -77,6 +83,48 @@ public class HeroRealmsActionsService {
 		
 		champion.setReady(false);
 		processCardAbilities(playerArea, champion);
+	}
+
+	void makeDecision(HeroRealmsTable table, String decisionId, String optionId) {
+		
+		heroRealmsTableService.checkIsPlayerActive(table);
+		
+		Player activePlayer = table.getActivePlayer();
+		PlayerArea playerArea = table.getPlayerAreas().get(activePlayer.getId());
+		
+		HeroRealmsDecision madeDecision = playerArea.getDecisions().stream()
+				.filter(decision -> decision.getId().equals(decisionId))
+				.findAny()
+				.orElseThrow(() -> new IllegalArgumentException("unknown decision '" + decisionId + "'"));
+		
+		switch (madeDecision.getType()) {
+			case SELECT_ONE:
+				makeDecisionSelect(playerArea, madeDecision, optionId);
+				break;
+			case OPTIONAL:
+				break;
+			default:
+				break;
+		}
+		
+		playerArea.getDecisions().remove(madeDecision);
+	}
+	
+	void makeDecisionSelect(PlayerArea area, HeroRealmsDecision decision, String optionId) {
+		
+		HeroRealmsDecisionOption selectedOption = decision.getOptions().stream()
+				.filter(option -> option.getId().equals(optionId))
+				.findAny()
+				.orElseThrow(() -> new IllegalArgumentException(
+						"unknown option '" + optionId + "' for decision '" + decision.getId() + "'"));
+		
+		HeroRealmsCard card4Decision = CollectionUtils.union(area.getPlayedCards(), area.getChampions()).stream()
+				.filter(card -> card.getId().equals(decision.getCardId()))
+				.findAny()
+				.orElseThrow(() -> new IllegalArgumentException(
+						"unknown card '" + decision.getCardId() + "' for decision '" + decision.getId() + "'"));
+		
+		processCardAbility(area, card4Decision, selectedOption.getAbilityType(), selectedOption.getValue());
 	}
 	
 	void sacrifice(HeroRealmsTable table, String cardId) {
@@ -167,47 +215,79 @@ public class HeroRealmsActionsService {
 		}
 		
 		if (abilitieSet.getLinkage() == HeroRealmsAbilityLinkage.OR) {
-			notificationService.addNotification(NotificationType.ERROR, 
-					"ability linkage OR not implemented");
-			return;
+			addOrDecisionOptions(area, card, abilitieSet);
+		} else {
+			abilitieSet.getAbilities().forEach(ability -> processCardAbility(area, card, ability));
 		}
+	}
+	
+	private void addOrDecisionOptions(PlayerArea area, HeroRealmsCard card, HeroRealmsAbilitySet abilitieSet) {
 		
-		abilitieSet.getAbilities().forEach(ability -> processCardAbility(area, card, ability));
+		List<HeroRealmsDecisionOption> options = abilitieSet.getAbilities().stream()
+				.map(ability -> {
+					String text = messageSource.getMessage("hero_realms.ability." + ability.getType(), 
+							(ability.getValue() == 0 ? null : new Integer[] {ability.getValue()}),
+							Locale.getDefault());
+					return HeroRealmsDecisionOption.builder()
+							.id(UUID.randomUUID().toString())
+							.text(text)
+							.abilityType(ability.getType())
+							.value(ability.getValue())
+							.build();
+				})
+				.collect(Collectors.toList());
+		
+		String decisionText = options.stream()
+				.map(option -> option.getText())
+				.collect(Collectors.joining(" oder "));
+		
+		HeroRealmsDecision decision = HeroRealmsDecision.builder()
+				.id(UUID.randomUUID().toString())
+				.cardId(card.getId())
+				.type(HeroRealmsDecisionType.SELECT_ONE)
+				.text(decisionText)
+				.options(options)
+				.build();
+		
+		area.getDecisions().add(decision);
 	}
 	
 	private void processCardAbility(PlayerArea area, HeroRealmsCard card, HeroRealmsAbility ability) {
+		processCardAbility(area, card, ability.getType(), ability.getValue());
+	}
+	
+	private void processCardAbility(PlayerArea area, HeroRealmsCard card, HeroRealmsAbilityType type, int value) {
 		
-		switch (ability.getType()) {
+		switch (type) {
 			case HEALTH:
-				area.setHealth(area.getHealth()+ability.getValue());
+				area.setHealth(area.getHealth()+value);
 				break;
 			case GOLD:
-				area.setGold(area.getGold()+ability.getValue());
+				area.setGold(area.getGold()+value);
 				break;
 			case COMBAT:
-				area.setCombat(area.getCombat()+ability.getValue());
+				area.setCombat(area.getCombat()+value);
 				break;
 			case HEALTH_EACH_CHAMPION:
-				area.setHealth(area.getHealth() + (area.getChampions().size() * ability.getValue()));
+				area.setHealth(area.getHealth() + (area.getChampions().size() * value));
 				break;
 			case COMBAT_EACH_CHAMPION:
-				addCombatEachChampion(area, card, ability.getValue(), false, false);
+				addCombatEachChampion(area, card, value, false, false);
 				break;
 			case COMBAT_EACH_OTHER_CHAMPION:
-				addCombatEachChampion(area, card, ability.getValue(), false, true);
+				addCombatEachChampion(area, card, value, false, true);
 				break;
 			case COMBAT_EACH_OTHER_GUARD:
-				addCombatEachChampion(area, card, ability.getValue(), true, true);
+				addCombatEachChampion(area, card, value, true, true);
 				break;
 			case COMBAT_EACH_OTHER_FACTION:
-				addCombatEachOtherFaction(area, card, ability.getValue());
+				addCombatEachOtherFaction(area, card, value);
 				break;
 			case DRAW_CARD:
-				area.getHand().addAll(area.getDeck().draw(ability.getValue()));
+				area.getHand().addAll(area.getDeck().draw(value));
 				break;
 			default:
-				notificationService.addNotification(NotificationType.ERROR, 
-						"ability " + ability.getType() + " not implemented");
+				notificationService.addNotification(NotificationType.ERROR, "ability " + type + " not implemented");
 		}
 	}
 	
@@ -388,6 +468,8 @@ public class HeroRealmsActionsService {
 		hand.addAll(draw(playerArea, 5));
 		
 		playerArea.getChampions().forEach(champion -> champion.setReady(true));
+		
+		playerArea.getDecisions().clear();
 		
 		playerArea.setFactionCountGuild(0);
 		playerArea.setFactionCountImperial(0);

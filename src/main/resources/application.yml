@@ -1,3 +1,7 @@
+spring:
+  messages:
+    basename: messages,games.hero_realms.messages
+
 firebase:
   firestore:
     database-url: https://msz-games.firebaseio.com

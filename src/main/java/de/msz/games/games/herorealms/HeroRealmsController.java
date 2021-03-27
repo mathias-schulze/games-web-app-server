@@ -57,6 +57,24 @@ public class HeroRealmsController {
 		private String championId;
 	}
 	
+	@PostMapping("/{gameId}/make_decision")
+	@ResponseBody
+	public NotificationResponse makeDecision(@PathVariable("gameId") String gameId,
+			@RequestBody MakeDecisionRequest makeDecisionRequest) throws InterruptedException, ExecutionException {
+		
+		HeroRealmsTable table = (HeroRealmsTable) tableService.getGameTable(gameId);
+		actionsService.makeDecision(table, makeDecisionRequest.getDecisionId(), makeDecisionRequest.getOptionId());
+		tableService.storeTable(gameId, table);
+		
+		return (new NotificationResponse());
+	}
+	
+	@Data
+	public static class MakeDecisionRequest {
+		private String decisionId;
+		private String optionId;
+	}
+	
 	@PostMapping("/{gameId}/sacrifice")
 	@ResponseBody
 	public NotificationResponse sacrifice(@PathVariable("gameId") String gameId,

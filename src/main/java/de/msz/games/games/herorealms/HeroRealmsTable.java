@@ -1,7 +1,9 @@
 package de.msz.games.games.herorealms;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -104,6 +106,8 @@ public class HeroRealmsTable extends GameTable {
 		
 		private List<HeroRealmsCard> champions;
 		
+		private List<HeroRealmsDecision> decisions;
+		
 		@Builder.Default
 		private int factionCountGuild = 0;
 		
@@ -137,6 +141,11 @@ public class HeroRealmsTable extends GameTable {
 					.map(card -> Card.from(card, HeroRealmsCard.class))
 					.collect(Collectors.toList());
 			
+			List<HeroRealmsDecision> decisions = Optional.ofNullable((List<Map<String, Object>>) map.get("decisions"))
+			 		.orElse(Collections.emptyList()).stream()
+					.map(decision -> HeroRealmsDecision.from(decision))
+					.collect(Collectors.toList());
+			
 			return PlayerArea.builder()
 					.playerId((String) map.get("playerId"))
 					.playerName((String) map.get("playerName"))
@@ -152,6 +161,7 @@ public class HeroRealmsTable extends GameTable {
 					.deck(Deck.from((Map<String, Object>) map.get("deck"), HeroRealmsCard.class))
 					.discardPile(Deck.from((Map<String, Object>) map.get("discardPile"), HeroRealmsCard.class))
 					.champions(champions)
+					.decisions(decisions)
 					.factionCountGuild(((Long) map.get("factionCountGuild")).intValue())
 					.factionCountImperial(((Long) map.get("factionCountImperial")).intValue())
 					.factionCountNecros(((Long) map.get("factionCountNecros")).intValue())
