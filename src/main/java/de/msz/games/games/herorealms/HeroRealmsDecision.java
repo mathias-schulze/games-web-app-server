@@ -1,7 +1,9 @@
 package de.msz.games.games.herorealms;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.Builder;
@@ -20,7 +22,8 @@ public class HeroRealmsDecision {
 	@SuppressWarnings("unchecked")
 	public static HeroRealmsDecision from(Map<String, Object> map) {
 		
-		List<HeroRealmsDecisionOption> options = ((List<Map<String, Object>>) map.get("options")).stream()
+		List<HeroRealmsDecisionOption> options = Optional.ofNullable((List<Map<String, Object>>) map.get("options"))
+				.orElse(Collections.emptyList()).stream()
 				.map(option -> HeroRealmsDecisionOption.from(option))
 				.collect(Collectors.toList());
 		

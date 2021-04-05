@@ -225,12 +225,9 @@ public class HeroRealmsActionsService {
 		
 		List<HeroRealmsDecisionOption> options = abilitieSet.getAbilities().stream()
 				.map(ability -> {
-					String text = messageSource.getMessage("hero_realms.ability." + ability.getType(), 
-							(ability.getValue() == 0 ? null : new Integer[] {ability.getValue()}),
-							Locale.getDefault());
 					return HeroRealmsDecisionOption.builder()
 							.id(UUID.randomUUID().toString())
-							.text(text)
+							.text(getAbilityMessageText(ability.getType(), ability.getValue()))
 							.abilityType(ability.getType())
 							.value(ability.getValue())
 							.build();
@@ -250,6 +247,12 @@ public class HeroRealmsActionsService {
 				.build();
 		
 		area.getDecisions().add(decision);
+	}
+	
+	private String getAbilityMessageText(HeroRealmsAbilityType type, int value) {
+		return messageSource.getMessage("hero_realms.ability." + type, 
+				(value == 0 ? null : new Integer[] {value}),
+				Locale.getDefault());
 	}
 	
 	private void processCardAbility(PlayerArea area, HeroRealmsCard card, HeroRealmsAbility ability) {
@@ -286,6 +289,16 @@ public class HeroRealmsActionsService {
 			case DRAW_CARD:
 				area.getHand().addAll(area.getDeck().draw(value));
 				break;
+			case DRAW_DISCARD_CARD:
+			case OPPONENT_DISCARD_CARD:
+			case PREPARE_CHAMPION:
+			case STUN_TARGET_CHAMPION:
+			case PUT_CARD_DISCARD_PILE_TOP_DECK:
+			case PUT_CHAMPION_DISCARD_PILE_TOP_DECK:
+			case SACRIFICE_HAND_OR_DISCARD_PILE:
+			case SACRIFICE_HAND_OR_DISCARD_PILE_COMBAT:	
+				addOptionalDecision(area, card, type, value);
+				break;
 			default:
 				notificationService.addNotification(NotificationType.ERROR, "ability " + type + " not implemented");
 		}
@@ -312,6 +325,18 @@ public class HeroRealmsActionsService {
 				.count());
 		
 		area.setCombat(area.getCombat() + combatValue);
+	}
+	
+	private void addOptionalDecision(PlayerArea area, HeroRealmsCard card, HeroRealmsAbilityType type, int value) {
+		
+		HeroRealmsDecision decision = HeroRealmsDecision.builder()
+				.id(UUID.randomUUID().toString())
+				.cardId(card.getId())
+				.type(HeroRealmsDecisionType.OPTIONAL)
+				.text(getAbilityMessageText(type, value))
+				.build();
+		
+		area.getDecisions().add(decision);
 	}
 	
 	void attack(HeroRealmsTable table, String playerId, String championId, int value)
