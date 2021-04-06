@@ -186,7 +186,9 @@ public class HeroRealmsActionsService {
 		
 		if (factionCount == 2) {
 			List<HeroRealmsCard> playedChampions = area.getChampions().stream()
-					.filter(champion -> !champion.isReady()).collect(Collectors.toList());
+					.filter(champion -> !champion.isReady())
+					.filter(champion -> !champion.getId().equals(card.getId()))
+					.collect(Collectors.toList());
 			ListUtils.union(playedChampions, area.getPlayedCards()).stream()
 				.filter(playedCard -> playedCard.getFaction() == faction)
 				.forEach(otherCard -> {
