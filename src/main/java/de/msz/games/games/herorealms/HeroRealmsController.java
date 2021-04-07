@@ -86,6 +86,18 @@ public class HeroRealmsController {
 		
 		return (new NotificationResponse());
 	}
+
+	@PostMapping("/{gameId}/discard")
+	@ResponseBody
+	public NotificationResponse discard(@PathVariable("gameId") String gameId,
+			@RequestBody PlayCardRequest playCardRequest) throws InterruptedException, ExecutionException {
+		
+		HeroRealmsTable table = (HeroRealmsTable) tableService.getGameTable(gameId);
+		actionsService.discard(table, playCardRequest.getCardId());
+		tableService.storeTable(gameId, table);
+		
+		return (new NotificationResponse());
+	}
 	
 	@PostMapping("/{gameId}/attack")
 	@ResponseBody

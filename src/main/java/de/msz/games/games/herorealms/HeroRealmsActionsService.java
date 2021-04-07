@@ -1,6 +1,7 @@
 package de.msz.games.games.herorealms;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -102,6 +103,7 @@ public class HeroRealmsActionsService {
 				makeDecisionSelect(playerArea, madeDecision, optionId);
 				break;
 			case OPTIONAL:
+				makeDecisionOptional(playerArea, madeDecision);
 				break;
 			default:
 				break;
@@ -118,13 +120,32 @@ public class HeroRealmsActionsService {
 				.orElseThrow(() -> new IllegalArgumentException(
 						"unknown option '" + optionId + "' for decision '" + decision.getId() + "'"));
 		
-		HeroRealmsCard card4Decision = CollectionUtils.union(area.getPlayedCards(), area.getChampions()).stream()
+		HeroRealmsCard card4Decision = getCard4Decision(area, decision);
+		
+		processCardAbility(area, card4Decision, selectedOption.getAbilityType(), selectedOption.getValue());
+	}
+	
+	private void makeDecisionOptional(PlayerArea area, HeroRealmsDecision decision) {
+		
+		HeroRealmsDecisionOption selectedOption = decision.getOptions().get(0);
+		
+		HeroRealmsAbilityType abilityType = selectedOption.getAbilityType();
+		switch (abilityType) {
+			case DRAW_DISCARD_CARD:
+				area.setActionMode(HeroRealmsSpecialActionMode.DISCARD);
+				break;
+			default:
+				notificationService.addNotification(NotificationType.ERROR, "ability " + abilityType + " not implemented");
+		}
+	}
+	
+	private static HeroRealmsCard getCard4Decision(PlayerArea area, HeroRealmsDecision decision) {
+		
+		return CollectionUtils.union(area.getPlayedCards(), area.getChampions()).stream()
 				.filter(card -> card.getId().equals(decision.getCardId()))
 				.findAny()
 				.orElseThrow(() -> new IllegalArgumentException(
 						"unknown card '" + decision.getCardId() + "' for decision '" + decision.getId() + "'"));
-		
-		processCardAbility(area, card4Decision, selectedOption.getAbilityType(), selectedOption.getValue());
 	}
 	
 	void sacrifice(HeroRealmsTable table, String cardId) {
@@ -142,6 +163,23 @@ public class HeroRealmsActionsService {
 		processSacrificeAbilities(playerArea, card);
 		playedCards.remove(card);
 		table.getSacrificePile().addCard(card);
+	}
+	
+	void discard(HeroRealmsTable table, String cardId) {
+		
+		heroRealmsTableService.checkIsPlayerActive(table);
+		
+		Player activePlayer = table.getActivePlayer();
+		PlayerArea playerArea = table.getPlayerAreas().get(activePlayer.getId());
+		List<HeroRealmsCard> hand = playerArea.getHand();
+		HeroRealmsCard card = hand.stream()
+				.filter(handCard -> handCard.getId().equals(cardId))
+				.findAny()
+				.orElseThrow(() -> new IllegalArgumentException("unknown card '" + cardId + "'"));
+		
+		hand.remove(card);
+		playerArea.getDiscardPile().addCard(card);
+		playerArea.setActionMode(null);
 	}
 	
 	private void processCardAbilities(PlayerArea area, HeroRealmsCard card) {
@@ -298,6 +336,10 @@ public class HeroRealmsActionsService {
 			case PUT_CARD_DISCARD_PILE_TOP_DECK:
 			case PUT_CHAMPION_DISCARD_PILE_TOP_DECK:
 			case SACRIFICE_HAND_OR_DISCARD_PILE:
+				for (int i=0; i<value; i++) {
+					addOptionalDecision(area, card, type, value);
+				}
+				break;
 			case SACRIFICE_HAND_OR_DISCARD_PILE_COMBAT:	
 				addOptionalDecision(area, card, type, value);
 				break;
@@ -331,11 +373,19 @@ public class HeroRealmsActionsService {
 	
 	private void addOptionalDecision(PlayerArea area, HeroRealmsCard card, HeroRealmsAbilityType type, int value) {
 		
+		HeroRealmsDecisionOption option = HeroRealmsDecisionOption.builder()
+				.id(UUID.randomUUID().toString())
+				.text(getAbilityMessageText(type, value))
+				.abilityType(type)
+				.value(value)
+				.build();
+		
 		HeroRealmsDecision decision = HeroRealmsDecision.builder()
 				.id(UUID.randomUUID().toString())
 				.cardId(card.getId())
 				.type(HeroRealmsDecisionType.OPTIONAL)
 				.text(getAbilityMessageText(type, value))
+				.options(Arrays.asList(option))
 				.build();
 		
 		area.getDecisions().add(decision);
@@ -481,6 +531,7 @@ public class HeroRealmsActionsService {
 		playerArea.setActive(false);
 		playerArea.setGold(0);
 		playerArea.setCombat(0);
+		playerArea.setActionMode(null);
 		
 		Deck<HeroRealmsCard> discardPile = playerArea.getDiscardPile();
 		

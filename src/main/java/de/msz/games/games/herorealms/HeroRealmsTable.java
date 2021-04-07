@@ -84,6 +84,8 @@ public class HeroRealmsTable extends GameTable {
 		
 		private boolean active;
 		
+		private HeroRealmsSpecialActionMode actionMode;
+		
 		private boolean killed;
 		
 		private int position;
@@ -129,6 +131,10 @@ public class HeroRealmsTable extends GameTable {
 		@SuppressWarnings("unchecked")
 		public static PlayerArea from(Map<String, Object> map) {
 			
+			HeroRealmsSpecialActionMode actionMode = Optional.ofNullable((String) map.get("actionMode"))
+					.map(actionModeString -> HeroRealmsSpecialActionMode.valueOf(actionModeString))
+					.orElse(null);
+			
 			List<HeroRealmsCard> hand = ((List<Map<String, Object>>) map.get("hand")).stream()
 					.map(card -> Card.from(card, HeroRealmsCard.class))
 					.collect(Collectors.toList());
@@ -150,6 +156,7 @@ public class HeroRealmsTable extends GameTable {
 					.playerId((String) map.get("playerId"))
 					.playerName((String) map.get("playerName"))
 					.active((boolean) map.get("active"))
+					.actionMode(actionMode)
 					.killed((boolean) map.get("killed"))
 					.position(((Long) map.get("position")).intValue())
 					.health(((Long) map.get("health")).intValue())
