@@ -132,6 +132,7 @@ public class HeroRealmsActionsService {
 		HeroRealmsAbilityType abilityType = selectedOption.getAbilityType();
 		switch (abilityType) {
 			case DRAW_DISCARD_CARD:
+				area.getHand().add(area.getDeck().draw());
 				area.setActionMode(HeroRealmsSpecialActionMode.DISCARD);
 				break;
 			default:
