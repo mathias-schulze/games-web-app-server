@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -128,12 +129,20 @@ public class HeroRealmsActionsService {
 	private void makeDecisionOptional(PlayerArea area, HeroRealmsDecision decision) {
 		
 		HeroRealmsDecisionOption selectedOption = decision.getOptions().get(0);
+		HeroRealmsCard card4Decision = getCard4Decision(area, decision);
 		
 		HeroRealmsAbilityType abilityType = selectedOption.getAbilityType();
 		switch (abilityType) {
 			case DRAW_DISCARD_CARD:
 				area.getHand().add(draw(area));
 				area.setActionMode(HeroRealmsSpecialActionMode.DISCARD);
+				break;
+			case SACRIFICE_HAND_OR_DISCARD_PILE:
+				area.setActionMode(HeroRealmsSpecialActionMode.SACRIFICE);
+				break;
+			case SACRIFICE_HAND_OR_DISCARD_PILE_COMBAT:
+				area.setActionMode(HeroRealmsSpecialActionMode.SACRIFICE);
+				processCardAbility(area, card4Decision, HeroRealmsAbilityType.COMBAT, selectedOption.getValue());
 				break;
 			default:
 				notificationService.addNotification(NotificationType.ERROR, "ability " + abilityType + " not implemented");
@@ -149,20 +158,54 @@ public class HeroRealmsActionsService {
 						"unknown card '" + decision.getCardId() + "' for decision '" + decision.getId() + "'"));
 	}
 	
-	void sacrifice(HeroRealmsTable table, String cardId) {
+	void sacrifice(HeroRealmsTable table, String cardId, boolean withAbility) {
 		
 		heroRealmsTableService.checkIsPlayerActive(table);
 		
 		Player activePlayer = table.getActivePlayer();
 		PlayerArea playerArea = table.getPlayerAreas().get(activePlayer.getId());
 		List<HeroRealmsCard> playedCards = playerArea.getPlayedCards();
-		HeroRealmsCard card = playedCards.stream()
-				.filter(playedCard -> playedCard.getId().equals(cardId))
-				.findAny()
-				.orElseThrow(() -> new IllegalArgumentException("unknown card '" + cardId + "'"));
+		List<HeroRealmsCard> handCards = playerArea.getHand();
+		Deck<HeroRealmsCard> discardPile = playerArea.getDiscardPile();
 		
-		processSacrificeAbilities(playerArea, card);
-		playedCards.remove(card);
+		Optional<HeroRealmsCard> cardOptional = playedCards.stream()
+				.filter(playedCard -> playedCard.getId().equals(cardId))
+				.findAny();
+		
+		boolean isPlayedCard = cardOptional.isPresent();
+		boolean isHandCard = false;
+		if (!isPlayedCard) {
+			cardOptional = handCards.stream()
+					.filter(handCard -> handCard.getId().equals(cardId))
+					.findAny();
+			
+			isHandCard = cardOptional.isPresent();
+			if (!isHandCard) {
+				cardOptional = discardPile.getCards().stream()
+						.filter(discardCard -> discardCard.getId().equals(cardId))
+						.findAny();
+				
+				if (cardOptional.isEmpty()) {
+					throw new IllegalArgumentException("unknown card '" + cardId + "'");
+				}
+			}
+		}
+		
+		HeroRealmsCard card = cardOptional.get();
+		if (withAbility) {
+			processSacrificeAbilities(playerArea, card);
+		} else {
+			playerArea.setActionMode(null);
+		}
+		
+		if (isPlayedCard) {
+			playedCards.remove(card);
+		} else if (isHandCard) {
+			handCards.remove(card);
+		} else {
+			discardPile.removeCard(card);
+		}
+		
 		table.getSacrificePile().addCard(card);
 	}
 	

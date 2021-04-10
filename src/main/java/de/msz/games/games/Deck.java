@@ -67,6 +67,11 @@ public class Deck<T extends Card> {
 		size = cards.size();
 	}
 	
+	public void removeCard(T card) {
+		cards.remove(card);
+		size = cards.size();
+	}
+	
 	public void clear() {
 		cards.clear();
 		size = 0;

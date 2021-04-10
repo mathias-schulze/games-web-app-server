@@ -78,15 +78,21 @@ public class HeroRealmsController {
 	@PostMapping("/{gameId}/sacrifice")
 	@ResponseBody
 	public NotificationResponse sacrifice(@PathVariable("gameId") String gameId,
-			@RequestBody PlayCardRequest playCardRequest) throws InterruptedException, ExecutionException {
+			@RequestBody SacrificeCardRequest sacrificeCardRequest) throws InterruptedException, ExecutionException {
 		
 		HeroRealmsTable table = (HeroRealmsTable) tableService.getGameTable(gameId);
-		actionsService.sacrifice(table, playCardRequest.getCardId());
+		actionsService.sacrifice(table, sacrificeCardRequest.getCardId(), sacrificeCardRequest.isWithAbility());
 		tableService.storeTable(gameId, table);
 		
 		return (new NotificationResponse());
 	}
-
+	
+	@Data
+	public static class SacrificeCardRequest {
+		private String cardId;
+		private boolean withAbility;
+	}
+	
 	@PostMapping("/{gameId}/discard")
 	@ResponseBody
 	public NotificationResponse discard(@PathVariable("gameId") String gameId,
