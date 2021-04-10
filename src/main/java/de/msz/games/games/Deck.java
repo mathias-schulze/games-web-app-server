@@ -47,7 +47,9 @@ public class Deck<T extends Card> {
 		size = cards.size();
 		
 		if (shuffle) {
-			Collections.shuffle(this.cards);
+			for (int i=0; i<10; i++) {
+				Collections.shuffle(this.cards);
+			}
 		}
 	}
 	
