@@ -132,7 +132,7 @@ public class HeroRealmsActionsService {
 		HeroRealmsAbilityType abilityType = selectedOption.getAbilityType();
 		switch (abilityType) {
 			case DRAW_DISCARD_CARD:
-				area.getHand().add(area.getDeck().draw());
+				area.getHand().add(draw(area));
 				area.setActionMode(HeroRealmsSpecialActionMode.DISCARD);
 				break;
 			default:
@@ -328,7 +328,7 @@ public class HeroRealmsActionsService {
 				addCombatEachOtherFaction(area, card, value);
 				break;
 			case DRAW_CARD:
-				area.getHand().addAll(area.getDeck().draw(value));
+				area.getHand().addAll(draw(area, value));
 				break;
 			case DRAW_DISCARD_CARD:
 			case OPPONENT_DISCARD_CARD:
@@ -556,6 +556,10 @@ public class HeroRealmsActionsService {
 		playerArea.setFactionCountWild(0);
 		
 		activateNextPlayer(table, activePlayer);
+	}
+	
+	private static HeroRealmsCard draw(PlayerArea playerArea) {
+		return draw(playerArea, 1).get(0);
 	}
 	
 	private static List<HeroRealmsCard> draw(PlayerArea playerArea, int number) {

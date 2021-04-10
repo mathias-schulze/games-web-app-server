@@ -63,12 +63,8 @@ public class HeroRealmsTableService extends GameTableService {
 		table.setSacrificePile(new Deck<>());
 		
 		Deck<HeroRealmsCard> marketDeck = heroRealmsService.createMarketDeck();
-		List<HeroRealmsCard> market = new ArrayList<>(5);
-		for (int i=0; i<5; i++) {
-			market.add(marketDeck.draw());
-		}
 		table.setMarketDeck(marketDeck);
-		table.setMarket(market);
+		table.setMarket(marketDeck.draw(5));
 		
 		int position = 0;
 		table.setPlayerAreas(new HashMap<>());
@@ -79,11 +75,7 @@ public class HeroRealmsTableService extends GameTableService {
 			
 			area.setDeck(heroRealmsService.createStartingDeck());
 			area.setHandSize(getNoOfCardsStart(area.getPosition(), players.size()));
-			area.setHand(new ArrayList<>(area.getHandSize()));
-			for (int i=0; i<area.getHandSize(); i++) {
-				area.getHand().add(area.getDeck().draw());
-			}
-			
+			area.setHand(area.getDeck().draw(area.getHandSize()));
 			area.setDiscardPile(new Deck<>());
 			area.setPlayedCards(new ArrayList<>());
 			area.setChampions(new ArrayList<>());
