@@ -143,6 +143,12 @@ public class HeroRealmsActionsService {
 			case STUN_TARGET_CHAMPION:
 				area.setActionMode(HeroRealmsSpecialActionMode.STUN_TARGET_CHAMPION);
 				break;
+			case PUT_CARD_DISCARD_PILE_TOP_DECK:
+				area.setActionMode(HeroRealmsSpecialActionMode.PUT_CARD_DISCARD_PILE_TOP_DECK);
+				break;
+			case PUT_CHAMPION_DISCARD_PILE_TOP_DECK:
+				area.setActionMode(HeroRealmsSpecialActionMode.PUT_CHAMPION_DISCARD_PILE_TOP_DECK);
+				break;
 			case SACRIFICE_HAND_OR_DISCARD_PILE:
 				area.setActionMode(HeroRealmsSpecialActionMode.SACRIFICE);
 				break;
@@ -264,6 +270,24 @@ public class HeroRealmsActionsService {
 		champions.remove(champion);
 		otherPlayerArea.getDiscardPile().addCard(champion);
 		activePlayerArea.setActionMode(null);
+	}
+	
+	void putCardTopDeck(HeroRealmsTable table, String cardId) {
+		
+		heroRealmsTableService.checkIsPlayerActive(table);
+		
+		Player activePlayer = table.getActivePlayer();
+		PlayerArea playerArea = table.getPlayerAreas().get(activePlayer.getId());
+		Deck<HeroRealmsCard> discardPile = playerArea.getDiscardPile();
+		List<HeroRealmsCard> cards = discardPile.getCards();
+		HeroRealmsCard card = cards.stream()
+				.filter(discardCard -> discardCard.getId().equals(cardId))
+				.findAny()
+				.orElseThrow(() -> new IllegalArgumentException("unknown card '" + cardId + "'"));
+		
+		discardPile.removeCard(card);
+		playerArea.getDeck().addCardTop(card);
+		playerArea.setActionMode(null);
 	}
 	
 	private void processCardAbilities(PlayerArea area, HeroRealmsCard card) {

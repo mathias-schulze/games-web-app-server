@@ -137,6 +137,18 @@ public class HeroRealmsController {
 		private String championId;
 	}
 	
+	@PostMapping("/{gameId}/put_card_top_deck")
+	@ResponseBody
+	public NotificationResponse putCardTopDeck(@PathVariable("gameId") String gameId,
+			@RequestBody PlayCardRequest playCardRequest) throws InterruptedException, ExecutionException {
+		
+		HeroRealmsTable table = (HeroRealmsTable) tableService.getGameTable(gameId);
+		actionsService.putCardTopDeck(table, playCardRequest.getCardId());
+		tableService.storeTable(gameId, table);
+		
+		return (new NotificationResponse());
+	}
+	
 	@PostMapping("/{gameId}/attack")
 	@ResponseBody
 	public NotificationResponse attack(@PathVariable("gameId") String gameId,
