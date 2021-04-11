@@ -140,6 +140,9 @@ public class HeroRealmsActionsService {
 			case PREPARE_CHAMPION:
 				area.setActionMode(HeroRealmsSpecialActionMode.PREPARE_CHAMPION);
 				break;
+			case STUN_TARGET_CHAMPION:
+				area.setActionMode(HeroRealmsSpecialActionMode.STUN_TARGET_CHAMPION);
+				break;
 			case SACRIFICE_HAND_OR_DISCARD_PILE:
 				area.setActionMode(HeroRealmsSpecialActionMode.SACRIFICE);
 				break;
@@ -243,6 +246,24 @@ public class HeroRealmsActionsService {
 		
 		champion.setReady(true);
 		playerArea.setActionMode(null);
+	}
+	
+	void stunTargetChampion(HeroRealmsTable table, String playerId, String championId) {
+		
+		heroRealmsTableService.checkIsPlayerActive(table);
+		
+		Player activePlayer = table.getActivePlayer();
+		PlayerArea activePlayerArea = table.getPlayerAreas().get(activePlayer.getId());
+		PlayerArea otherPlayerArea = table.getPlayerAreas().get(playerId);
+		List<HeroRealmsCard> champions = otherPlayerArea.getChampions();
+		HeroRealmsCard champion = champions.stream()
+			.filter(handCard -> handCard.getId().equals(championId))
+			.findAny()
+			.orElseThrow(() -> new IllegalArgumentException("unknown champion '" + championId + "'"));
+		
+		champions.remove(champion);
+		otherPlayerArea.getDiscardPile().addCard(champion);
+		activePlayerArea.setActionMode(null);
 	}
 	
 	private void processCardAbilities(PlayerArea area, HeroRealmsCard card) {

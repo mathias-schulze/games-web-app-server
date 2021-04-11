@@ -117,6 +117,26 @@ public class HeroRealmsController {
 		return (new NotificationResponse());
 	}
 	
+	@PostMapping("/{gameId}/stun_target_champion")
+	@ResponseBody
+	public NotificationResponse stunTargetChampion(@PathVariable("gameId") String gameId,
+			@RequestBody StunTargetChampionRequest stunTargetChampionRequest)
+			throws InterruptedException, ExecutionException {
+		
+		HeroRealmsTable table = (HeroRealmsTable) tableService.getGameTable(gameId);
+		actionsService.stunTargetChampion(table, 
+				stunTargetChampionRequest.getPlayerId(), stunTargetChampionRequest.getChampionId());
+		tableService.storeTable(gameId, table);
+		
+		return (new NotificationResponse());
+	}
+	
+	@Data
+	public static class StunTargetChampionRequest {
+		private String playerId;
+		private String championId;
+	}
+	
 	@PostMapping("/{gameId}/attack")
 	@ResponseBody
 	public NotificationResponse attack(@PathVariable("gameId") String gameId,
