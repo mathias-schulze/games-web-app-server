@@ -105,6 +105,18 @@ public class HeroRealmsController {
 		return (new NotificationResponse());
 	}
 	
+	@PostMapping("/{gameId}/prepare_champion")
+	@ResponseBody
+	public NotificationResponse prepareChampion(@PathVariable("gameId") String gameId,
+			@RequestBody PlayCardRequest playCardRequest) throws InterruptedException, ExecutionException {
+		
+		HeroRealmsTable table = (HeroRealmsTable) tableService.getGameTable(gameId);
+		actionsService.prepareChampion(table, playCardRequest.getCardId());
+		tableService.storeTable(gameId, table);
+		
+		return (new NotificationResponse());
+	}
+	
 	@PostMapping("/{gameId}/attack")
 	@ResponseBody
 	public NotificationResponse attack(@PathVariable("gameId") String gameId,

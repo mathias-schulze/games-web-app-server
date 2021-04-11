@@ -137,6 +137,9 @@ public class HeroRealmsActionsService {
 				area.getHand().add(draw(area));
 				area.setActionMode(HeroRealmsSpecialActionMode.DISCARD);
 				break;
+			case PREPARE_CHAMPION:
+				area.setActionMode(HeroRealmsSpecialActionMode.PREPARE_CHAMPION);
+				break;
 			case SACRIFICE_HAND_OR_DISCARD_PILE:
 				area.setActionMode(HeroRealmsSpecialActionMode.SACRIFICE);
 				break;
@@ -223,6 +226,22 @@ public class HeroRealmsActionsService {
 		
 		hand.remove(card);
 		playerArea.getDiscardPile().addCard(card);
+		playerArea.setActionMode(null);
+	}
+	
+	void prepareChampion(HeroRealmsTable table, String cardId) {
+		
+		heroRealmsTableService.checkIsPlayerActive(table);
+		
+		Player activePlayer = table.getActivePlayer();
+		PlayerArea playerArea = table.getPlayerAreas().get(activePlayer.getId());
+		List<HeroRealmsCard> champions = playerArea.getChampions();
+		HeroRealmsCard champion = champions.stream()
+			.filter(handCard -> handCard.getId().equals(cardId))
+			.findAny()
+			.orElseThrow(() -> new IllegalArgumentException("unknown champion '" + cardId + "'"));
+		
+		champion.setReady(true);
 		playerArea.setActionMode(null);
 	}
 	
