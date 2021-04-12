@@ -102,15 +102,16 @@ public class HeroRealmsActionsService {
 		switch (madeDecision.getType()) {
 			case SELECT_ONE:
 				makeDecisionSelect(playerArea, madeDecision, optionId);
+				playerArea.getDecisions().remove(madeDecision);
 				break;
 			case OPTIONAL:
-				makeDecisionOptional(playerArea, madeDecision);
+				if (makeDecisionOptional(table, playerArea, madeDecision)) {
+					playerArea.getDecisions().remove(madeDecision);
+				}
 				break;
 			default:
 				break;
 		}
-		
-		playerArea.getDecisions().remove(madeDecision);
 	}
 	
 	void makeDecisionSelect(PlayerArea area, HeroRealmsDecision decision, String optionId) {
@@ -126,7 +127,7 @@ public class HeroRealmsActionsService {
 		processCardAbility(area, card4Decision, selectedOption.getAbilityType(), selectedOption.getValue());
 	}
 	
-	private void makeDecisionOptional(PlayerArea area, HeroRealmsDecision decision) {
+	private boolean makeDecisionOptional(HeroRealmsTable table, PlayerArea area, HeroRealmsDecision decision) {
 		
 		HeroRealmsDecisionOption selectedOption = decision.getOptions().get(0);
 		HeroRealmsCard card4Decision = getCard4Decision(area, decision);
@@ -138,27 +139,59 @@ public class HeroRealmsActionsService {
 				area.setActionMode(HeroRealmsSpecialActionMode.DISCARD);
 				break;
 			case PREPARE_CHAMPION:
+				if (!isPreparableChampionAvailable(area)) {
+					notificationService.addNotification(NotificationType.WARNING, messageSource.getMessage(
+							"hero_realms.info.no_champion_preparable", null, Locale.getDefault()));
+					return false;
+				}
 				area.setActionMode(HeroRealmsSpecialActionMode.PREPARE_CHAMPION);
 				break;
 			case STUN_TARGET_CHAMPION:
+				if (!isTargetChampionAvailable(table, area)) {
+					notificationService.addNotification(NotificationType.WARNING, messageSource.getMessage(
+							"hero_realms.info.no_target_champion", null, Locale.getDefault()));
+					return false;
+				}
 				area.setActionMode(HeroRealmsSpecialActionMode.STUN_TARGET_CHAMPION);
 				break;
 			case PUT_CARD_DISCARD_PILE_TOP_DECK:
+				if (area.getDiscardPile().getCards().isEmpty()) {
+					notificationService.addNotification(NotificationType.WARNING, messageSource.getMessage(
+							"hero_realms.info.discard_pile_empty", null, Locale.getDefault()));
+					return false;
+				}
 				area.setActionMode(HeroRealmsSpecialActionMode.PUT_CARD_DISCARD_PILE_TOP_DECK);
 				break;
 			case PUT_CHAMPION_DISCARD_PILE_TOP_DECK:
+				if (!isChampionInDiscardPile(area)) {
+					notificationService.addNotification(NotificationType.WARNING, messageSource.getMessage(
+							"hero_realms.info.no_champion_discard_pile", null, Locale.getDefault()));
+					return false;
+				}
 				area.setActionMode(HeroRealmsSpecialActionMode.PUT_CHAMPION_DISCARD_PILE_TOP_DECK);
 				break;
 			case SACRIFICE_HAND_OR_DISCARD_PILE:
+				if (isHandAndDiscardPileEmpty(area)) {
+					notificationService.addNotification(NotificationType.WARNING, messageSource.getMessage(
+							"hero_realms.info.hand_and_discard_pile_empty", null, Locale.getDefault()));
+					return false;
+				}
 				area.setActionMode(HeroRealmsSpecialActionMode.SACRIFICE);
 				break;
 			case SACRIFICE_HAND_OR_DISCARD_PILE_COMBAT:
+				if (isHandAndDiscardPileEmpty(area)) {
+					notificationService.addNotification(NotificationType.WARNING, messageSource.getMessage(
+							"hero_realms.info.hand_and_discard_pile_empty", null, Locale.getDefault()));
+					return false;
+				}
 				area.setActionMode(HeroRealmsSpecialActionMode.SACRIFICE);
 				processCardAbility(area, card4Decision, HeroRealmsAbilityType.COMBAT, selectedOption.getValue());
 				break;
 			default:
 				notificationService.addNotification(NotificationType.ERROR, "ability " + abilityType + " not implemented");
 		}
+		
+		return true;
 	}
 	
 	private static HeroRealmsCard getCard4Decision(PlayerArea area, HeroRealmsDecision decision) {
@@ -168,6 +201,37 @@ public class HeroRealmsActionsService {
 				.findAny()
 				.orElseThrow(() -> new IllegalArgumentException(
 						"unknown card '" + decision.getCardId() + "' for decision '" + decision.getId() + "'"));
+	}
+	
+	private static boolean isPreparableChampionAvailable(PlayerArea area) {
+		
+		return area.getChampions().stream()
+				.filter(champion -> !champion.isReady())
+				.findAny()
+				.isPresent();
+	}
+	
+	private static boolean isTargetChampionAvailable(HeroRealmsTable table, PlayerArea activePlayerArea) {
+		
+		return table.getPlayerAreas().values().stream()
+				.filter(area -> !area.getPlayerId().equals(activePlayerArea.getPlayerId()))
+				.flatMap(area -> area.getChampions().stream())
+				.findAny()
+				.isPresent();
+	}
+	
+	private static boolean isChampionInDiscardPile(PlayerArea area) {
+		
+		return area.getDiscardPile().getCards().stream()
+				.filter(card -> card.getType() == HeroRealmsCardType.CHAMPION
+						|| card.getType() == HeroRealmsCardType.GUARD)
+				.findAny()
+				.isPresent();
+	}
+	
+	private static boolean isHandAndDiscardPileEmpty(PlayerArea area) {
+		
+		return area.getHand().isEmpty() && area.getDiscardPile().getCards().isEmpty();
 	}
 	
 	void sacrifice(HeroRealmsTable table, String cardId, boolean withAbility) {
