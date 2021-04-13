@@ -154,6 +154,11 @@ public class HeroRealmsActionsService {
 				}
 				area.setActionMode(HeroRealmsSpecialActionMode.STUN_TARGET_CHAMPION);
 				break;
+			case NEXT_ACTION_TOP_DECK:
+			case NEXT_ACQUIRE_TOP_DECK:
+			case NEXT_ACQUIRE_HAND:
+				setBuyMode(area, decision, abilityType);
+				return false;
 			case PUT_CARD_DISCARD_PILE_TOP_DECK:
 				if (area.getDiscardPile().getCards().isEmpty()) {
 					notificationService.addNotification(NotificationType.WARNING, messageSource.getMessage(
@@ -201,6 +206,32 @@ public class HeroRealmsActionsService {
 				.findAny()
 				.orElseThrow(() -> new IllegalArgumentException(
 						"unknown card '" + decision.getCardId() + "' for decision '" + decision.getId() + "'"));
+	}
+	
+	private static void setBuyMode(PlayerArea area, HeroRealmsDecision decision,
+			HeroRealmsAbilityType abilityType) {
+		
+		if (area.getBuyMode() != null) {
+			area.getDecisions().stream()
+					.filter(buyDecision -> buyDecision.isActive())
+					.forEach(buyDecision -> buyDecision.setActive(false));
+		}
+		
+		switch (abilityType) {
+			case NEXT_ACTION_TOP_DECK:
+				area.setBuyMode(HeroRealmsBuyMode.NEXT_ACTION_TOP_DECK);
+				break;
+			case NEXT_ACQUIRE_TOP_DECK:
+				area.setBuyMode(HeroRealmsBuyMode.NEXT_ACQUIRE_TOP_DECK);
+				break;
+			case NEXT_ACQUIRE_HAND:
+				area.setBuyMode(HeroRealmsBuyMode.NEXT_ACQUIRE_HAND);
+				break;
+			default:
+				throw new IllegalArgumentException("unknown ability '" + abilityType + "' for buying card from market");
+		}
+		
+		decision.setActive(true);
 	}
 	
 	private static boolean isPreparableChampionAvailable(PlayerArea area) {
@@ -505,6 +536,9 @@ public class HeroRealmsActionsService {
 			case OPPONENT_DISCARD_CARD:
 			case PREPARE_CHAMPION:
 			case STUN_TARGET_CHAMPION:
+			case NEXT_ACTION_TOP_DECK:
+			case NEXT_ACQUIRE_TOP_DECK:
+			case NEXT_ACQUIRE_HAND:
 			case PUT_CARD_DISCARD_PILE_TOP_DECK:
 			case PUT_CHAMPION_DISCARD_PILE_TOP_DECK:
 			case SACRIFICE_HAND_OR_DISCARD_PILE:
@@ -667,8 +701,7 @@ public class HeroRealmsActionsService {
 		playerArea.setGold(playerArea.getGold()-card.getCost());
 		
 		market.set(market.indexOf(card), table.getMarketDeck().draw());
-		
-		playerArea.getDiscardPile().addCard(card);
+		putAquiredCardToDeckOrHand(playerArea, card);
 	}
 	
 	void buyFireGem(HeroRealmsTable table) {
@@ -691,7 +724,54 @@ public class HeroRealmsActionsService {
 		}
 		playerArea.setGold(playerArea.getGold()-card.getCost());
 		
-		playerArea.getDiscardPile().addCard(fireGemsDeck.draw());
+		putAquiredCardToDeckOrHand(playerArea, fireGemsDeck.draw());
+	}
+	
+	private static void putAquiredCardToDeckOrHand(PlayerArea playerArea, HeroRealmsCard card) {
+		
+		boolean resetBuyMode = false;
+		if (playerArea.getBuyMode() == null) {
+			playerArea.getDiscardPile().addCard(card);
+		} else {
+			switch (playerArea.getBuyMode()) {
+				case NEXT_ACTION_TOP_DECK:
+					if (card.getType() == HeroRealmsCardType.ACTION) {
+						playerArea.getDeck().addCardTop(card);
+						resetBuyMode = true;
+					} else {
+						playerArea.getDiscardPile().addCard(card);
+					}
+					break;
+				case NEXT_ACQUIRE_TOP_DECK:
+					playerArea.getDeck().addCardTop(card);
+					resetBuyMode = true;
+					break;
+				case NEXT_ACQUIRE_HAND:
+					playerArea.getHand().add(card);
+					resetBuyMode = true;
+					break;
+				default:
+					break;
+			}
+		}
+		
+		if (resetBuyMode) {
+			playerArea.setBuyMode(null);
+			playerArea.getDecisions().removeIf(decision -> {
+				if (decision.isActive()) {
+					switch (decision.getOptions().get(0).getAbilityType()) {
+						case NEXT_ACTION_TOP_DECK:
+						case NEXT_ACQUIRE_TOP_DECK:
+						case NEXT_ACQUIRE_HAND:
+							return true;
+						default:
+							break;
+					}
+				}
+				
+				return false;
+			});
+		}
 	}
 	
 	void endTurn(HeroRealmsTable table) {

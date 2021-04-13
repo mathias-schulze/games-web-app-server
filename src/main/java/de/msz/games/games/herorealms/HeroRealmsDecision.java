@@ -17,6 +17,8 @@ public class HeroRealmsDecision {
 	private String cardId;
 	private HeroRealmsDecisionType type;
 	private String text;
+	@Builder.Default
+	private boolean active = false;
 	private List<HeroRealmsDecisionOption> options;
 	
 	@SuppressWarnings("unchecked")
@@ -32,6 +34,7 @@ public class HeroRealmsDecision {
 				.cardId((String) map.get("cardId"))
 				.type(HeroRealmsDecisionType.valueOf((String) map.get("type")))
 				.text((String) map.get("text"))
+				.active(Optional.ofNullable((Boolean) map.get("active")).orElse(false))
 				.options(options)
 				.build();
 	}
