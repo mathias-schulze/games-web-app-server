@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import de.msz.games.base.NotificationService;
 import de.msz.games.base.NotificationService.NotificationType;
+import de.msz.games.base.UserService;
 import de.msz.games.games.Deck;
 import de.msz.games.games.GameService;
 import de.msz.games.games.herorealms.HeroRealmsTable.PlayerArea;
@@ -27,6 +28,9 @@ import de.msz.games.games.player.Player;
 
 @Service
 public class HeroRealmsActionsService {
+	
+	@Autowired
+	private UserService userService;
 	
 	@Autowired
 	private NotificationService notificationService;
@@ -137,6 +141,9 @@ public class HeroRealmsActionsService {
 			case DRAW_DISCARD_CARD:
 				area.getHand().add(draw(area));
 				area.setActionMode(HeroRealmsSpecialActionMode.DISCARD);
+				break;
+			case OPPONENT_DISCARD_CARD:
+				area.setActionMode(HeroRealmsSpecialActionMode.OPPONENT_DISCARD_CARD);
 				break;
 			case PREPARE_CHAMPION:
 				if (!isPreparableChampionAvailable(area)) {
@@ -318,19 +325,41 @@ public class HeroRealmsActionsService {
 	
 	void discard(HeroRealmsTable table, String cardId) {
 		
-		heroRealmsTableService.checkIsPlayerActive(table);
+		String discardPlayerId = userService.getCurrentUser();
+		PlayerArea discardPlayerArea = table.getPlayerAreas().get(discardPlayerId);
 		
 		Player activePlayer = table.getActivePlayer();
-		PlayerArea playerArea = table.getPlayerAreas().get(activePlayer.getId());
-		List<HeroRealmsCard> hand = playerArea.getHand();
+		PlayerArea activePlayerArea = table.getPlayerAreas().get(activePlayer.getId());
+		
+		boolean isSelected4Discard = discardPlayerArea.isSelected4Discard();
+		if (!isSelected4Discard) {
+			heroRealmsTableService.checkIsPlayerActive(table);
+		}
+		
+		List<HeroRealmsCard> hand = discardPlayerArea.getHand();
 		HeroRealmsCard card = hand.stream()
 				.filter(handCard -> handCard.getId().equals(cardId))
 				.findAny()
 				.orElseThrow(() -> new IllegalArgumentException("unknown card '" + cardId + "'"));
 		
 		hand.remove(card);
-		playerArea.getDiscardPile().addCard(card);
-		playerArea.setActionMode(null);
+		discardPlayerArea.getDiscardPile().addCard(card);
+		discardPlayerArea.setActionMode(null);
+		
+		if (isSelected4Discard) {
+			discardPlayerArea.setSelected4Discard(false);
+			activePlayerArea.setActionMode(null);
+		}
+	}
+	
+	void selectPlayer4Discard(HeroRealmsTable table, String playerId) {
+		
+		heroRealmsTableService.checkIsPlayerActive(table);
+		
+		PlayerArea otherPlayerArea = table.getPlayerAreas().get(playerId);
+		
+		otherPlayerArea.setActionMode(HeroRealmsSpecialActionMode.DISCARD);
+		otherPlayerArea.setSelected4Discard(true);
 	}
 	
 	void prepareChampion(HeroRealmsTable table, String cardId) {

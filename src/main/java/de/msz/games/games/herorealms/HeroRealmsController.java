@@ -105,6 +105,23 @@ public class HeroRealmsController {
 		return (new NotificationResponse());
 	}
 	
+	@PostMapping("/{gameId}/select_player_for_discard")
+	@ResponseBody
+	public NotificationResponse selectPlayer4Discard(@PathVariable("gameId") String gameId,
+			@RequestBody SelectPlayerRequest selectPlayerRequest) throws InterruptedException, ExecutionException {
+		
+		HeroRealmsTable table = (HeroRealmsTable) tableService.getGameTable(gameId);
+		actionsService.selectPlayer4Discard(table, selectPlayerRequest.getPlayerId());
+		tableService.storeTable(gameId, table);
+		
+		return (new NotificationResponse());
+	}
+	
+	@Data
+	public static class SelectPlayerRequest {
+		private String playerId;
+	}
+	
 	@PostMapping("/{gameId}/prepare_champion")
 	@ResponseBody
 	public NotificationResponse prepareChampion(@PathVariable("gameId") String gameId,

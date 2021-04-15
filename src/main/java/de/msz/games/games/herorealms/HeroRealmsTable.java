@@ -86,6 +86,9 @@ public class HeroRealmsTable extends GameTable {
 		
 		private HeroRealmsSpecialActionMode actionMode;
 		
+		@Builder.Default
+		private boolean selected4Discard = false;
+		
 		private HeroRealmsBuyMode buyMode;
 		
 		private boolean killed;
@@ -163,6 +166,7 @@ public class HeroRealmsTable extends GameTable {
 					.playerName((String) map.get("playerName"))
 					.active((boolean) map.get("active"))
 					.actionMode(actionMode)
+					.selected4Discard(Optional.ofNullable((Boolean) map.get("selected4Discard")).orElse(false))
 					.buyMode(buyMode)
 					.killed((boolean) map.get("killed"))
 					.position(((Long) map.get("position")).intValue())
