@@ -15,6 +15,7 @@ public class HeroRealmsJsonCard {
     private int defense = 0;
     private String faction;
     private String type;
+    private String subType;
     private int quantity;
     private String image;
     private HeroRealmsJsonAbilitySet PrimaryAbility;

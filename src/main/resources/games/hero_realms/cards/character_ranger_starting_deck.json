@@ -1,0 +1,65 @@
+[
+  {
+    "Name": "Black Arrow",
+    "Text": "Gain 1 Combat. <hr> If you have a bow in play, draw a card.",
+    "Type": "ITEM",
+    "Quantity": 2,
+    "Image": "extern/hero_realms/CRA-EN-001-ranger-black-arrow.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 2 },
+                { "Type": "DRAW_CARD_IF_BOW_IN_PLAY", "Value": 1 }
+            ]
+        }
+  },
+  {
+    "Name": "Horn of Calling",
+    "Text": "Gain 1 Gold.\nThe next champion you acquire this turn costs 1 Gold less.",
+    "Type": "ITEM",
+    "Quantity": 1,
+    "Image": "extern/hero_realms/CRA-EN-007-ranger-horn-of-calling.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "GOLD", "Value": 1 },
+                { "Type": "NEXT_CHAMPION_COSTS_LESS", "Value": 1 }
+            ]
+        }
+  },
+  {
+    "Name": "Hunting Bow",
+    "Text": "Gain 2 Combat. <hr> <i>You�re the prey.</i>",
+    "Type": "ITEM",
+    "SubType": "BOW",
+    "Quantity": 1,
+    "Image": "extern/hero_realms/CRA-EN-008-ranger-hunting-bow.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 2 }
+            ]
+        }
+  },
+  {
+    "Name": "Gold",
+    "Text": "Gain 1 Gold.",
+    "Type": "ITEM",
+    "Quantity": 5,
+    "Image": "extern/hero_realms/CRA-EN-004-ranger-gold.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "GOLD", "Value": 1 }
+            ]
+        }
+  },
+  {
+    "Name": "Ruby",
+    "Text": "Gain 2 Gold.",
+    "Type": "ITEM",
+    "Quantity": 1,
+    "Image": "extern/hero_realms/CRA-EN-009-ranger-ruby.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "GOLD", "Value": 2 }
+            ]
+        }
+  }
+]

@@ -1,0 +1,59 @@
+[
+  {
+    "Name": "Longsword",
+    "Text": "Gain 3 Combat. <hr> <i>�I prefer to let my blade do the talking.�</i>",
+    "Type": "ITEM",
+    "Quantity": 1,
+    "Image": "extern/hero_realms/CFT-EN-006-fighter-longsword.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 3 }
+            ]
+        }
+  },
+  {
+    "Name": "Shield Bearer",
+    "Text": "<i>�Your shield, my liege.�</i>",
+    "Defense": 3,
+    "Type": "GUARD",
+    "Quantity": 1,
+    "Image": "extern/hero_realms/CFT-EN-008-fighter-shield-bearer.jpg"
+  },
+  {
+    "Name": "Throwing Axe",
+    "Text": "Gain 2 Combat.\nIf playing this card would give you 7 or more combat this turn, draw a card.",
+    "Type": "ITEM",
+    "Quantity": 1,
+    "Image": "extern/hero_realms/CFT-EN-011-fighter-throwing-axe.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 2 },
+                { "Type": "DRAW_CARD_IF_COMBAT_7", "Value": 1 }
+            ]
+        }
+  },
+  {
+    "Name": "Gold",
+    "Text": "Gain 1 Gold.",
+    "Type": "ITEM",
+    "Quantity": 6,
+    "Image": "extern/hero_realms/CFT-EN-005-fighter-gold.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "GOLD", "Value": 1 }
+            ]
+        }
+  },
+  {
+    "Name": "Ruby",
+    "Text": "Gain 2 Gold.",
+    "Type": "ITEM",
+    "Quantity": 1,
+    "Image": "extern/hero_realms/CFT-EN-007-fighter-ruby.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "GOLD", "Value": 2 }
+            ]
+        }
+  }
+]

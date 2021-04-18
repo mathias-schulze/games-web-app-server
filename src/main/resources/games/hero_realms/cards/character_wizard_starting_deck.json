@@ -1,0 +1,68 @@
+[
+  {
+    "Name": "Cat Familiar",
+    "Text": "Expend:\nGain 1 Combat. <i>or</i> Gain 1 Gold. <i>or</i> Gain 1 Health. <hr> <i>�Meow�</i>",
+    "Defense": 2,
+    "Type": "CHAMPION",
+    "Quantity": 1,
+    "Image": "extern/hero_realms/CWZ-EN-010-wizard-cat-familiar.jpg",
+        "PrimaryAbility": {
+            "Linkage": "OR",
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 1 },
+                { "Type": "GOLD", "Value": 1 },
+                { "Type": "HEALTH", "Value": 1 }
+            ]
+        }
+  },
+  {
+    "Name": "Ignite",
+    "Text": "Gain 2 Combat. <hr> <i>Every inferno starts with a spark.</i>",
+    "Type": "ACTION",
+    "Quantity": 2,
+    "Image": "extern/hero_realms/CWZ-EN-013-wizard-ignite.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 2 }
+            ]
+        }
+  },
+  {
+    "Name": "Spell Components",
+    "Text": "Gain 1 Gold.\nThe next action you acquire this turn costs 1 Gold less. <hr> <i>�What do you need <u>that[\\u] for?�</i>",
+    "Type": "ITEM",
+    "Quantity": 1,
+    "Image": "extern/hero_realms/CWZ-EN-014-wizard-spell-components.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "GOLD", "Value": 1 },
+                { "Type": "NEXT_CHAMPION_COSTS_LESS", "Value": 1 }
+            ]
+        }
+  },
+  {
+    "Name": "Fire Staff",
+    "Text": "Gain 1 Combat.\nIf you have two or more actions in play, draw a card.",
+    "Type": "ITEM",
+    "Quantity": 1,
+    "Image": "extern/hero_realms/CWZ-EN-015-wizard-fire-staff.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 1 },
+                { "Type": "DRAW_CARD_IF_ACTIONS_IN_PLAY", "Value": 2 }
+            ]
+        }
+  },
+  {
+    "Name": "Gold",
+    "Text": "Gain 1 Gold.",
+    "Type": "ITEM",
+    "Quantity": 5,
+    "Image": "extern/hero_realms/CWZ-EN-012-wizard-gold.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "GOLD", "Value": 1 }
+            ]
+        }
+  }
+]

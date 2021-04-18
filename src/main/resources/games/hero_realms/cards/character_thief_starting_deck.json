@@ -1,0 +1,40 @@
+[
+  {
+    "Name": "Throwing Knife",
+    "Text": "Gain 1 Combat.\n+2 Combat for each knife you�ve already played this turn.",
+    "Type": "ITEM",
+    "SubType": "KNIFE",
+    "Quantity": 3,
+    "Image": "extern/hero_realms/CTH-EN-011-thief-throwing-knife.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 1 },
+                { "Type": "COMBAT_EACH_KNIFE", "Value": 2 }
+            ]
+        }
+  },
+  {
+    "Name": "Gold",
+    "Text": "Gain 1 Gold.",
+    "Type": "ITEM",
+    "Quantity": 5,
+    "Image": "extern/hero_realms/CTH-EN-013-thief-gold.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "GOLD", "Value": 1 }
+            ]
+        }
+  },
+  {
+    "Name": "Ruby",
+    "Text": "Gain 2 Gold.",
+    "Type": "ITEM",
+    "Quantity": 2,
+    "Image": "extern/hero_realms/CTH-EN-010-thief-ruby.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "GOLD", "Value": 2 }
+            ]
+        }
+  }
+]

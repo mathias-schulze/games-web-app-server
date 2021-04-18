@@ -1,0 +1,66 @@
+[
+  {
+    "Name": "Follower A",
+    "Text": "Expend:\nGain 1 Combat. <hr> True faith requires strength of will <u>and</u> strength of arms.",
+    "Defense": 1,
+    "Type": "GUARD",
+    "Quantity": 1,
+    "Image": "extern/hero_realms/CCL-EN-005-cleric-follower-a.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 1 }
+            ]
+        }
+  },
+  {
+    "Name": "Follower B",
+    "Text": "Expend:\nGain 1 Combat. <hr> True faith requires strength of will <u>and</u> strength of arms.",
+    "Defense": 1,
+    "Type": "GUARD",
+    "Quantity": 1,
+    "Image": "extern/hero_realms/CCL-EN-006-cleric-follower-b.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 1 }
+            ]
+        }
+  },
+  {
+    "Name": "Spiked Mace",
+    "Text": "Gain 2 Combat. <hr> Sometimes the path to redemption is sharp and pointy.",
+    "Type": "ITEM",
+    "Quantity": 1,
+    "Image": "extern/hero_realms/CCL-EN-008-cleric-spiked-mace.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "COMBAT", "Value": 2 }
+            ]
+        }
+  },
+  {
+    "Name": "Prayer Beads",
+    "Text": "Gain 2 Gold. <i>or</i> Gain 5 Health.\nIf you have two or more champions in play, gain both.",
+    "Type": "ITEM",
+    "Quantity": 1,
+    "Image": "extern/hero_realms/CCL-EN-009-cleric-prayer-beads.jpg",
+        "PrimaryAbility": {
+            "Linkage": "BOTH_IF_2_CHAMPIONS_IN_PLAY",
+            "Abilities": [
+                { "Type": "GOLD", "Value": 2 },
+                { "Type": "HEALTH", "Value": 5 }
+            ]
+        }
+  },
+  {
+    "Name": "Gold",
+    "Text": "Gain 1 Gold.",
+    "Type": "ITEM",
+    "Quantity": 6,
+    "Image": "extern/hero_realms/CCL-EN-007-cleric-gold.jpg",
+        "PrimaryAbility": {
+            "Abilities": [
+                { "Type": "GOLD", "Value": 1 }
+            ]
+        }
+  }
+]

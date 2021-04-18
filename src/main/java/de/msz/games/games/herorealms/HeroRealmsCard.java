@@ -16,6 +16,7 @@ public class HeroRealmsCard implements Card {
     private int defense;
     private HeroRealmsFaction faction;
     private HeroRealmsCardType type;
+    private HeroRealmsCardSubType subType;
     private String image;
     @Builder.Default
     private boolean ready = true;
@@ -27,6 +28,9 @@ public class HeroRealmsCard implements Card {
     	String factionString = (String) map.get("faction");
     	HeroRealmsFaction faction = (factionString == null) ? null : HeroRealmsFaction.valueOf(factionString);
     	
+    	String subTypeString = (String) map.get("subType");
+    	HeroRealmsCardSubType subType = (subTypeString == null) ? null : HeroRealmsCardSubType.valueOf(subTypeString);
+    	
 		return HeroRealmsCard.builder()
 			.id((String) map.get("id"))
     		.name((String) map.get("name"))
@@ -34,6 +38,7 @@ public class HeroRealmsCard implements Card {
     		.defense(((Long) map.get("defense")).intValue())
     		.faction(faction)
     		.type(HeroRealmsCardType.valueOf((String) map.get("type")))
+    		.subType(subType)
     		.image((String) map.get("image"))
     		.ready((Boolean) map.get("ready"))
     		.sacrifice((Boolean) map.get("sacrifice"))

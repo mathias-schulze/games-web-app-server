@@ -35,6 +35,11 @@ public class HeroRealmsService {
 	private HeroRealmsJsonCard[] fireGemDeck;
 	private HeroRealmsJsonCard[] marketDeck;
 	private HeroRealmsJsonCard[] startingDeck;
+	private HeroRealmsJsonCard[] characterStartingDeckCleric;
+	private HeroRealmsJsonCard[] characterStartingDeckFighter;
+	private HeroRealmsJsonCard[] characterStartingDeckRanger;
+	private HeroRealmsJsonCard[] characterStartingDeckThief;
+	private HeroRealmsJsonCard[] characterStartingDeckWizard;
 	
 	private Map<String, HeroRealmsCardAbilities> cardAbilities = new HashedMap<>();
 	
@@ -43,16 +48,20 @@ public class HeroRealmsService {
 		fireGemDeck = readCards("classpath:games/hero_realms/cards/fire_gems_deck.json");
 		marketDeck = readCards("classpath:games/hero_realms/cards/market_deck.json");
 		startingDeck = readCards("classpath:games/hero_realms/cards/starting_deck.json");
+		characterStartingDeckCleric = readCards("classpath:games/hero_realms/cards/character_cleric_starting_deck.json");
+		characterStartingDeckFighter = readCards("classpath:games/hero_realms/cards/character_fighter_starting_deck.json");
+		characterStartingDeckRanger = readCards("classpath:games/hero_realms/cards/character_ranger_starting_deck.json");
+		characterStartingDeckThief = readCards("classpath:games/hero_realms/cards/character_thief_starting_deck.json");
+		characterStartingDeckWizard = readCards("classpath:games/hero_realms/cards/character_wizard_starting_deck.json");
 		
-		for (HeroRealmsJsonCard fireGemDeckCard : fireGemDeck) {
-			addCardAbilities(fireGemDeckCard);
-		}
-		for (HeroRealmsJsonCard marketDeckCard : marketDeck) {
-			addCardAbilities(marketDeckCard);
-		}
-		for (HeroRealmsJsonCard startingDeckCard : startingDeck) {
-			addCardAbilities(startingDeckCard);
-		}
+		addCardAbilities(fireGemDeck);
+		addCardAbilities(marketDeck);
+		addCardAbilities(startingDeck);
+		addCardAbilities(characterStartingDeckCleric);
+		addCardAbilities(characterStartingDeckFighter);
+		addCardAbilities(characterStartingDeckRanger);
+		addCardAbilities(characterStartingDeckThief);
+		addCardAbilities(characterStartingDeckWizard);
 	}
 	
 	public Deck<HeroRealmsCard> createFireGemsDeck() {
@@ -84,14 +93,16 @@ public class HeroRealmsService {
 		return deck;
 	}
 	
-	private void addCardAbilities(HeroRealmsJsonCard jsonCard) {
+	private void addCardAbilities(HeroRealmsJsonCard[] deck) {
 		
-		cardAbilities.put(jsonCard.getName(), HeroRealmsCardAbilities.builder()
-				.primaryAbility(jsonConfigMapper.jsonAbilitySetToAbilitySet(jsonCard.getPrimaryAbility()))
-				.allyAbility(jsonConfigMapper.jsonAbilitySetToAbilitySet(jsonCard.getAllyAbility()))
-				.sacrificeAbility(jsonConfigMapper.jsonAbilitySetToAbilitySet(jsonCard.getSacrificeAbility()))
-				.build()
-		);
+		for (HeroRealmsJsonCard jsonCard : deck) {
+			cardAbilities.put(jsonCard.getName(), HeroRealmsCardAbilities.builder()
+					.primaryAbility(jsonConfigMapper.jsonAbilitySetToAbilitySet(jsonCard.getPrimaryAbility()))
+					.allyAbility(jsonConfigMapper.jsonAbilitySetToAbilitySet(jsonCard.getAllyAbility()))
+					.sacrificeAbility(jsonConfigMapper.jsonAbilitySetToAbilitySet(jsonCard.getSacrificeAbility()))
+					.build()
+			);
+		}
 	}
 	
 	private HeroRealmsJsonCard[] readCards(String filename) {
