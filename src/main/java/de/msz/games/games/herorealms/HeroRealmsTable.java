@@ -95,6 +95,8 @@ public class HeroRealmsTable extends GameTable {
 		
 		private int position;
 		
+		private HeroRealmsCharacterPack character;
+		
 		private int health;
 		
 		private int combat;
@@ -136,6 +138,10 @@ public class HeroRealmsTable extends GameTable {
 		@SuppressWarnings("unchecked")
 		public static PlayerArea from(Map<String, Object> map) {
 			
+			HeroRealmsCharacterPack character = Optional.ofNullable((String) map.get("character"))
+					.map(characterString -> HeroRealmsCharacterPack.valueOf(characterString))
+					.orElse(null);
+			
 			HeroRealmsSpecialActionMode actionMode = Optional.ofNullable((String) map.get("actionMode"))
 					.map(actionModeString -> HeroRealmsSpecialActionMode.valueOf(actionModeString))
 					.orElse(null);
@@ -164,6 +170,7 @@ public class HeroRealmsTable extends GameTable {
 			return PlayerArea.builder()
 					.playerId((String) map.get("playerId"))
 					.playerName((String) map.get("playerName"))
+					.character(character)
 					.active((boolean) map.get("active"))
 					.actionMode(actionMode)
 					.selected4Discard(Optional.ofNullable((Boolean) map.get("selected4Discard")).orElse(false))

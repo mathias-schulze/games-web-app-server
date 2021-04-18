@@ -72,8 +72,26 @@ public class HeroRealmsService {
 		return createDeck(marketDeck);
 	}
 	
-	public Deck<HeroRealmsCard> createStartingDeck() {
-		return createDeck(startingDeck);
+	public Deck<HeroRealmsCard> createStartingDeck(HeroRealmsCharacterPack characterPack) {
+		
+		if (characterPack == null) {
+			return createDeck(startingDeck);
+		}
+		
+		switch (characterPack) {
+			case CLERIC:
+				return createDeck(characterStartingDeckCleric);
+			case FIGHTER:
+				return createDeck(characterStartingDeckFighter);
+			case RANGER:
+				return createDeck(characterStartingDeckRanger);
+			case THIEF:
+				return createDeck(characterStartingDeckThief);
+			case WIZARD:
+				return createDeck(characterStartingDeckWizard);
+			default:
+				throw new IllegalArgumentException("unknown character pack " + characterPack + "!");
+		}
 	}
 	
 	private Deck<HeroRealmsCard> createDeck(HeroRealmsJsonCard[] jsonCards) {

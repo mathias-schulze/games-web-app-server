@@ -16,6 +16,7 @@ public class GameTableServiceFactory {
 		GameTableService gameTableService = null;
 		switch (game) {
 			case HERO_REALMS:
+			case HERO_REALMS_CHARACTER_PACKS:
 				gameTableService = heroRealmsTableService;
 				break;
 			default:

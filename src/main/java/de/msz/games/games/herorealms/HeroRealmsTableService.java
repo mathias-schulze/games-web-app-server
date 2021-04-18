@@ -53,6 +53,8 @@ public class HeroRealmsTableService extends GameTableService {
 	@Override
 	public HeroRealmsTable createTable(DocumentSnapshot gameDocument) {
 		
+		boolean withCharacterPacks = (Game.valueOf(gameDocument.getString("game")) == Game.HERO_REALMS_CHARACTER_PACKS);
+		
 		List<Player> players = getPlayers(gameDocument, true);
 		
 		HeroRealmsTable table = new HeroRealmsTable(gameDocument.getId(), players);
@@ -66,14 +68,18 @@ public class HeroRealmsTableService extends GameTableService {
 		table.setMarketDeck(marketDeck);
 		table.setMarket(marketDeck.draw(5));
 		
+		List<HeroRealmsCharacterPack> characterPacks = 
+				withCharacterPacks ? HeroRealmsCharacterPack.getRandomList() : Collections.emptyList();
+		
 		int position = 0;
 		table.setPlayerAreas(new HashMap<>());
 		for (Player player : players) {
 			PlayerArea area = new PlayerArea(player, position++);
+			area.setCharacter(withCharacterPacks ? characterPacks.remove(0) : null);
 			area.setActive(area.getPosition() == 0);
 			area.setHealth(HEALTH_START);
 			
-			area.setDeck(heroRealmsService.createStartingDeck());
+			area.setDeck(heroRealmsService.createStartingDeck(area.getCharacter()));
 			area.setHandSize(getNoOfCardsStart(area.getPosition(), players.size()));
 			area.setHand(area.getDeck().draw(area.getHandSize()));
 			area.setDiscardPile(new Deck<>());
