@@ -7,7 +7,7 @@
     "Image": "extern/hero_realms/CRA-EN-001-ranger-black-arrow.jpg",
         "PrimaryAbility": {
             "Abilities": [
-                { "Type": "COMBAT", "Value": 2 },
+                { "Type": "COMBAT", "Value": 1 },
                 { "Type": "DRAW_CARD_IF_BOW_IN_PLAY", "Value": 1 }
             ]
         }
