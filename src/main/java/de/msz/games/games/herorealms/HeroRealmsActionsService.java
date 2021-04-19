@@ -164,6 +164,8 @@ public class HeroRealmsActionsService {
 			case NEXT_ACTION_TOP_DECK:
 			case NEXT_ACQUIRE_TOP_DECK:
 			case NEXT_ACQUIRE_HAND:
+			case NEXT_ACTION_COSTS_LESS:
+			case NEXT_CHAMPION_COSTS_LESS:
 				setBuyMode(area, decision, abilityType);
 				return false;
 			case PUT_CARD_DISCARD_PILE_TOP_DECK:
@@ -233,6 +235,12 @@ public class HeroRealmsActionsService {
 				break;
 			case NEXT_ACQUIRE_HAND:
 				area.setBuyMode(HeroRealmsBuyMode.NEXT_ACQUIRE_HAND);
+				break;
+			case NEXT_ACTION_COSTS_LESS:
+				area.setBuyMode(HeroRealmsBuyMode.NEXT_ACTION_COSTS_LESS);
+				break;
+			case NEXT_CHAMPION_COSTS_LESS:
+				area.setBuyMode(HeroRealmsBuyMode.NEXT_CHAMPION_COSTS_LESS);
 				break;
 			default:
 				throw new IllegalArgumentException("unknown ability '" + abilityType + "' for buying card from market");
@@ -588,14 +596,21 @@ public class HeroRealmsActionsService {
 			case OPPONENT_DISCARD_CARD:
 			case PREPARE_CHAMPION:
 			case STUN_TARGET_CHAMPION:
-			case NEXT_ACTION_TOP_DECK:
-			case NEXT_ACQUIRE_TOP_DECK:
-			case NEXT_ACQUIRE_HAND:
 			case PUT_CARD_DISCARD_PILE_TOP_DECK:
 			case PUT_CHAMPION_DISCARD_PILE_TOP_DECK:
 			case SACRIFICE_HAND_OR_DISCARD_PILE:
 				for (int i=0; i<value; i++) {
 					addOptionalDecision(area, card, type, value);
+				}
+				break;
+			case NEXT_ACTION_TOP_DECK:
+			case NEXT_ACQUIRE_TOP_DECK:
+			case NEXT_ACQUIRE_HAND:
+			case NEXT_ACTION_COSTS_LESS:
+			case NEXT_CHAMPION_COSTS_LESS:
+				HeroRealmsDecision decision = addOptionalDecision(area, card, type, value);
+				if (area.getBuyMode() == null) {
+					setBuyMode(area, decision, type);
 				}
 				break;
 			case SACRIFICE_HAND_OR_DISCARD_PILE_COMBAT:	
@@ -638,7 +653,7 @@ public class HeroRealmsActionsService {
 		area.setCombat(area.getCombat() + combatValue);
 	}
 	
-	private void addOptionalDecision(PlayerArea area, HeroRealmsCard card, HeroRealmsAbilityType type, int value) {
+	private HeroRealmsDecision addOptionalDecision(PlayerArea area, HeroRealmsCard card, HeroRealmsAbilityType type, int value) {
 		
 		HeroRealmsDecisionOption option = HeroRealmsDecisionOption.builder()
 				.id(UUID.randomUUID().toString())
@@ -656,6 +671,8 @@ public class HeroRealmsActionsService {
 				.build();
 		
 		area.getDecisions().add(decision);
+		
+		return decision;
 	}
 	
 	void attack(HeroRealmsTable table, String playerId, String championId, int value)
@@ -754,15 +771,28 @@ public class HeroRealmsActionsService {
 		Player activePlayer = table.getActivePlayer();
 		PlayerArea playerArea = table.getPlayerAreas().get(activePlayer.getId());
 		
-		if (playerArea.getGold() < card.getCost()) {
+		int cost = card.getCost();
+		boolean resetBuyMode = false; 
+		if (playerArea.getBuyMode() == HeroRealmsBuyMode.NEXT_ACTION_COSTS_LESS
+				&& card.getType() == HeroRealmsCardType.ACTION) {
+			cost--;
+			resetBuyMode = true;
+		} else if (playerArea.getBuyMode() == HeroRealmsBuyMode.NEXT_CHAMPION_COSTS_LESS
+				&& (card.getType() == HeroRealmsCardType.CHAMPION || card.getType() == HeroRealmsCardType.GUARD)) {
+			cost--;
+			resetBuyMode = true;
+		}
+		
+		if (playerArea.getGold() < cost) {
 			notificationService.addNotification(NotificationType.WARNING, 
-					"nicht genug Gold (Preis: " + card.getCost() + ", Gold: " + playerArea.getGold() + ")");
+					"nicht genug Gold (Preis: " + cost + ", Gold: " + playerArea.getGold() + ")");
 			return;
 		}
-		playerArea.setGold(playerArea.getGold()-card.getCost());
+		playerArea.setGold(playerArea.getGold()-cost);
 		
 		market.set(market.indexOf(card), table.getMarketDeck().draw());
 		putAquiredCardToDeckOrHand(playerArea, card);
+		resetBuyMode(playerArea, resetBuyMode);
 	}
 	
 	void buyFireGem(HeroRealmsTable table) {
@@ -816,17 +846,24 @@ public class HeroRealmsActionsService {
 			}
 		}
 		
+		resetBuyMode(playerArea, resetBuyMode);
+	}
+	
+	private static void resetBuyMode(PlayerArea playerArea, boolean resetBuyMode) {
+		
 		if (resetBuyMode) {
 			playerArea.setBuyMode(null);
 			playerArea.getDecisions().removeIf(decision -> {
 				if (decision.isActive()) {
 					switch (decision.getOptions().get(0).getAbilityType()) {
-						case NEXT_ACTION_TOP_DECK:
-						case NEXT_ACQUIRE_TOP_DECK:
-						case NEXT_ACQUIRE_HAND:
-							return true;
-						default:
-							break;
+					case NEXT_ACTION_TOP_DECK:
+					case NEXT_ACQUIRE_TOP_DECK:
+					case NEXT_ACQUIRE_HAND:
+					case NEXT_ACTION_COSTS_LESS:
+					case NEXT_CHAMPION_COSTS_LESS:
+						return true;
+					default:
+						break;
 					}
 				}
 				

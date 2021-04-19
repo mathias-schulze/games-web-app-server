@@ -36,7 +36,7 @@
         "PrimaryAbility": {
             "Abilities": [
                 { "Type": "GOLD", "Value": 1 },
-                { "Type": "NEXT_CHAMPION_COSTS_LESS", "Value": 1 }
+                { "Type": "NEXT_ACTION_COSTS_LESS", "Value": 1 }
             ]
         }
   },
