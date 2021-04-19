@@ -561,6 +561,26 @@ public class HeroRealmsActionsService {
 			case DRAW_CARD:
 				area.getHand().addAll(draw(area, value));
 				break;
+			case DRAW_CARD_IF_COMBAT_7:
+				if (area.getCombat() >= 5) {
+					area.getHand().addAll(draw(area, value));
+				}
+				break;
+			case DRAW_CARD_IF_BOW_IN_PLAY:
+				if (area.getPlayedCards().stream()
+						.filter(playedCard -> playedCard.getSubType() == HeroRealmsCardSubType.BOW)
+						.findAny()
+						.isPresent()) {
+					area.getHand().addAll(draw(area, value));
+				}
+				break;
+			case DRAW_CARD_IF_ACTIONS_IN_PLAY:
+				if (area.getPlayedCards().stream()
+						.filter(playedCard -> playedCard.getType() == HeroRealmsCardType.ACTION)
+						.count() >= 2) {
+					area.getHand().addAll(draw(area, value));
+				}
+				break;
 			case DRAW_DISCARD_CARD:
 			case OPPONENT_DISCARD_CARD:
 			case PREPARE_CHAMPION:
