@@ -558,6 +558,9 @@ public class HeroRealmsActionsService {
 			case COMBAT_EACH_OTHER_FACTION:
 				addCombatEachOtherFaction(area, card, value);
 				break;
+			case COMBAT_EACH_KNIFE:
+				addCombatEachKnife(area, value);
+				break;
 			case DRAW_CARD:
 				area.getHand().addAll(draw(area, value));
 				break;
@@ -621,6 +624,15 @@ public class HeroRealmsActionsService {
 		int combatValue = (int) (value * CollectionUtils.union(area.getChampions(), area.getPlayedCards()).stream()
 				.filter(otherCard -> faction == otherCard.getFaction())
 				.filter(otherCard -> !card.getId().equals(otherCard.getId()))
+				.count());
+		
+		area.setCombat(area.getCombat() + combatValue);
+	}
+	
+	private static void addCombatEachKnife(PlayerArea area, int value) {
+		
+		int combatValue = (int) (value * area.getPlayedCards().stream()
+				.filter(playedCardCard -> playedCardCard.getSubType() == HeroRealmsCardSubType.KNIFE)
 				.count());
 		
 		area.setCombat(area.getCombat() + combatValue);
