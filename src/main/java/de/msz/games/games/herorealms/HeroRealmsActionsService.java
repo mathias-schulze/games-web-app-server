@@ -494,7 +494,16 @@ public class HeroRealmsActionsService {
 			return;
 		}
 		
-		if (abilitieSet.getLinkage() == HeroRealmsAbilityLinkage.OR) {
+		HeroRealmsAbilityLinkage linkage = abilitieSet.getLinkage();
+		if (linkage == HeroRealmsAbilityLinkage.BOTH_IF_2_CHAMPIONS_IN_PLAY) {
+			if (area.getChampions().size() >= 2) {
+				linkage = HeroRealmsAbilityLinkage.AND;
+			} else {
+				linkage = HeroRealmsAbilityLinkage.OR;
+			}
+		}
+		
+		if (linkage == HeroRealmsAbilityLinkage.OR) {
 			addOrDecisionOptions(area, card, abilitieSet);
 		} else {
 			abilitieSet.getAbilities().forEach(ability -> processCardAbility(area, card, ability));
