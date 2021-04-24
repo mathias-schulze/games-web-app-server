@@ -81,6 +81,7 @@ public class HeroRealmsTableService extends GameTableService {
 			if (withCharacterPacks) {
 				HeroRealmsCharacterPack character = characterPacks.remove(0);
 				area.setCharacter(character);
+				area.setHealth(character.getInitialHealth());
 				area.setCharacterRoundAbilityActive(true);
 				area.setCharacterRoundAbilityImage(character.getRoundAbilityImage());
 				area.setCharacterOneTimeAbilityImage(character.getOneTimeAbilityImage());
