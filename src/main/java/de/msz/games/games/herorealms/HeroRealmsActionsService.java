@@ -850,6 +850,10 @@ public class HeroRealmsActionsService {
 					playerArea.getHand().add(card);
 					resetBuyMode = true;
 					break;
+				case NEXT_ACTION_COSTS_LESS:
+				case NEXT_CHAMPION_COSTS_LESS:
+					playerArea.getDiscardPile().addCard(card);
+					resetBuyMode = true;
 				default:
 					break;
 			}
