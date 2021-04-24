@@ -892,6 +892,10 @@ public class HeroRealmsActionsService {
 		playerArea.setCombat(0);
 		playerArea.setActionMode(null);
 		
+		if (playerArea.getCharacter() != null) {
+			playerArea.setCharacterRoundAbilityActive(true);
+		}
+		
 		Deck<HeroRealmsCard> discardPile = playerArea.getDiscardPile();
 		
 		List<HeroRealmsCard> playedCards = playerArea.getPlayedCards();

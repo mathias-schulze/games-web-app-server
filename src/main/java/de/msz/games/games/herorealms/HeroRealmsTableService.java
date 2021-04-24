@@ -75,9 +75,16 @@ public class HeroRealmsTableService extends GameTableService {
 		table.setPlayerAreas(new HashMap<>());
 		for (Player player : players) {
 			PlayerArea area = new PlayerArea(player, position++);
-			area.setCharacter(withCharacterPacks ? characterPacks.remove(0) : null);
 			area.setActive(area.getPosition() == 0);
 			area.setHealth(HEALTH_START);
+			
+			if (withCharacterPacks) {
+				HeroRealmsCharacterPack character = characterPacks.remove(0);
+				area.setCharacter(character);
+				area.setCharacterRoundAbilityActive(true);
+				area.setCharacterRoundAbilityImage(character.getRoundAbilityImage());
+				area.setCharacterOneTimeAbilityImage(character.getOneTimeAbilityImage());
+			}
 			
 			area.setDeck(heroRealmsService.createStartingDeck(area.getCharacter()));
 			area.setHandSize(getNoOfCardsStart(area.getPosition(), players.size()));

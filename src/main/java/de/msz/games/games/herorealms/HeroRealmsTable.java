@@ -97,6 +97,13 @@ public class HeroRealmsTable extends GameTable {
 		
 		private HeroRealmsCharacterPack character;
 		
+		@Builder.Default
+		private boolean characterRoundAbilityActive = true;
+		
+		private String characterRoundAbilityImage;
+		
+		private String characterOneTimeAbilityImage;
+		
 		private int health;
 		
 		private int combat;
@@ -171,6 +178,9 @@ public class HeroRealmsTable extends GameTable {
 					.playerId((String) map.get("playerId"))
 					.playerName((String) map.get("playerName"))
 					.character(character)
+					.characterRoundAbilityActive(Optional.ofNullable((Boolean) map.get("characterRoundAbilityActive")).orElse(false))
+					.characterRoundAbilityImage((String) map.get("characterRoundAbilityImage"))
+					.characterOneTimeAbilityImage((String) map.get("characterOneTimeAbilityImage"))
 					.active((boolean) map.get("active"))
 					.actionMode(actionMode)
 					.selected4Discard(Optional.ofNullable((Boolean) map.get("selected4Discard")).orElse(false))
