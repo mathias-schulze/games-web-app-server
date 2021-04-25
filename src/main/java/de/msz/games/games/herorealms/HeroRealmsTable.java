@@ -136,6 +136,9 @@ public class HeroRealmsTable extends GameTable {
 		@Builder.Default
 		private int factionCountWild = 0;
 		
+		@Builder.Default
+		private boolean blessedThisTurn = false;
+		
 		public PlayerArea(Player player, int position) {
 			this.playerId = player.getId();
 			this.playerName = player.getName();
@@ -201,6 +204,7 @@ public class HeroRealmsTable extends GameTable {
 					.factionCountImperial(((Long) map.get("factionCountImperial")).intValue())
 					.factionCountNecros(((Long) map.get("factionCountNecros")).intValue())
 					.factionCountWild(((Long) map.get("factionCountWild")).intValue())
+					.blessedThisTurn(Optional.ofNullable((Boolean) map.get("blessedThisTurn")).orElse(false))
 					.build();
 		}
 	}

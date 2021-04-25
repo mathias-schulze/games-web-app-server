@@ -235,6 +235,18 @@ public class HeroRealmsController {
 		return (new NotificationResponse());
 	}
 	
+	@PostMapping("/{gameId}/select_player_for_bless")
+	@ResponseBody
+	public NotificationResponse selectPlayer4Bless(@PathVariable("gameId") String gameId,
+			@RequestBody SelectPlayerRequest selectPlayerRequest) throws InterruptedException, ExecutionException {
+		
+		HeroRealmsTable table = (HeroRealmsTable) tableService.getGameTable(gameId);
+		actionsService.selectPlayer4Bless(table, selectPlayerRequest.getPlayerId());
+		tableService.storeTable(gameId, table);
+		
+		return (new NotificationResponse());
+	}
+	
 	@PostMapping("/{gameId}/end_turn")
 	public NotificationResponse endTurn(@PathVariable("gameId") String gameId) throws InterruptedException, ExecutionException {
 		

@@ -626,6 +626,9 @@ public class HeroRealmsActionsService {
 			case SACRIFICE_HAND_OR_DISCARD_PILE_COMBAT:	
 				addOptionalDecision(area, card, type, value);
 				break;
+			case CLERIC_BLESS:
+				area.setActionMode(HeroRealmsSpecialActionMode.CLERIC_BLESS);
+				break;
 			default:
 				notificationService.addNotification(NotificationType.ERROR, "ability " + type + " not implemented");
 		}
@@ -712,10 +715,19 @@ public class HeroRealmsActionsService {
 			return;
 		}
 		
-		if (champion != null && champion.getDefense() > value) {
-			notificationService.addNotification(NotificationType.WARNING, 
-					"Nicht genug Schaden (" + value + ") um Champion zu besiegen (" + champion.getDefense() + ")!");
-			return;
+		int championDefense = 0;
+		if (champion != null) {
+			championDefense = champion.getDefense();
+			
+			if (champion.isBlessed()) {
+				championDefense++;
+			}
+			
+			if (championDefense > value) {
+				notificationService.addNotification(NotificationType.WARNING, 
+						"Nicht genug Schaden (" + value + ") um Champion zu besiegen (" + championDefense + ")!");
+				return;
+			}
 		}
 		
 		if (champion == null) {
@@ -733,8 +745,7 @@ public class HeroRealmsActionsService {
 			
 			activePlayerArea.setCombat(activePlayerArea.getCombat() - attackPlayerValue);
 		} else {
-			int defense = champion.getDefense();
-			int attackChampionValue = NumberUtils.min(defense, value);
+			int attackChampionValue = NumberUtils.min(championDefense, value);
 			
 			otherPlayerArea.getChampions().remove(champion);
 			otherPlayerArea.getDiscardPile().addCard(champion);
@@ -933,6 +944,19 @@ public class HeroRealmsActionsService {
 		playerArea.setCharacterOneTimeAbilityImage(null);
 	}
 	
+	void selectPlayer4Bless(HeroRealmsTable table, String playerId) {
+		
+		heroRealmsTableService.checkIsPlayerActive(table);
+		
+		PlayerArea targetPlayerArea = table.getPlayerAreas().get(playerId);
+		targetPlayerArea.setHealth(targetPlayerArea.getHealth()+3);
+		targetPlayerArea.getChampions().forEach(champion -> champion.setBlessed(true));
+		
+		Player activePlayer = table.getActivePlayer();
+		PlayerArea activePlayerArea = table.getPlayerAreas().get(activePlayer.getId());
+		activePlayerArea.setActionMode(null);
+	}
+	
 	void endTurn(HeroRealmsTable table) {
 		
 		heroRealmsTableService.checkIsPlayerActive(table);
@@ -961,6 +985,12 @@ public class HeroRealmsActionsService {
 		hand.addAll(draw(playerArea, 5));
 		
 		playerArea.getChampions().forEach(champion -> champion.setReady(true));
+		
+		if (playerArea.isBlessedThisTurn()) {
+			playerArea.setBlessedThisTurn(false);
+		} else {
+			playerArea.getChampions().forEach(champion -> champion.setBlessed(false));
+		}
 		
 		playerArea.getDecisions().clear();
 		

@@ -1,6 +1,7 @@
 package de.msz.games.games.herorealms;
 
 import java.util.Map;
+import java.util.Optional;
 
 import de.msz.games.games.Card;
 import lombok.Builder;
@@ -22,6 +23,8 @@ public class HeroRealmsCard implements Card {
     private boolean ready = true;
     @Builder.Default
     private boolean sacrifice = false;
+    @Builder.Default
+    private boolean blessed = false;
     
     public static HeroRealmsCard from(Map<String, Object> map) {
     	
@@ -42,6 +45,7 @@ public class HeroRealmsCard implements Card {
     		.image((String) map.get("image"))
     		.ready((Boolean) map.get("ready"))
     		.sacrifice((Boolean) map.get("sacrifice"))
+    		.blessed(Optional.ofNullable((Boolean) map.get("blessed")).orElse(false))
     		.build();
     }
 }

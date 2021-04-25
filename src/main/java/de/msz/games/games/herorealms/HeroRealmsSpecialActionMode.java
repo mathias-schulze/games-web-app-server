@@ -9,5 +9,6 @@ public enum HeroRealmsSpecialActionMode {
 	PUT_CARD_DISCARD_PILE_TOP_DECK,
 	PUT_CHAMPION_DISCARD_PILE_TOP_DECK,
 	SACRIFICE,
+	CLERIC_BLESS,
 	;
 }
