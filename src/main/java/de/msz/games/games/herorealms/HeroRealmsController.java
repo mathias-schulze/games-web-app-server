@@ -213,6 +213,28 @@ public class HeroRealmsController {
 		return (new NotificationResponse());
 	}
 	
+	@PostMapping("/{gameId}/process_character_round_abilities")
+	public NotificationResponse executeCharacterRoundAbilities(@PathVariable("gameId") String gameId)
+			throws InterruptedException, ExecutionException {
+		
+		HeroRealmsTable table = (HeroRealmsTable) tableService.getGameTable(gameId);
+		actionsService.processCharacterRoundAbilities(table);
+		tableService.storeTable(gameId, table);
+		
+		return (new NotificationResponse());
+	}
+
+	@PostMapping("/{gameId}/process_character_one_time_abilities")
+	public NotificationResponse executeCharacterOneTimeAbilities(@PathVariable("gameId") String gameId)
+			throws InterruptedException, ExecutionException {
+		
+		HeroRealmsTable table = (HeroRealmsTable) tableService.getGameTable(gameId);
+		actionsService.processCharacterOneTimeAbilities(table);
+		tableService.storeTable(gameId, table);
+		
+		return (new NotificationResponse());
+	}
+	
 	@PostMapping("/{gameId}/end_turn")
 	public NotificationResponse endTurn(@PathVariable("gameId") String gameId) throws InterruptedException, ExecutionException {
 		

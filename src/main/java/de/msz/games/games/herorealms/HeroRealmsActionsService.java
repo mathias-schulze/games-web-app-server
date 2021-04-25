@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
@@ -883,6 +884,53 @@ public class HeroRealmsActionsService {
 				return false;
 			});
 		}
+	}
+	
+	private static final int CHARACTER_ROUND_ABILITY_COST = 2;
+	
+	void processCharacterRoundAbilities(HeroRealmsTable table) {
+		
+		heroRealmsTableService.checkIsPlayerActive(table);
+		
+		Player activePlayer = table.getActivePlayer();
+		PlayerArea playerArea = table.getPlayerAreas().get(activePlayer.getId());
+		
+		if (!playerArea.isCharacterRoundAbilityActive()) {
+			notificationService.addNotification(NotificationType.ERROR, "character round abilities already processed");
+			return;
+		}
+		
+		if (playerArea.getGold() < CHARACTER_ROUND_ABILITY_COST) {
+			notificationService.addNotification(NotificationType.WARNING, 
+					"nicht genug Gold (Preis: " + CHARACTER_ROUND_ABILITY_COST + ", Gold: " + playerArea.getGold() + ")");
+			return;
+		}
+		
+		Stream.of(playerArea.getCharacter().getRoundAbilities()).forEach(ability -> {
+			processCardAbility(playerArea, null, ability);
+		});
+		
+		playerArea.setGold(playerArea.getGold()-CHARACTER_ROUND_ABILITY_COST);
+		playerArea.setCharacterRoundAbilityActive(false);
+	}
+	
+	void processCharacterOneTimeAbilities(HeroRealmsTable table) {
+		
+		heroRealmsTableService.checkIsPlayerActive(table);
+		
+		Player activePlayer = table.getActivePlayer();
+		PlayerArea playerArea = table.getPlayerAreas().get(activePlayer.getId());
+		
+		if (playerArea.getCharacterOneTimeAbilityImage() == null) {
+			notificationService.addNotification(NotificationType.ERROR, "character one time abilities already processed");
+			return;
+		}
+		
+		Stream.of(playerArea.getCharacter().getOneTimeAbilities()).forEach(ability -> {
+			processCardAbility(playerArea, null, ability);
+		});
+		
+		playerArea.setCharacterOneTimeAbilityImage(null);
 	}
 	
 	void endTurn(HeroRealmsTable table) {
