@@ -247,6 +247,54 @@ public class HeroRealmsController {
 		return (new NotificationResponse());
 	}
 	
+	@PostMapping("/{gameId}/ranger_track_discard")
+	@ResponseBody
+	public NotificationResponse rangerTrackDiscard(@PathVariable("gameId") String gameId,
+			@RequestBody PlayCardRequest selectCardRequest) throws InterruptedException, ExecutionException {
+		
+		HeroRealmsTable table = (HeroRealmsTable) tableService.getGameTable(gameId);
+		actionsService.rangerTrackDiscard(table, selectCardRequest.getCardId());
+		tableService.storeTable(gameId, table);
+		
+		return (new NotificationResponse());
+	}
+	
+	@PostMapping("/{gameId}/ranger_track_up")
+	@ResponseBody
+	public NotificationResponse rangerTrackUp(@PathVariable("gameId") String gameId,
+			@RequestBody PlayCardRequest selectCardRequest) throws InterruptedException, ExecutionException {
+		
+		HeroRealmsTable table = (HeroRealmsTable) tableService.getGameTable(gameId);
+		actionsService.rangerTrackUp(table, selectCardRequest.getCardId());
+		tableService.storeTable(gameId, table);
+		
+		return (new NotificationResponse());
+	}
+	
+	@PostMapping("/{gameId}/ranger_track_down")
+	@ResponseBody
+	public NotificationResponse rangerTrackDown(@PathVariable("gameId") String gameId,
+			@RequestBody PlayCardRequest selectCardRequest) throws InterruptedException, ExecutionException {
+		
+		HeroRealmsTable table = (HeroRealmsTable) tableService.getGameTable(gameId);
+		actionsService.rangerTrackDown(table, selectCardRequest.getCardId());
+		tableService.storeTable(gameId, table);
+		
+		return (new NotificationResponse());
+	}
+	
+	@PostMapping("/{gameId}/ranger_track_end")
+	@ResponseBody
+	public NotificationResponse rangerTrackEnd(@PathVariable("gameId") String gameId)
+			throws InterruptedException, ExecutionException {
+		
+		HeroRealmsTable table = (HeroRealmsTable) tableService.getGameTable(gameId);
+		actionsService.rangerTrackEnd(table);
+		tableService.storeTable(gameId, table);
+		
+		return (new NotificationResponse());
+	}
+	
 	@PostMapping("/{gameId}/end_turn")
 	public NotificationResponse endTurn(@PathVariable("gameId") String gameId) throws InterruptedException, ExecutionException {
 		

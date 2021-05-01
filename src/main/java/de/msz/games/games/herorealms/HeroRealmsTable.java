@@ -139,6 +139,10 @@ public class HeroRealmsTable extends GameTable {
 		@Builder.Default
 		private boolean blessedThisTurn = false;
 		
+		private List<HeroRealmsCard> rangerTrackCards;
+		
+		private int rangerTrackDiscardCount;
+		
 		public PlayerArea(Player player, int position) {
 			this.playerId = player.getId();
 			this.playerName = player.getName();
@@ -177,6 +181,11 @@ public class HeroRealmsTable extends GameTable {
 					.map(decision -> HeroRealmsDecision.from(decision))
 					.collect(Collectors.toList());
 			
+			List<HeroRealmsCard> rangerTrackCards = Optional.ofNullable((List<Map<String, Object>>) map.get("rangerTrackCards"))
+			 		.orElse(Collections.emptyList()).stream()
+					.map(card -> Card.from(card, HeroRealmsCard.class))
+					.collect(Collectors.toList());
+			
 			return PlayerArea.builder()
 					.playerId((String) map.get("playerId"))
 					.playerName((String) map.get("playerName"))
@@ -205,6 +214,8 @@ public class HeroRealmsTable extends GameTable {
 					.factionCountNecros(((Long) map.get("factionCountNecros")).intValue())
 					.factionCountWild(((Long) map.get("factionCountWild")).intValue())
 					.blessedThisTurn(Optional.ofNullable((Boolean) map.get("blessedThisTurn")).orElse(false))
+					.rangerTrackCards(rangerTrackCards)
+					.rangerTrackDiscardCount((Optional.ofNullable((Long) map.get("rangerTrackDiscardCount")).orElse(0L)).intValue())
 					.build();
 		}
 	}

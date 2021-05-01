@@ -2,6 +2,7 @@ package de.msz.games.games.herorealms;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -629,6 +630,16 @@ public class HeroRealmsActionsService {
 			case CLERIC_BLESS:
 				area.setActionMode(HeroRealmsSpecialActionMode.CLERIC_BLESS);
 				break;
+			case RANGER_TRACK:
+				if (area.getDeck().getCards().isEmpty()) {
+					notificationService.addNotification(NotificationType.WARNING, messageSource.getMessage(
+							"hero_realms.info.deck_empty", null, Locale.getDefault()));
+					return;
+				}
+				area.setActionMode(HeroRealmsSpecialActionMode.RANGER_TRACK);
+				area.setRangerTrackCards(area.getDeck().draw(3));
+				area.setRangerTrackDiscardCount(2);
+				break;
 			default:
 				notificationService.addNotification(NotificationType.ERROR, "ability " + type + " not implemented");
 		}
@@ -955,6 +966,76 @@ public class HeroRealmsActionsService {
 		Player activePlayer = table.getActivePlayer();
 		PlayerArea activePlayerArea = table.getPlayerAreas().get(activePlayer.getId());
 		activePlayerArea.setActionMode(null);
+	}
+	
+	void rangerTrackDiscard(HeroRealmsTable table, String cardId) {
+		
+		heroRealmsTableService.checkIsPlayerActive(table);
+		
+		Player activePlayer = table.getActivePlayer();
+		PlayerArea playerArea = table.getPlayerAreas().get(activePlayer.getId());
+		
+		List<HeroRealmsCard> rangerTrackCards = playerArea.getRangerTrackCards();
+		HeroRealmsCard card = rangerTrackCards.stream()
+				.filter(rangerTrackCard -> rangerTrackCard.getId().equals(cardId))
+				.findAny()
+				.orElseThrow(() -> new IllegalArgumentException("unknown card '" + cardId + "'"));
+		
+		rangerTrackCards.remove(card);
+		playerArea.getDiscardPile().addCard(card);
+		playerArea.setRangerTrackDiscardCount(playerArea.getRangerTrackDiscardCount()-1);
+	}
+	
+	void rangerTrackUp(HeroRealmsTable table, String cardId) {
+		
+		heroRealmsTableService.checkIsPlayerActive(table);
+		
+		Player activePlayer = table.getActivePlayer();
+		PlayerArea playerArea = table.getPlayerAreas().get(activePlayer.getId());
+		
+		List<HeroRealmsCard> rangerTrackCards = playerArea.getRangerTrackCards();
+		HeroRealmsCard card = rangerTrackCards.stream()
+				.filter(rangerTrackCard -> rangerTrackCard.getId().equals(cardId))
+				.findAny()
+				.orElseThrow(() -> new IllegalArgumentException("unknown card '" + cardId + "'"));
+		
+		int cardIndex = rangerTrackCards.indexOf(card);
+		rangerTrackCards.remove(cardIndex);
+		rangerTrackCards.add(cardIndex-1,card);
+	}
+	
+	void rangerTrackDown(HeroRealmsTable table, String cardId) {
+		
+		heroRealmsTableService.checkIsPlayerActive(table);
+		
+		Player activePlayer = table.getActivePlayer();
+		PlayerArea playerArea = table.getPlayerAreas().get(activePlayer.getId());
+		
+		List<HeroRealmsCard> rangerTrackCards = playerArea.getRangerTrackCards();
+		HeroRealmsCard card = rangerTrackCards.stream()
+				.filter(rangerTrackCard -> rangerTrackCard.getId().equals(cardId))
+				.findAny()
+				.orElseThrow(() -> new IllegalArgumentException("unknown card '" + cardId + "'"));
+		
+		int cardIndex = rangerTrackCards.indexOf(card);
+		rangerTrackCards.remove(cardIndex);
+		rangerTrackCards.add(cardIndex+1,card);
+	}
+	
+	void rangerTrackEnd(HeroRealmsTable table) {
+		
+		heroRealmsTableService.checkIsPlayerActive(table);
+		
+		Player activePlayer = table.getActivePlayer();
+		PlayerArea playerArea = table.getPlayerAreas().get(activePlayer.getId());
+		
+		List<HeroRealmsCard> rangerTrackCards = playerArea.getRangerTrackCards();
+		Collections.reverse(rangerTrackCards);
+		rangerTrackCards.forEach(card -> playerArea.getDeck().addCardTop(card));
+		
+		playerArea.getRangerTrackCards().clear();
+		playerArea.setRangerTrackDiscardCount(0);
+		playerArea.setActionMode(null);
 	}
 	
 	void endTurn(HeroRealmsTable table) {
