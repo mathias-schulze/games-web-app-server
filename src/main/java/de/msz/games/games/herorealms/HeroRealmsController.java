@@ -247,6 +247,18 @@ public class HeroRealmsController {
 		return (new NotificationResponse());
 	}
 	
+	@PostMapping("/{gameId}/put_champion_discard_into_play")
+	@ResponseBody
+	public NotificationResponse putChampionDiscardIntoPlay(@PathVariable("gameId") String gameId,
+			@RequestBody PlayCardRequest selectCardRequest) throws InterruptedException, ExecutionException {
+		
+		HeroRealmsTable table = (HeroRealmsTable) tableService.getGameTable(gameId);
+		actionsService.putChampionDiscardIntoPlay(table, selectCardRequest.getCardId());
+		tableService.storeTable(gameId, table);
+		
+		return (new NotificationResponse());
+	}
+	
 	@PostMapping("/{gameId}/ranger_track_discard")
 	@ResponseBody
 	public NotificationResponse rangerTrackDiscard(@PathVariable("gameId") String gameId,

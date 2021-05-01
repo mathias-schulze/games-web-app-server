@@ -401,6 +401,7 @@ public class HeroRealmsActionsService {
 			.findAny()
 			.orElseThrow(() -> new IllegalArgumentException("unknown champion '" + championId + "'"));
 		
+		champion.setStunnedSinceLastTurn(true);
 		champions.remove(champion);
 		otherPlayerArea.getDiscardPile().addCard(champion);
 		activePlayerArea.setActionMode(null);
@@ -546,11 +547,11 @@ public class HeroRealmsActionsService {
 				Locale.getDefault());
 	}
 	
-	private void processCardAbility(PlayerArea area, HeroRealmsCard card, HeroRealmsAbility ability) {
-		processCardAbility(area, card, ability.getType(), ability.getValue());
+	private boolean processCardAbility(PlayerArea area, HeroRealmsCard card, HeroRealmsAbility ability) {
+		return processCardAbility(area, card, ability.getType(), ability.getValue());
 	}
 	
-	private void processCardAbility(PlayerArea area, HeroRealmsCard card, HeroRealmsAbilityType type, int value) {
+	private boolean processCardAbility(PlayerArea area, HeroRealmsCard card, HeroRealmsAbilityType type, int value) {
 		
 		switch (type) {
 			case HEALTH:
@@ -630,11 +631,21 @@ public class HeroRealmsActionsService {
 			case CLERIC_BLESS:
 				area.setActionMode(HeroRealmsSpecialActionMode.CLERIC_BLESS);
 				break;
+			case PUT_CHAMPION_DISCARD_INTO_PLAY:
+				if (area.getDiscardPile().getCards().stream()
+						.filter(discardCard -> discardCard.isStunnedSinceLastTurn())
+						.findAny().isEmpty()) {
+					notificationService.addNotification(NotificationType.WARNING, messageSource.getMessage(
+							"hero_realms.info.no_champion_stunned_since_last_turn", null, Locale.getDefault()));
+					return false;
+				}
+				area.setActionMode(HeroRealmsSpecialActionMode.PUT_CHAMPION_DISCARD_INTO_PLAY);
+				break;
 			case RANGER_TRACK:
 				if (area.getDeck().getCards().isEmpty()) {
 					notificationService.addNotification(NotificationType.WARNING, messageSource.getMessage(
 							"hero_realms.info.deck_empty", null, Locale.getDefault()));
-					return;
+					return false;
 				}
 				area.setActionMode(HeroRealmsSpecialActionMode.RANGER_TRACK);
 				area.setRangerTrackCards(area.getDeck().draw(3));
@@ -642,7 +653,10 @@ public class HeroRealmsActionsService {
 				break;
 			default:
 				notificationService.addNotification(NotificationType.ERROR, "ability " + type + " not implemented");
+				return false;
 		}
+		
+		return true;
 	}
 	
 	private static void addCombatEachChampion(PlayerArea area, HeroRealmsCard card, int value, boolean onlyGuard,
@@ -758,6 +772,7 @@ public class HeroRealmsActionsService {
 		} else {
 			int attackChampionValue = NumberUtils.min(championDefense, value);
 			
+			champion.setStunnedSinceLastTurn(true);
 			otherPlayerArea.getChampions().remove(champion);
 			otherPlayerArea.getDiscardPile().addCard(champion);
 			
@@ -948,9 +963,11 @@ public class HeroRealmsActionsService {
 			return;
 		}
 		
-		Stream.of(playerArea.getCharacter().getOneTimeAbilities()).forEach(ability -> {
-			processCardAbility(playerArea, null, ability);
-		});
+		for (HeroRealmsAbility ability : playerArea.getCharacter().getOneTimeAbilities()) {
+			if (!processCardAbility(playerArea, null, ability)) {
+				return;
+			}
+		}
 		
 		playerArea.setCharacterOneTimeAbilityImage(null);
 	}
@@ -966,6 +983,27 @@ public class HeroRealmsActionsService {
 		Player activePlayer = table.getActivePlayer();
 		PlayerArea activePlayerArea = table.getPlayerAreas().get(activePlayer.getId());
 		activePlayerArea.setActionMode(null);
+	}
+	
+	void putChampionDiscardIntoPlay(HeroRealmsTable table, String cardId) {
+		
+		heroRealmsTableService.checkIsPlayerActive(table);
+		
+		Player activePlayer = table.getActivePlayer();
+		PlayerArea playerArea = table.getPlayerAreas().get(activePlayer.getId());
+		
+		HeroRealmsCard champion = playerArea.getDiscardPile().getCards().stream()
+				.filter(discardCard -> discardCard.isStunnedSinceLastTurn())
+				.filter(discardCard -> discardCard.getId().equals(cardId))
+				.findAny()
+				.orElseThrow(() -> new IllegalArgumentException("unknown champion '" + cardId + "'"));
+		
+		playerArea.getDiscardPile().removeCard(champion);
+		playerArea.getHand().add(champion);
+		
+		playCard(table, cardId);
+		
+		playerArea.setActionMode(null);
 	}
 	
 	void rangerTrackDiscard(HeroRealmsTable table, String cardId) {
@@ -1066,6 +1104,7 @@ public class HeroRealmsActionsService {
 		hand.addAll(draw(playerArea, 5));
 		
 		playerArea.getChampions().forEach(champion -> champion.setReady(true));
+		playerArea.getDiscardPile().getCards().forEach(champion -> champion.setStunnedSinceLastTurn(false));
 		
 		if (playerArea.isBlessedThisTurn()) {
 			playerArea.setBlessedThisTurn(false);

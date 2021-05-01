@@ -25,6 +25,8 @@ public class HeroRealmsCard implements Card {
     private boolean sacrifice = false;
     @Builder.Default
     private boolean blessed = false;
+    @Builder.Default
+    private boolean stunnedSinceLastTurn = false;
     
     public static HeroRealmsCard from(Map<String, Object> map) {
     	
@@ -46,6 +48,7 @@ public class HeroRealmsCard implements Card {
     		.ready((Boolean) map.get("ready"))
     		.sacrifice((Boolean) map.get("sacrifice"))
     		.blessed(Optional.ofNullable((Boolean) map.get("blessed")).orElse(false))
+    		.stunnedSinceLastTurn(Optional.ofNullable((Boolean) map.get("stunnedSinceLastTurn")).orElse(false))
     		.build();
     }
 }
