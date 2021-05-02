@@ -172,7 +172,8 @@ public class HeroRealmsController {
 			@RequestBody AttackRequest attackRequest) throws InterruptedException, ExecutionException {
 		
 		HeroRealmsTable table = (HeroRealmsTable) tableService.getGameTable(gameId);
-		actionsService.attack(table, attackRequest.getPlayerId(), attackRequest.getChampionId(), attackRequest.getValue());
+		actionsService.attack(table, attackRequest.getPlayerId(), attackRequest.getChampionId(),
+				attackRequest.getValue(), false);
 		tableService.storeTable(gameId, table);
 		
 		return (new NotificationResponse());
@@ -316,6 +317,18 @@ public class HeroRealmsController {
 		HeroRealmsTable table = (HeroRealmsTable) tableService.getGameTable(gameId);
 		actionsService.acquireOpponentDiscard(table, acquireOpponentDiscardRequest.getPlayerId(), 
 				acquireOpponentDiscardRequest.getCardId());
+		tableService.storeTable(gameId, table);
+		
+		return (new NotificationResponse());
+	}
+	
+	@PostMapping("/{gameId}/select_player_for_fireball")
+	@ResponseBody
+	public NotificationResponse selectPlayer4Fireball(@PathVariable("gameId") String gameId,
+			@RequestBody SelectPlayerRequest selectPlayerRequest) throws InterruptedException, ExecutionException {
+		
+		HeroRealmsTable table = (HeroRealmsTable) tableService.getGameTable(gameId);
+		actionsService.selectPlayer4Fireball(table, selectPlayerRequest.getPlayerId());
 		tableService.storeTable(gameId, table);
 		
 		return (new NotificationResponse());

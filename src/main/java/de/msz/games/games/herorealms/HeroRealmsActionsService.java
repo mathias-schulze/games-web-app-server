@@ -667,6 +667,9 @@ public class HeroRealmsActionsService {
 				}
 				area.setActionMode(HeroRealmsSpecialActionMode.ACQUIRE_OPPONENT_DISCARD);
 				break;
+			case WIZARD_FIREBALL:
+				area.setActionMode(HeroRealmsSpecialActionMode.WIZARD_FIREBALL);
+				break;
 			default:
 				notificationService.addNotification(NotificationType.ERROR, "ability " + type + " not implemented");
 				return false;
@@ -729,7 +732,7 @@ public class HeroRealmsActionsService {
 		return decision;
 	}
 	
-	void attack(HeroRealmsTable table, String playerId, String championId, int value)
+	void attack(HeroRealmsTable table, String playerId, String championId, int value, boolean fireball)
 			throws InterruptedException, ExecutionException {
 		
 		heroRealmsTableService.checkIsPlayerActive(table);
@@ -750,7 +753,9 @@ public class HeroRealmsActionsService {
 			}
 		}
 		
-		if (hasGuard(otherPlayerArea) && (champion == null || champion.getType() != HeroRealmsCardType.GUARD)) {
+		if (!fireball
+				&& hasGuard(otherPlayerArea)
+				&& (champion == null || champion.getType() != HeroRealmsCardType.GUARD)) {
 			notificationService.addNotification(NotificationType.WARNING, 
 					"Kein Angriff möglich! Es ist ein Wächter vorhanden!");
 			return;
@@ -758,13 +763,13 @@ public class HeroRealmsActionsService {
 		
 		int championDefense = 0;
 		if (champion != null) {
-			championDefense = champion.getDefense();
+			championDefense = champion.getDefense() - champion.getDamage();
 			
 			if (champion.isBlessed()) {
 				championDefense++;
 			}
 			
-			if (championDefense > value) {
+			if (!fireball & championDefense > value) {
 				notificationService.addNotification(NotificationType.WARNING, 
 						"Nicht genug Schaden (" + value + ") um Champion zu besiegen (" + championDefense + ")!");
 				return;
@@ -784,15 +789,24 @@ public class HeroRealmsActionsService {
 				}
 			}
 			
-			activePlayerArea.setCombat(activePlayerArea.getCombat() - attackPlayerValue);
+			if (!fireball) {
+				activePlayerArea.setCombat(activePlayerArea.getCombat() - attackPlayerValue);
+			}
 		} else {
 			int attackChampionValue = NumberUtils.min(championDefense, value);
 			
-			champion.setStunnedSinceLastTurn(true);
-			otherPlayerArea.getChampions().remove(champion);
-			otherPlayerArea.getDiscardPile().addCard(champion);
+			if (fireball && attackChampionValue < championDefense) {
+				champion.setDamage(value);
+			} else {
+				champion.setStunnedSinceLastTurn(true);
+				champion.setDamage(0);
+				otherPlayerArea.getChampions().remove(champion);
+				otherPlayerArea.getDiscardPile().addCard(champion);
+			}
 			
-			activePlayerArea.setCombat(activePlayerArea.getCombat() - attackChampionValue);
+			if (!fireball) {
+				activePlayerArea.setCombat(activePlayerArea.getCombat() - attackChampionValue);
+			}
 		}
 	}
 	
@@ -1119,6 +1133,29 @@ public class HeroRealmsActionsService {
 		activePlayerArea.setActionMode(null);
 	}
 	
+	private static final int FIREBALL_ATTACK_VALUE = 4;
+	
+	void selectPlayer4Fireball(HeroRealmsTable table, String playerId) throws InterruptedException, ExecutionException {
+		
+		heroRealmsTableService.checkIsPlayerActive(table);
+		
+		Player activePlayer = table.getActivePlayer();
+		PlayerArea activePlayerArea = table.getPlayerAreas().get(activePlayer.getId());
+		
+		PlayerArea otherPlayerArea = table.getPlayerAreas().get(playerId);
+		
+		attack(table, playerId, null, FIREBALL_ATTACK_VALUE, true);
+		if (!CollectionUtils.isEmpty(otherPlayerArea.getChampions())) {
+			for (String championId : otherPlayerArea.getChampions().stream()
+					.map(champion -> champion.getId())
+					.collect(Collectors.toList())) {
+				attack(table, playerId, championId, FIREBALL_ATTACK_VALUE, true);
+			}
+		}
+		
+		activePlayerArea.setActionMode(null);
+	}
+	
 	void endTurn(HeroRealmsTable table) {
 		
 		heroRealmsTableService.checkIsPlayerActive(table);
@@ -1161,6 +1198,10 @@ public class HeroRealmsActionsService {
 		playerArea.setFactionCountImperial(0);
 		playerArea.setFactionCountNecros(0);
 		playerArea.setFactionCountWild(0);
+		
+		table.getPlayerAreas().values().stream()
+				.flatMap(area -> area.getChampions().stream())
+				.forEach(champion -> champion.setDamage(0));
 		
 		activateNextPlayer(table, activePlayer);
 	}

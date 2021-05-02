@@ -15,6 +15,8 @@ public class HeroRealmsCard implements Card {
     private String name;
     private int cost;
     private int defense;
+    @Builder.Default
+    private int damage = 0;
     private HeroRealmsFaction faction;
     private HeroRealmsCardType type;
     private HeroRealmsCardSubType subType;
@@ -41,6 +43,7 @@ public class HeroRealmsCard implements Card {
     		.name((String) map.get("name"))
     		.cost(((Long) map.get("cost")).intValue())
     		.defense(((Long) map.get("defense")).intValue())
+    		.damage(Optional.ofNullable((Long) map.get("damage")).orElse(0L).intValue())
     		.faction(faction)
     		.type(HeroRealmsCardType.valueOf((String) map.get("type")))
     		.subType(subType)
