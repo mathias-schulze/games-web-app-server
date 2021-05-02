@@ -307,6 +307,26 @@ public class HeroRealmsController {
 		return (new NotificationResponse());
 	}
 	
+	@PostMapping("/{gameId}/acquire_opponent_discard")
+	@ResponseBody
+	public NotificationResponse acquireOpponentDiscard(@PathVariable("gameId") String gameId,
+			@RequestBody AcquireOpponentDiscardRequest acquireOpponentDiscardRequest)
+			throws InterruptedException, ExecutionException {
+		
+		HeroRealmsTable table = (HeroRealmsTable) tableService.getGameTable(gameId);
+		actionsService.acquireOpponentDiscard(table, acquireOpponentDiscardRequest.getPlayerId(), 
+				acquireOpponentDiscardRequest.getCardId());
+		tableService.storeTable(gameId, table);
+		
+		return (new NotificationResponse());
+	}
+	
+	@Data
+	public static class AcquireOpponentDiscardRequest {
+		private String playerId;
+		private String cardId;
+	}
+	
 	@PostMapping("/{gameId}/end_turn")
 	public NotificationResponse endTurn(@PathVariable("gameId") String gameId) throws InterruptedException, ExecutionException {
 		

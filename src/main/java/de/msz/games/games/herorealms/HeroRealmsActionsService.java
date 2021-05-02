@@ -61,7 +61,7 @@ public class HeroRealmsActionsService {
 				.findAny()
 				.orElseThrow(() -> new IllegalArgumentException("unknown card '" + cardId + "'"));
 		
-		processCardAbilities(playerArea, card);
+		processCardAbilities(table, playerArea, card);
 		
 		hand.remove(card);
 		
@@ -90,7 +90,7 @@ public class HeroRealmsActionsService {
 				.orElseThrow(() -> new IllegalArgumentException("unknown champion '" + championId + "'"));
 		
 		champion.setReady(false);
-		processCardAbilities(playerArea, champion);
+		processCardAbilities(table, playerArea, champion);
 	}
 
 	void makeDecision(HeroRealmsTable table, String decisionId, String optionId) {
@@ -107,7 +107,7 @@ public class HeroRealmsActionsService {
 		
 		switch (madeDecision.getType()) {
 			case SELECT_ONE:
-				makeDecisionSelect(playerArea, madeDecision, optionId);
+				makeDecisionSelect(table, playerArea, madeDecision, optionId);
 				playerArea.getDecisions().remove(madeDecision);
 				break;
 			case OPTIONAL:
@@ -120,7 +120,7 @@ public class HeroRealmsActionsService {
 		}
 	}
 	
-	void makeDecisionSelect(PlayerArea area, HeroRealmsDecision decision, String optionId) {
+	void makeDecisionSelect(HeroRealmsTable table, PlayerArea area, HeroRealmsDecision decision, String optionId) {
 		
 		HeroRealmsDecisionOption selectedOption = decision.getOptions().stream()
 				.filter(option -> option.getId().equals(optionId))
@@ -130,7 +130,7 @@ public class HeroRealmsActionsService {
 		
 		HeroRealmsCard card4Decision = getCard4Decision(area, decision);
 		
-		processCardAbility(area, card4Decision, selectedOption.getAbilityType(), selectedOption.getValue());
+		processCardAbility(table, area, card4Decision, selectedOption.getAbilityType(), selectedOption.getValue());
 	}
 	
 	private boolean makeDecisionOptional(HeroRealmsTable table, PlayerArea area, HeroRealmsDecision decision) {
@@ -201,7 +201,7 @@ public class HeroRealmsActionsService {
 					return false;
 				}
 				area.setActionMode(HeroRealmsSpecialActionMode.SACRIFICE);
-				processCardAbility(area, card4Decision, HeroRealmsAbilityType.COMBAT, selectedOption.getValue());
+				processCardAbility(table, area, card4Decision, HeroRealmsAbilityType.COMBAT, selectedOption.getValue());
 				break;
 			default:
 				notificationService.addNotification(NotificationType.ERROR, "ability " + abilityType + " not implemented");
@@ -317,7 +317,7 @@ public class HeroRealmsActionsService {
 		
 		HeroRealmsCard card = cardOptional.get();
 		if (withAbility) {
-			processSacrificeAbilities(playerArea, card);
+			processSacrificeAbilities(table, playerArea, card);
 		} else {
 			playerArea.setActionMode(null);
 		}
@@ -425,32 +425,32 @@ public class HeroRealmsActionsService {
 		playerArea.setActionMode(null);
 	}
 	
-	private void processCardAbilities(PlayerArea area, HeroRealmsCard card) {
+	private void processCardAbilities(HeroRealmsTable table, PlayerArea area, HeroRealmsCard card) {
 		
 		HeroRealmsCardAbilities cardAbilities = heroRealmsService.getCardAbilities(card.getName());
-		processCardAbilities(area, card, cardAbilities.getPrimaryAbility());
+		processCardAbilities(table, area, card, cardAbilities.getPrimaryAbility());
 		
 		if (card.getFaction() != null) {
 			switch(card.getFaction()) {
 				case GUILD:
 					int factionCountGuild = area.getFactionCountGuild();
 					area.setFactionCountGuild(++factionCountGuild);
-					processAllyAbilities(area, card, cardAbilities, HeroRealmsFaction.GUILD, factionCountGuild);
+					processAllyAbilities(table, area, card, cardAbilities, HeroRealmsFaction.GUILD, factionCountGuild);
 					break;
 				case IMPERIAL:
 					int factionCountImperial = area.getFactionCountImperial();
 					area.setFactionCountImperial(++factionCountImperial);
-					processAllyAbilities(area, card, cardAbilities, HeroRealmsFaction.IMPERIAL, factionCountImperial);
+					processAllyAbilities(table, area, card, cardAbilities, HeroRealmsFaction.IMPERIAL, factionCountImperial);
 					break;
 				case NECROS:
 					int factionCountNecros = area.getFactionCountNecros();
 					area.setFactionCountNecros(++factionCountNecros);
-					processAllyAbilities(area, card, cardAbilities, HeroRealmsFaction.NECROS, factionCountNecros);
+					processAllyAbilities(table, area, card, cardAbilities, HeroRealmsFaction.NECROS, factionCountNecros);
 					break;
 				case WILD:
 					int factionCountWild = area.getFactionCountWild();
 					area.setFactionCountWild(++factionCountWild);
-					processAllyAbilities(area, card, cardAbilities, HeroRealmsFaction.WILD, factionCountWild);
+					processAllyAbilities(table, area, card, cardAbilities, HeroRealmsFaction.WILD, factionCountWild);
 					break;
 				default:
 					break;
@@ -458,11 +458,11 @@ public class HeroRealmsActionsService {
 		}
 	}
 	
-	private void processAllyAbilities(PlayerArea area, HeroRealmsCard card, HeroRealmsCardAbilities cardAbilities,
-			HeroRealmsFaction faction, int factionCount) {
+	private void processAllyAbilities(HeroRealmsTable table, PlayerArea area, HeroRealmsCard card,
+			HeroRealmsCardAbilities cardAbilities, HeroRealmsFaction faction, int factionCount) {
 		
 		if (factionCount > 1) {
-			processCardAbilities(area, card, cardAbilities.getAllyAbility());
+			processCardAbilities(table, area, card, cardAbilities.getAllyAbility());
 		}
 		
 		if (factionCount == 2) {
@@ -474,12 +474,12 @@ public class HeroRealmsActionsService {
 				.filter(playedCard -> playedCard.getFaction() == faction)
 				.forEach(otherCard -> {
 					HeroRealmsCardAbilities otherCardAbilities = heroRealmsService.getCardAbilities(otherCard.getName());
-					processCardAbilities(area, card, otherCardAbilities.getAllyAbility());
+					processCardAbilities(table, area, card, otherCardAbilities.getAllyAbility());
 				});
 		}
 	}
 	
-	private void processSacrificeAbilities(PlayerArea area, HeroRealmsCard card) {
+	private void processSacrificeAbilities(HeroRealmsTable table, PlayerArea area, HeroRealmsCard card) {
 		
 		HeroRealmsCardAbilities cardAbilities = heroRealmsService.getCardAbilities(card.getName());
 		HeroRealmsAbilitySet sacrificeAbilities = cardAbilities.getSacrificeAbility();
@@ -488,10 +488,11 @@ public class HeroRealmsActionsService {
 			throw new IllegalArgumentException("no sacrifice ability for card '" + card.getId() + "'");
 		}
 		
-		processCardAbilities(area, card, sacrificeAbilities);
+		processCardAbilities(table, area, card, sacrificeAbilities);
 	}
 	
-	private void processCardAbilities(PlayerArea area, HeroRealmsCard card, HeroRealmsAbilitySet abilitieSet) {
+	private void processCardAbilities(HeroRealmsTable table, PlayerArea area, HeroRealmsCard card,
+			HeroRealmsAbilitySet abilitieSet) {
 		
 		if (abilitieSet == null) {
 			return;
@@ -509,7 +510,7 @@ public class HeroRealmsActionsService {
 		if (linkage == HeroRealmsAbilityLinkage.OR) {
 			addOrDecisionOptions(area, card, abilitieSet);
 		} else {
-			abilitieSet.getAbilities().forEach(ability -> processCardAbility(area, card, ability));
+			abilitieSet.getAbilities().forEach(ability -> processCardAbility(table, area, card, ability));
 		}
 	}
 	
@@ -547,11 +548,13 @@ public class HeroRealmsActionsService {
 				Locale.getDefault());
 	}
 	
-	private boolean processCardAbility(PlayerArea area, HeroRealmsCard card, HeroRealmsAbility ability) {
-		return processCardAbility(area, card, ability.getType(), ability.getValue());
+	private boolean processCardAbility(HeroRealmsTable table, PlayerArea area, HeroRealmsCard card,
+			HeroRealmsAbility ability) {
+		return processCardAbility(table, area, card, ability.getType(), ability.getValue());
 	}
 	
-	private boolean processCardAbility(PlayerArea area, HeroRealmsCard card, HeroRealmsAbilityType type, int value) {
+	private boolean processCardAbility(HeroRealmsTable table, PlayerArea area, HeroRealmsCard card,
+			HeroRealmsAbilityType type, int value) {
 		
 		switch (type) {
 			case HEALTH:
@@ -650,6 +653,19 @@ public class HeroRealmsActionsService {
 				area.setActionMode(HeroRealmsSpecialActionMode.RANGER_TRACK);
 				area.setRangerTrackCards(area.getDeck().draw(3));
 				area.setRangerTrackDiscardCount(2);
+				break;
+			case ACQUIRE_OPPONENT_DISCARD:
+				if (table.getPlayerAreas().values().stream()
+						.filter(otherArea -> !otherArea.getPlayerId().equals(area.getPlayerId()))
+						.flatMap(otherArea -> otherArea.getDiscardPile().getCards().stream())
+						.filter(discardCard -> discardCard.getCost() > 0 && discardCard.getCost() <= area.getGold())
+						.findAny()
+						.isEmpty()) {
+					notificationService.addNotification(NotificationType.WARNING, messageSource.getMessage(
+							"hero_realms.info.no_card_for_acquire_discard", null, Locale.getDefault()));
+					return false;
+				}
+				area.setActionMode(HeroRealmsSpecialActionMode.ACQUIRE_OPPONENT_DISCARD);
 				break;
 			default:
 				notificationService.addNotification(NotificationType.ERROR, "ability " + type + " not implemented");
@@ -944,7 +960,7 @@ public class HeroRealmsActionsService {
 		}
 		
 		Stream.of(playerArea.getCharacter().getRoundAbilities()).forEach(ability -> {
-			processCardAbility(playerArea, null, ability);
+			processCardAbility(table, playerArea, null, ability);
 		});
 		
 		playerArea.setGold(playerArea.getGold()-CHARACTER_ROUND_ABILITY_COST);
@@ -964,7 +980,7 @@ public class HeroRealmsActionsService {
 		}
 		
 		for (HeroRealmsAbility ability : playerArea.getCharacter().getOneTimeAbilities()) {
-			if (!processCardAbility(playerArea, null, ability)) {
+			if (!processCardAbility(table, playerArea, null, ability)) {
 				return;
 			}
 		}
@@ -1074,6 +1090,33 @@ public class HeroRealmsActionsService {
 		playerArea.getRangerTrackCards().clear();
 		playerArea.setRangerTrackDiscardCount(0);
 		playerArea.setActionMode(null);
+	}
+	
+	void acquireOpponentDiscard(HeroRealmsTable table, String playerId, String cardId) {
+		
+		heroRealmsTableService.checkIsPlayerActive(table);
+		
+		Player activePlayer = table.getActivePlayer();
+		PlayerArea activePlayerArea = table.getPlayerAreas().get(activePlayer.getId());
+		
+		PlayerArea otherPlayerArea = table.getPlayerAreas().get(playerId);
+		HeroRealmsCard card = otherPlayerArea.getDiscardPile().getCards().stream()
+				.filter(discardCard -> discardCard.getId().equals(cardId))
+				.findAny()
+				.orElseThrow(() -> new IllegalArgumentException("unknown card '" + cardId + "'"));
+		
+		int cost = card.getCost();
+		if (activePlayerArea.getGold() < cost) {
+			notificationService.addNotification(NotificationType.WARNING, 
+					"nicht genug Gold (Preis: " + cost + ", Gold: " + activePlayerArea.getGold() + ")");
+			return;
+		}
+		activePlayerArea.setGold(activePlayerArea.getGold()-cost);
+		
+		otherPlayerArea.getDiscardPile().removeCard(card);
+		activePlayerArea.getDiscardPile().addCard(card);
+		
+		activePlayerArea.setActionMode(null);
 	}
 	
 	void endTurn(HeroRealmsTable table) {
