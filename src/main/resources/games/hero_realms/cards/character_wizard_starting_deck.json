@@ -49,7 +49,7 @@
         "PrimaryAbility": {
             "Abilities": [
                 { "Type": "COMBAT", "Value": 1 },
-                { "Type": "DRAW_CARD_IF_ACTIONS_IN_PLAY", "Value": 2 }
+                { "Type": "DRAW_CARD_IF_ACTIONS_IN_PLAY", "Value": 1 }
             ]
         }
   },
