@@ -588,7 +588,7 @@ public class HeroRealmsActionsService {
 				area.getHand().addAll(draw(area, value));
 				break;
 			case DRAW_CARD_IF_COMBAT_7:
-				if (area.getCombat() >= 5) {
+				if (area.getCombat() >= 7) {
 					area.getHand().addAll(draw(area, value));
 				}
 				break;
