@@ -762,6 +762,7 @@ public class HeroRealmsActionsService {
 		}
 		
 		int championDefense = 0;
+		int playerCombat = activePlayerArea.getCombat();
 		if (champion != null) {
 			championDefense = champion.getDefense() - champion.getDamage();
 			
@@ -769,9 +770,9 @@ public class HeroRealmsActionsService {
 				championDefense++;
 			}
 			
-			if (!fireball & championDefense > value) {
+			if (!fireball & championDefense > playerCombat) {
 				notificationService.addNotification(NotificationType.WARNING, 
-						"Nicht genug Schaden (" + value + ") um Champion zu besiegen (" + championDefense + ")!");
+						"Nicht genug Schaden (" + playerCombat + ") um Champion zu besiegen (" + championDefense + ")!");
 				return;
 			}
 		}
@@ -790,13 +791,13 @@ public class HeroRealmsActionsService {
 			}
 			
 			if (!fireball) {
-				activePlayerArea.setCombat(activePlayerArea.getCombat() - attackPlayerValue);
+				activePlayerArea.setCombat(playerCombat - attackPlayerValue);
 			}
 		} else {
-			int attackChampionValue = NumberUtils.min(championDefense, value);
+			int attackChampionValue = NumberUtils.min(championDefense, playerCombat);
 			
-			if (fireball && attackChampionValue < championDefense) {
-				champion.setDamage(value);
+			if (fireball && FIREBALL_ATTACK_VALUE < championDefense) {
+				champion.setDamage(FIREBALL_ATTACK_VALUE);
 			} else {
 				champion.setStunnedSinceLastTurn(true);
 				champion.setDamage(0);
@@ -805,7 +806,7 @@ public class HeroRealmsActionsService {
 			}
 			
 			if (!fireball) {
-				activePlayerArea.setCombat(activePlayerArea.getCombat() - attackChampionValue);
+				activePlayerArea.setCombat(playerCombat - attackChampionValue);
 			}
 		}
 	}
@@ -1013,6 +1014,10 @@ public class HeroRealmsActionsService {
 		Player activePlayer = table.getActivePlayer();
 		PlayerArea activePlayerArea = table.getPlayerAreas().get(activePlayer.getId());
 		activePlayerArea.setActionMode(null);
+		
+		if (activePlayer.getId().equals(targetPlayerArea.getPlayerId())) {
+			activePlayerArea.setBlessedThisTurn(true);
+		}
 	}
 	
 	void putChampionDiscardIntoPlay(HeroRealmsTable table, String cardId) {
