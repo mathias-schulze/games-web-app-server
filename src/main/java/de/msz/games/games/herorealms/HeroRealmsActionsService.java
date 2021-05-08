@@ -215,8 +215,7 @@ public class HeroRealmsActionsService {
 		return CollectionUtils.union(area.getPlayedCards(), area.getChampions()).stream()
 				.filter(card -> card.getId().equals(decision.getCardId()))
 				.findAny()
-				.orElseThrow(() -> new IllegalArgumentException(
-						"unknown card '" + decision.getCardId() + "' for decision '" + decision.getId() + "'"));
+				.orElse(null);
 	}
 	
 	private static void setBuyMode(PlayerArea area, HeroRealmsDecision decision,
@@ -721,7 +720,7 @@ public class HeroRealmsActionsService {
 		
 		HeroRealmsDecision decision = HeroRealmsDecision.builder()
 				.id(UUID.randomUUID().toString())
-				.cardId(card.getId())
+				.cardId(card == null ? null : card.getId())
 				.type(HeroRealmsDecisionType.OPTIONAL)
 				.text(getAbilityMessageText(type, value))
 				.options(Arrays.asList(option))
