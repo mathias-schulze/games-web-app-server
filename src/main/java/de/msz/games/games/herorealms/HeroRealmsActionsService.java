@@ -1160,6 +1160,32 @@ public class HeroRealmsActionsService {
 		activePlayerArea.setActionMode(null);
 	}
 	
+	void cancelSpecialActionMode(HeroRealmsTable table) {
+		
+		heroRealmsTableService.checkIsPlayerActive(table);
+		
+		Player player = table.getActivePlayer();
+		PlayerArea playerArea = table.getPlayerAreas().get(player.getId());
+		
+		if (playerArea.getActionMode() == null) {
+			return;
+		}
+		
+		switch (playerArea.getActionMode()) {
+			case OPPONENT_DISCARD_CARD:
+			case PREPARE_CHAMPION:
+			case STUN_TARGET_CHAMPION:
+			case PUT_CARD_DISCARD_PILE_TOP_DECK:
+			case PUT_CHAMPION_DISCARD_PILE_TOP_DECK:
+			case SACRIFICE:
+			case CLERIC_BLESS:
+				playerArea.setActionMode(null);
+				break;
+			default:
+				throw new IllegalArgumentException("mode '" + playerArea.getActionMode() + "' not supported");
+		}
+	}
+	
 	void endTurn(HeroRealmsTable table) {
 		
 		heroRealmsTableService.checkIsPlayerActive(table);

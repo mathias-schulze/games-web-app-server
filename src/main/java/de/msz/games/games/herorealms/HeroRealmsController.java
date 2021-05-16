@@ -339,6 +339,16 @@ public class HeroRealmsController {
 		private String playerId;
 		private String cardId;
 	}
+
+	@PostMapping("/{gameId}/cancel_special_action_mode")
+	public NotificationResponse endSpecialActionMode(@PathVariable("gameId") String gameId) throws InterruptedException, ExecutionException {
+		
+		HeroRealmsTable table = (HeroRealmsTable) tableService.getGameTable(gameId);
+		actionsService.cancelSpecialActionMode(table);
+		tableService.storeTable(gameId, table);
+		
+		return (new NotificationResponse());
+	}
 	
 	@PostMapping("/{gameId}/end_turn")
 	public NotificationResponse endTurn(@PathVariable("gameId") String gameId) throws InterruptedException, ExecutionException {
