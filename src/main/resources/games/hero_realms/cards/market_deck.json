@@ -755,7 +755,7 @@
         },
         "AllyAbility": {
             "Abilities": [
-                { "Type": "COMBAT", "Value": 3 }
+                { "Type": "DRAW_CARD" }
             ]
         }
     },
