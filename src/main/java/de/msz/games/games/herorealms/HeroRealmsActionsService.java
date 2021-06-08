@@ -931,30 +931,52 @@ public class HeroRealmsActionsService {
 			}
 		}
 		
-		resetBuyMode(playerArea, resetBuyMode);
+		if (resetBuyMode) {
+			resetBuyMode(playerArea);
+			activateNextBuyMode(playerArea);
+		}
 	}
 	
-	private static void resetBuyMode(PlayerArea playerArea, boolean resetBuyMode) {
-		
-		if (resetBuyMode) {
-			playerArea.setBuyMode(null);
-			playerArea.getDecisions().removeIf(decision -> {
-				if (decision.isActive()) {
-					switch (decision.getOptions().get(0).getAbilityType()) {
-					case NEXT_ACTION_TOP_DECK:
-					case NEXT_ACQUIRE_TOP_DECK:
-					case NEXT_ACQUIRE_HAND:
-					case NEXT_ACTION_COSTS_LESS:
-					case NEXT_CHAMPION_COSTS_LESS:
-						return true;
-					default:
-						break;
-					}
+	private static void resetBuyMode(PlayerArea playerArea) {
+	
+		playerArea.setBuyMode(null);
+		playerArea.getDecisions().removeIf(decision -> {
+			if (decision.isActive()) {
+				switch (decision.getOptions().get(0).getAbilityType()) {
+				case NEXT_ACTION_TOP_DECK:
+				case NEXT_ACQUIRE_TOP_DECK:
+				case NEXT_ACQUIRE_HAND:
+				case NEXT_ACTION_COSTS_LESS:
+				case NEXT_CHAMPION_COSTS_LESS:
+					return true;
+				default:
+					break;
 				}
-				
-				return false;
-			});
-		}
+			}
+			
+			return false;
+		});
+	}
+	
+	private static void activateNextBuyMode(PlayerArea playerArea) {
+		
+		playerArea.getDecisions().stream()
+				.filter(decision -> {
+					switch (decision.getOptions().get(0).getAbilityType()) {
+						case NEXT_ACTION_TOP_DECK:
+						case NEXT_ACQUIRE_TOP_DECK:
+						case NEXT_ACQUIRE_HAND:
+						case NEXT_ACTION_COSTS_LESS:
+						case NEXT_CHAMPION_COSTS_LESS:
+							return true;
+						default:
+							return false;
+						}
+				})
+				.findAny()
+				.ifPresent(decision -> {
+					setBuyMode(playerArea, decision, decision.getOptions().get(0).getAbilityType());
+				});
 	}
 	
 	private static final int CHARACTER_ROUND_ABILITY_COST = 2;
