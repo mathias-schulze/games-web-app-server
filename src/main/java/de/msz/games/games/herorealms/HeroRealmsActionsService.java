@@ -1222,6 +1222,7 @@ public class HeroRealmsActionsService {
 		playerArea.setGold(0);
 		playerArea.setCombat(0);
 		playerArea.setActionMode(null);
+		playerArea.setBuyMode(null);
 		
 		if (playerArea.getCharacter() != null) {
 			playerArea.setCharacterRoundAbilityActive(true);
