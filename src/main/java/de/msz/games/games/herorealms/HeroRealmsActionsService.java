@@ -849,15 +849,12 @@ public class HeroRealmsActionsService {
 		PlayerArea playerArea = table.getPlayerAreas().get(activePlayer.getId());
 		
 		int cost = card.getCost();
-		boolean resetBuyMode = false; 
 		if (playerArea.getBuyMode() == HeroRealmsBuyMode.NEXT_ACTION_COSTS_LESS
 				&& card.getType() == HeroRealmsCardType.ACTION) {
 			cost--;
-			resetBuyMode = true;
 		} else if (playerArea.getBuyMode() == HeroRealmsBuyMode.NEXT_CHAMPION_COSTS_LESS
 				&& (card.getType() == HeroRealmsCardType.CHAMPION || card.getType() == HeroRealmsCardType.GUARD)) {
 			cost--;
-			resetBuyMode = true;
 		}
 		
 		if (playerArea.getGold() < cost) {
@@ -869,7 +866,6 @@ public class HeroRealmsActionsService {
 		
 		market.set(market.indexOf(card), table.getMarketDeck().draw());
 		putAquiredCardToDeckOrHand(playerArea, card);
-		resetBuyMode(playerArea, resetBuyMode);
 	}
 	
 	void buyFireGem(HeroRealmsTable table) {
@@ -919,9 +915,17 @@ public class HeroRealmsActionsService {
 					resetBuyMode = true;
 					break;
 				case NEXT_ACTION_COSTS_LESS:
+					playerArea.getDiscardPile().addCard(card);
+					if (card.getType() == HeroRealmsCardType.ACTION) {
+						resetBuyMode = true;
+					}
+					break;
 				case NEXT_CHAMPION_COSTS_LESS:
 					playerArea.getDiscardPile().addCard(card);
-					resetBuyMode = true;
+					if (card.getType() == HeroRealmsCardType.CHAMPION || card.getType() == HeroRealmsCardType.GUARD) {
+						resetBuyMode = true;
+					}
+					break;
 				default:
 					break;
 			}
