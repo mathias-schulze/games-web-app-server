@@ -134,4 +134,10 @@ public class GameService {
 		DocumentReference gameDocumentRef = firestore.collection(FirestoreCollectionName.GAMES.getName()).document(id);
 		gameDocumentRef.update("stage", Stage.FINISHED.name()).get();
 	}
+	
+	public void deleteGame(String id) throws InterruptedException, ExecutionException {
+		
+		DocumentReference gameDocumentRef = firestore.collection(FirestoreCollectionName.GAMES.getName()).document(id);
+		gameDocumentRef.delete().get();
+	}
 }
