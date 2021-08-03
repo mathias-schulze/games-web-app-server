@@ -72,19 +72,19 @@ public class GameService {
 		return newGameFuture.get().getId();
 	}
 	
-	public List<ActiveGame> getActiveGames() throws InterruptedException, ExecutionException {
+	public List<Table> getTables() throws InterruptedException, ExecutionException {
 		
-		ApiFuture<QuerySnapshot> activeGamesFuture = 
+		ApiFuture<QuerySnapshot> tablesFuture = 
 				firestore.collection(FirestoreCollectionName.GAMES.getName())
 					.orderBy("created")
 					.get();
 		
-		return activeGamesFuture.get().getDocuments().stream().map(gameDocument -> {
+		return tablesFuture.get().getDocuments().stream().map(gameDocument -> {
 			
 			@SuppressWarnings("unchecked")
 			List<Player> players = playerService.getPlayers((List<String>) gameDocument.get("players"));
 			
-			return ActiveGame.builder()
+			return Table.builder()
 					.id(gameDocument.getId())
 					.no(gameDocument.getLong("no"))
 					.created(gameDocument.getLong("created"))
@@ -98,7 +98,7 @@ public class GameService {
 	
 	@Data
 	@Builder
-	public static class ActiveGame {
+	public static class Table {
 		
 		private final String id;
 		private final Long no;

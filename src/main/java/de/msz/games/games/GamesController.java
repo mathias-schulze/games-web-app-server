@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.msz.games.games.Game.GameParameter;
-import de.msz.games.games.GameService.ActiveGame;
+import de.msz.games.games.GameService.Table;
 import lombok.Data;
 
 @RestController
@@ -63,9 +63,9 @@ public class GamesController {
 		private String gameId;
 	}
 	
-	@GetMapping("/active")
-	public List<ActiveGame> getActiveGames() throws InterruptedException, ExecutionException {
-		return gameService.getActiveGames();
+	@GetMapping("/tables")
+	public List<Table> getActiveGames() throws InterruptedException, ExecutionException {
+		return gameService.getTables();
 	}
 	
 	@PostMapping("/{id}/join")
