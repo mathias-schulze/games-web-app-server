@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.msz.games.base.NotificationResponse;
 import de.msz.games.games.Game.GameParameter;
 import de.msz.games.games.GameService.Table;
 import lombok.Data;
@@ -74,8 +75,11 @@ public class GamesController {
 	}
 	
 	@PostMapping("/{id}/start")
-	public void startGame(@PathVariable("id") String id) throws InterruptedException, ExecutionException {
+	public NotificationResponse startGame(@PathVariable("id") String id) throws InterruptedException, ExecutionException {
+		
 		gameService.startGame(id);
+		
+		return (new NotificationResponse());
 	}
 	
 	@DeleteMapping("/{id}")
