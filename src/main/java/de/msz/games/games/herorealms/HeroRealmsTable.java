@@ -89,7 +89,9 @@ public class HeroRealmsTable extends GameTable {
 		@Builder.Default
 		private boolean selected4Discard = false;
 		
-		private HeroRealmsBuyMode buyMode;
+		private HeroRealmsBuyModeTarget buyModeTarget;
+		
+		private HeroRealmsBuyModeDiscount buyModeDiscount;
 		
 		private boolean killed;
 		
@@ -160,8 +162,12 @@ public class HeroRealmsTable extends GameTable {
 					.map(actionModeString -> HeroRealmsSpecialActionMode.valueOf(actionModeString))
 					.orElse(null);
 			
-			HeroRealmsBuyMode buyMode = Optional.ofNullable((String) map.get("buyMode"))
-					.map(buyModeString -> HeroRealmsBuyMode.valueOf(buyModeString))
+			HeroRealmsBuyModeTarget buyModeTarget = Optional.ofNullable((String) map.get("buyModeTarget"))
+					.map(buyModeTargetString -> HeroRealmsBuyModeTarget.valueOf(buyModeTargetString))
+					.orElse(null);
+			
+			HeroRealmsBuyModeDiscount buyModeDiscount = Optional.ofNullable((String) map.get("buyModeDiscount"))
+					.map(buyModeDiscountString -> HeroRealmsBuyModeDiscount.valueOf(buyModeDiscountString))
 					.orElse(null);
 			
 			List<HeroRealmsCard> hand = ((List<Map<String, Object>>) map.get("hand")).stream()
@@ -196,7 +202,8 @@ public class HeroRealmsTable extends GameTable {
 					.active((boolean) map.get("active"))
 					.actionMode(actionMode)
 					.selected4Discard(Optional.ofNullable((Boolean) map.get("selected4Discard")).orElse(false))
-					.buyMode(buyMode)
+					.buyModeTarget(buyModeTarget)
+					.buyModeDiscount(buyModeDiscount)
 					.killed((boolean) map.get("killed"))
 					.position(((Long) map.get("position")).intValue())
 					.health(((Long) map.get("health")).intValue())

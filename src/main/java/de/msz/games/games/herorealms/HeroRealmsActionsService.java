@@ -221,27 +221,62 @@ public class HeroRealmsActionsService {
 	private static void setBuyMode(PlayerArea area, HeroRealmsDecision decision,
 			HeroRealmsAbilityType abilityType) {
 		
-		if (area.getBuyMode() != null) {
-			area.getDecisions().stream()
-					.filter(buyDecision -> buyDecision.isActive())
-					.forEach(buyDecision -> buyDecision.setActive(false));
+		switch (abilityType) {
+			case NEXT_ACTION_TOP_DECK:
+			case NEXT_ACQUIRE_TOP_DECK:
+			case NEXT_ACQUIRE_HAND:
+				if (area.getBuyModeTarget() != null) {
+					area.getDecisions().stream()
+							.filter(buyDecision -> buyDecision.isActive())
+							.filter(buyDecision -> {
+								switch (buyDecision.getOptions().get(0).getAbilityType()) {
+									case NEXT_ACTION_TOP_DECK:
+									case NEXT_ACQUIRE_TOP_DECK:
+									case NEXT_ACQUIRE_HAND:
+										return true;
+									default:
+										return false;
+								}
+							})
+							.forEach(buyDecision -> buyDecision.setActive(false));
+				}
+				break;
+			case NEXT_ACTION_COSTS_LESS:
+			case NEXT_CHAMPION_COSTS_LESS:
+				if (area.getBuyModeDiscount() != null) {
+					area.getDecisions().stream()
+							.filter(buyDecision -> buyDecision.isActive())
+							.filter(buyDecision -> {
+								switch (buyDecision.getOptions().get(0).getAbilityType()) {
+									case NEXT_ACTION_COSTS_LESS:
+									case NEXT_CHAMPION_COSTS_LESS:
+										return true;
+									default:
+										return false;
+								}
+							})
+							.forEach(buyDecision -> buyDecision.setActive(false));
+				}
+				break;
+			default:
+				throw new IllegalArgumentException("unknown ability '" + abilityType + "' for buying card from market");
 		}
 		
 		switch (abilityType) {
 			case NEXT_ACTION_TOP_DECK:
-				area.setBuyMode(HeroRealmsBuyMode.NEXT_ACTION_TOP_DECK);
+				area.setBuyModeTarget(HeroRealmsBuyModeTarget.NEXT_ACTION_TOP_DECK);
 				break;
 			case NEXT_ACQUIRE_TOP_DECK:
-				area.setBuyMode(HeroRealmsBuyMode.NEXT_ACQUIRE_TOP_DECK);
+				area.setBuyModeTarget(HeroRealmsBuyModeTarget.NEXT_ACQUIRE_TOP_DECK);
 				break;
 			case NEXT_ACQUIRE_HAND:
-				area.setBuyMode(HeroRealmsBuyMode.NEXT_ACQUIRE_HAND);
+				area.setBuyModeTarget(HeroRealmsBuyModeTarget.NEXT_ACQUIRE_HAND);
 				break;
 			case NEXT_ACTION_COSTS_LESS:
-				area.setBuyMode(HeroRealmsBuyMode.NEXT_ACTION_COSTS_LESS);
+				area.setBuyModeDiscount(HeroRealmsBuyModeDiscount.NEXT_ACTION_COSTS_LESS);
 				break;
 			case NEXT_CHAMPION_COSTS_LESS:
-				area.setBuyMode(HeroRealmsBuyMode.NEXT_CHAMPION_COSTS_LESS);
+				area.setBuyModeDiscount(HeroRealmsBuyModeDiscount.NEXT_CHAMPION_COSTS_LESS);
 				break;
 			default:
 				throw new IllegalArgumentException("unknown ability '" + abilityType + "' for buying card from market");
@@ -620,11 +655,16 @@ public class HeroRealmsActionsService {
 			case NEXT_ACTION_TOP_DECK:
 			case NEXT_ACQUIRE_TOP_DECK:
 			case NEXT_ACQUIRE_HAND:
+				HeroRealmsDecision decisionTarget = addOptionalDecision(area, card, type, value);
+				if (area.getBuyModeTarget() == null) {
+					setBuyMode(area, decisionTarget, type);
+				}
+				break;
 			case NEXT_ACTION_COSTS_LESS:
 			case NEXT_CHAMPION_COSTS_LESS:
-				HeroRealmsDecision decision = addOptionalDecision(area, card, type, value);
-				if (area.getBuyMode() == null) {
-					setBuyMode(area, decision, type);
+				HeroRealmsDecision decisionDiscount = addOptionalDecision(area, card, type, value);
+				if (area.getBuyModeDiscount() == null) {
+					setBuyMode(area, decisionDiscount, type);
 				}
 				break;
 			case SACRIFICE_HAND_OR_DISCARD_PILE_COMBAT:	
@@ -848,13 +888,16 @@ public class HeroRealmsActionsService {
 		Player activePlayer = table.getActivePlayer();
 		PlayerArea playerArea = table.getPlayerAreas().get(activePlayer.getId());
 		
+		boolean resetBuyMode = false;
 		int cost = card.getCost();
-		if (playerArea.getBuyMode() == HeroRealmsBuyMode.NEXT_ACTION_COSTS_LESS
+		if (playerArea.getBuyModeDiscount() == HeroRealmsBuyModeDiscount.NEXT_ACTION_COSTS_LESS
 				&& card.getType() == HeroRealmsCardType.ACTION) {
 			cost--;
-		} else if (playerArea.getBuyMode() == HeroRealmsBuyMode.NEXT_CHAMPION_COSTS_LESS
+			resetBuyMode = true;
+		} else if (playerArea.getBuyModeDiscount() == HeroRealmsBuyModeDiscount.NEXT_CHAMPION_COSTS_LESS
 				&& (card.getType() == HeroRealmsCardType.CHAMPION || card.getType() == HeroRealmsCardType.GUARD)) {
 			cost--;
+			resetBuyMode = true;
 		}
 		
 		if (playerArea.getGold() < cost) {
@@ -865,6 +908,12 @@ public class HeroRealmsActionsService {
 		playerArea.setGold(playerArea.getGold()-cost);
 		
 		market.set(market.indexOf(card), table.getMarketDeck().draw());
+		
+		if (resetBuyMode) {
+			resetBuyModeDiscount(playerArea);
+			activateNextBuyModeDiscount(playerArea);
+		}
+		
 		putAquiredCardToDeckOrHand(playerArea, card);
 	}
 	
@@ -894,10 +943,10 @@ public class HeroRealmsActionsService {
 	private static void putAquiredCardToDeckOrHand(PlayerArea playerArea, HeroRealmsCard card) {
 		
 		boolean resetBuyMode = false;
-		if (playerArea.getBuyMode() == null) {
+		if (playerArea.getBuyModeTarget() == null) {
 			playerArea.getDiscardPile().addCard(card);
 		} else {
-			switch (playerArea.getBuyMode()) {
+			switch (playerArea.getBuyModeTarget()) {
 				case NEXT_ACTION_TOP_DECK:
 					if (card.getType() == HeroRealmsCardType.ACTION) {
 						playerArea.getDeck().addCardTop(card);
@@ -914,43 +963,29 @@ public class HeroRealmsActionsService {
 					playerArea.getHand().add(card);
 					resetBuyMode = true;
 					break;
-				case NEXT_ACTION_COSTS_LESS:
-					playerArea.getDiscardPile().addCard(card);
-					if (card.getType() == HeroRealmsCardType.ACTION) {
-						resetBuyMode = true;
-					}
-					break;
-				case NEXT_CHAMPION_COSTS_LESS:
-					playerArea.getDiscardPile().addCard(card);
-					if (card.getType() == HeroRealmsCardType.CHAMPION || card.getType() == HeroRealmsCardType.GUARD) {
-						resetBuyMode = true;
-					}
-					break;
 				default:
 					break;
 			}
 		}
 		
 		if (resetBuyMode) {
-			resetBuyMode(playerArea);
-			activateNextBuyMode(playerArea);
+			resetBuyModeTarget(playerArea);
+			activateNextBuyModeTarget(playerArea);
 		}
 	}
 	
-	private static void resetBuyMode(PlayerArea playerArea) {
-	
-		playerArea.setBuyMode(null);
+	private static void resetBuyModeTarget(PlayerArea playerArea) {
+		
+		playerArea.setBuyModeTarget(null);
 		playerArea.getDecisions().removeIf(decision -> {
 			if (decision.isActive()) {
 				switch (decision.getOptions().get(0).getAbilityType()) {
-				case NEXT_ACTION_TOP_DECK:
-				case NEXT_ACQUIRE_TOP_DECK:
-				case NEXT_ACQUIRE_HAND:
-				case NEXT_ACTION_COSTS_LESS:
-				case NEXT_CHAMPION_COSTS_LESS:
-					return true;
-				default:
-					break;
+					case NEXT_ACTION_TOP_DECK:
+					case NEXT_ACQUIRE_TOP_DECK:
+					case NEXT_ACQUIRE_HAND:
+						return true;
+					default:
+						break;
 				}
 			}
 			
@@ -958,7 +993,25 @@ public class HeroRealmsActionsService {
 		});
 	}
 	
-	private static void activateNextBuyMode(PlayerArea playerArea) {
+	private static void resetBuyModeDiscount(PlayerArea playerArea) {
+		
+		playerArea.setBuyModeDiscount(null);
+		playerArea.getDecisions().removeIf(decision -> {
+			if (decision.isActive()) {
+				switch (decision.getOptions().get(0).getAbilityType()) {
+					case NEXT_ACTION_COSTS_LESS:
+					case NEXT_CHAMPION_COSTS_LESS:
+						return true;
+					default:
+						break;
+				}
+			}
+			
+			return false;
+		});
+	}
+	
+	private static void activateNextBuyModeTarget(PlayerArea playerArea) {
 		
 		playerArea.getDecisions().stream()
 				.filter(decision -> {
@@ -966,6 +1019,22 @@ public class HeroRealmsActionsService {
 						case NEXT_ACTION_TOP_DECK:
 						case NEXT_ACQUIRE_TOP_DECK:
 						case NEXT_ACQUIRE_HAND:
+							return true;
+						default:
+							return false;
+						}
+				})
+				.findAny()
+				.ifPresent(decision -> {
+					setBuyMode(playerArea, decision, decision.getOptions().get(0).getAbilityType());
+				});
+	}
+	
+	private static void activateNextBuyModeDiscount(PlayerArea playerArea) {
+		
+		playerArea.getDecisions().stream()
+				.filter(decision -> {
+					switch (decision.getOptions().get(0).getAbilityType()) {
 						case NEXT_ACTION_COSTS_LESS:
 						case NEXT_CHAMPION_COSTS_LESS:
 							return true;
@@ -1222,7 +1291,8 @@ public class HeroRealmsActionsService {
 		playerArea.setGold(0);
 		playerArea.setCombat(0);
 		playerArea.setActionMode(null);
-		playerArea.setBuyMode(null);
+		playerArea.setBuyModeTarget(null);
+		playerArea.setBuyModeDiscount(null);
 		
 		if (playerArea.getCharacter() != null) {
 			playerArea.setCharacterRoundAbilityActive(true);
