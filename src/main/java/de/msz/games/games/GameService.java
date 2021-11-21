@@ -98,6 +98,7 @@ public class GameService {
 					.created(gameDocument.getLong("created"))
 					.game(Game.valueOf(gameDocument.getString("game")).getParameter().getName())
 					.stage(Stage.valueOf(gameDocument.getString("stage")))
+					.winner(gameDocument.getString("winner"))
 					.players(players)
 					.build();
 			
@@ -114,6 +115,7 @@ public class GameService {
 		private final String game;
 		private final Stage stage;
 		private final List<Player> players;
+		private final String winner;
 	}
 	
 	public void joinGame(String id) throws InterruptedException, ExecutionException {
@@ -178,10 +180,13 @@ public class GameService {
 		}
 	}
 	
-	public void endGame(String id) throws InterruptedException, ExecutionException {
+	public void endGame(String id, String winner) throws InterruptedException, ExecutionException {
 		
 		DocumentReference gameDocumentRef = firestore.collection(FirestoreCollectionName.GAMES.getName()).document(id);
-		gameDocumentRef.update("stage", Stage.FINISHED.name()).get();
+		gameDocumentRef.update(
+				"stage", Stage.FINISHED.name(), 
+				"winner", winner)
+		.get();
 	}
 	
 	public void deleteGame(String id) throws InterruptedException, ExecutionException {

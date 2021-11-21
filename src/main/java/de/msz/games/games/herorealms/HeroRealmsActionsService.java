@@ -825,7 +825,7 @@ public class HeroRealmsActionsService {
 			if (newHealth <= 0) {
 				removeKilledPlayer(otherPlayerArea);
 				if (isEndOfGame(table)) {
-					gameService.endGame(table.getGameId());
+					gameService.endGame(table.getGameId(), activePlayerArea.getPlayerId());
 				}
 			}
 			
