@@ -110,12 +110,14 @@ public class HeroRealmsTableService extends GameTableService {
 		tableViews.document("full").set(heroRealmsTable).get();
 		
 		for (Player player : table.getPlayers()) {
-			storePlayerView(tableViews, player.getId(), heroRealmsTable);
+			storePlayerView(tableViews, player.getId(), heroRealmsTable, false);
 		}
+		
+		storePlayerView(tableViews, table.getPlayers().get(0).getId(), heroRealmsTable, true);
 	}
 	
-	private static void storePlayerView(CollectionReference tableViews, String playerId, HeroRealmsTable table)
-			throws InterruptedException, ExecutionException {
+	private static void storePlayerView(CollectionReference tableViews, String playerId, HeroRealmsTable table, 
+			boolean observer) throws InterruptedException, ExecutionException {
 		
 		HeroRealmsTablePlayerView tableCopy = HeroRealmsTablePlayerView.builder()
 				.players(table.getPlayers())
@@ -129,7 +131,7 @@ public class HeroRealmsTableService extends GameTableService {
 				.build();
 		
 		PlayerArea sourceArea = table.getPlayerAreas().get(playerId);
-		tableCopy.setOwnPlayerArea(createPlayerAreaView(sourceArea, true));
+		tableCopy.setOwnPlayerArea(createPlayerAreaView(sourceArea, observer ? false : true));
 		
 		tableCopy.setOtherPlayerAreas(table.getOtherPlayersSorted(sourceArea.getPosition()).stream()
 			.map(player -> {
@@ -139,7 +141,7 @@ public class HeroRealmsTableService extends GameTableService {
 			.collect(Collectors.toList())
 		);
 		
-		tableViews.document(playerId).set(tableCopy).get();
+		tableViews.document(observer ? "observer" : playerId).set(tableCopy).get();
 	}
 	
 	private static PlayerArea createPlayerAreaView(PlayerArea sourceArea, boolean own) {
