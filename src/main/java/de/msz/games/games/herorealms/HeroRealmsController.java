@@ -359,4 +359,16 @@ public class HeroRealmsController {
 		
 		return (new NotificationResponse());
 	}
+	
+	@PostMapping("/{gameId}/start_observer_mode")
+	public NotificationResponse startObserverMode(@PathVariable("gameId") String gameId) throws InterruptedException, ExecutionException {
+		
+		HeroRealmsTable table = (HeroRealmsTable) tableService.getGameTable(gameId);
+		if (!table.isObserverMode()) {
+			table.setObserverMode(true);
+			tableService.storeTable(gameId, table);
+		}
+		
+		return (new NotificationResponse());
+	}
 }

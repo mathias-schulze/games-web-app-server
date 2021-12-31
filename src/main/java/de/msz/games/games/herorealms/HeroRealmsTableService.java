@@ -113,7 +113,9 @@ public class HeroRealmsTableService extends GameTableService {
 			storePlayerView(tableViews, player.getId(), heroRealmsTable, false);
 		}
 		
-		storePlayerView(tableViews, table.getPlayers().get(0).getId(), heroRealmsTable, true);
+		if (table.isObserverMode()) {
+			storePlayerView(tableViews, table.getPlayers().get(0).getId(), heroRealmsTable, true);
+		}
 	}
 	
 	private static void storePlayerView(CollectionReference tableViews, String playerId, HeroRealmsTable table, 
