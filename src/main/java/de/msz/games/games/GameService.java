@@ -193,5 +193,14 @@ public class GameService {
 		
 		DocumentReference gameDocumentRef = firestore.collection(FirestoreCollectionName.GAMES.getName()).document(id);
 		gameDocumentRef.delete().get();
+		gameDocumentRef.listCollections().forEach(collection -> {
+			try {
+				collection.get().get().getDocuments().forEach(document -> {
+					document.getReference().delete();
+				});
+			} catch (InterruptedException | ExecutionException e) {
+				throw new RuntimeException(e);
+			}
+		});
 	}
 }
