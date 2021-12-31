@@ -1373,6 +1373,7 @@ public class HeroRealmsActionsService {
 		do {
 			if (indexNextPlayer == allPlayers.size()-1) {
 				indexNextPlayer = 0;
+				table.setRound(table.getRound()+1);
 			} else {
 				indexNextPlayer++;
 			}

@@ -124,6 +124,7 @@ public class HeroRealmsTableService extends GameTableService {
 		HeroRealmsTablePlayerView tableCopy = HeroRealmsTablePlayerView.builder()
 				.players(table.getPlayers())
 				.activePlayer(table.getActivePlayer())
+				.round(table.getRound())
 				.cardBack(table.getCardBack())
 				.emptyDeck(table.getEmptyDeck())
 				.fireGemsDeck(table.getFireGemsDeck())

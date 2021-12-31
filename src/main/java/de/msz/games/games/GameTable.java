@@ -19,6 +19,8 @@ public abstract class GameTable {
 	
 	private Player activePlayer;
 	
+	private int round = 1;
+	
 	private boolean observerMode = false;
 	
 	protected GameTable(String gameId, List<Player> players) {
