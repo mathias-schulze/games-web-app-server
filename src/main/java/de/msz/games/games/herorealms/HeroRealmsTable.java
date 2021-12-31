@@ -62,7 +62,7 @@ public class HeroRealmsTable extends GameTable {
 				.gameId(gameId)
 				.players(players)
 				.activePlayer(Player.from((Map<String, Object>) map.get("activePlayer")))
-				.round((int) Optional.ofNullable(map.get("round")).orElse(0))
+				.round(((Long) Optional.ofNullable(map.get("round")).orElse(0)).intValue())
 				.cardBack((String) map.get("cardBack"))
 				.emptyDeck((String) map.get("emptyDeck"))
 				.fireGemsDeck(Deck.from((Map<String, Object>) map.get("fireGemsDeck"), HeroRealmsCard.class))

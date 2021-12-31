@@ -33,8 +33,10 @@ import de.msz.games.games.player.Player;
 import de.msz.games.games.player.PlayerService;
 import lombok.Builder;
 import lombok.Data;
+import lombok.extern.log4j.Log4j2;
 
 @Component
+@Log4j2
 public class GameService {
 	
 	@Autowired
@@ -133,13 +135,7 @@ public class GameService {
 			
 			cleanup();
 			
-			Lock lock = locks.get(id);
-			if (lock == null) {
-				lock = new ReentrantLock();
-				locks.put(id, lock);
-			}
-			
-			return lock;
+			return locks.computeIfAbsent(id, k -> new ReentrantLock());
 		}
 		
 		private void cleanup() {
@@ -147,7 +143,11 @@ public class GameService {
 			for (Iterator<Lock> it = locks.values().iterator(); it.hasNext();) {
 				Lock lock = it.next();
 				if (lock.tryLock()) {
-					it.remove();
+					try {
+						it.remove();
+					} finally {
+						lock.unlock();
+					}
 				}
 			}
 		}
@@ -195,11 +195,10 @@ public class GameService {
 		gameDocumentRef.delete().get();
 		gameDocumentRef.listCollections().forEach(collection -> {
 			try {
-				collection.get().get().getDocuments().forEach(document -> {
-					document.getReference().delete();
-				});
+				collection.get().get().getDocuments().forEach(document -> document.getReference().delete());
 			} catch (InterruptedException | ExecutionException e) {
-				throw new RuntimeException(e);
+				log.error("error on deleting game data", e);
+				Thread.currentThread().interrupt();
 			}
 		});
 	}

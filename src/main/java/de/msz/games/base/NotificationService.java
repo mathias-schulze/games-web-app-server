@@ -30,7 +30,7 @@ public class NotificationService {
 		private final String message;
 	}
 	
-	public static enum NotificationType {
+	public enum NotificationType {
 		
 		ERROR,
 		SUCCESS,
