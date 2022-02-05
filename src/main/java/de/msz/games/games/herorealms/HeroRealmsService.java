@@ -142,7 +142,6 @@ public class HeroRealmsService {
 		@Mapping(target = "damage", ignore = true)
 		@Mapping(target = "ready", ignore = true)
 		@Mapping(target = "sacrifice", ignore = true)
-		@Mapping(target = "blessed", ignore = true)
 		@Mapping(target = "stunnedSinceLastTurn", ignore = true)
 		HeroRealmsCard jsonCardToCard(HeroRealmsJsonCard source);
 		@Mapping(target = "allyAbility", ignore = true)

@@ -140,6 +140,9 @@ public class HeroRealmsTable extends GameTable {
 		private int factionCountWild = 0;
 		
 		@Builder.Default
+		private boolean blessed = false;
+		
+		@Builder.Default
 		private boolean blessedThisTurn = false;
 		
 		private List<HeroRealmsCard> rangerTrackCards;
@@ -221,6 +224,7 @@ public class HeroRealmsTable extends GameTable {
 					.factionCountImperial(((Long) map.get("factionCountImperial")).intValue())
 					.factionCountNecros(((Long) map.get("factionCountNecros")).intValue())
 					.factionCountWild(((Long) map.get("factionCountWild")).intValue())
+					.blessed(Optional.ofNullable((Boolean) map.get("blessed")).orElse(false))
 					.blessedThisTurn(Optional.ofNullable((Boolean) map.get("blessedThisTurn")).orElse(false))
 					.rangerTrackCards(rangerTrackCards)
 					.rangerTrackDiscardCount((Optional.ofNullable((Long) map.get("rangerTrackDiscardCount")).orElse(0L)).intValue())

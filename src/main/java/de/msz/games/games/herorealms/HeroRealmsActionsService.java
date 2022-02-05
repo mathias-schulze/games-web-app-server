@@ -805,7 +805,7 @@ public class HeroRealmsActionsService {
 		if (champion != null) {
 			championDefense = champion.getDefense() - champion.getDamage();
 			
-			if (champion.isBlessed()) {
+			if (otherPlayerArea.isBlessed()) {
 				championDefense++;
 			}
 			
@@ -1103,7 +1103,7 @@ public class HeroRealmsActionsService {
 		
 		PlayerArea targetPlayerArea = table.getPlayerAreas().get(playerId);
 		targetPlayerArea.setHealth(targetPlayerArea.getHealth()+3);
-		targetPlayerArea.getChampions().forEach(champion -> champion.setBlessed(true));
+		targetPlayerArea.setBlessed(true);
 		
 		Player activePlayer = table.getActivePlayer();
 		PlayerArea activePlayerArea = table.getPlayerAreas().get(activePlayer.getId());
@@ -1316,7 +1316,7 @@ public class HeroRealmsActionsService {
 		if (playerArea.isBlessedThisTurn()) {
 			playerArea.setBlessedThisTurn(false);
 		} else {
-			playerArea.getChampions().forEach(champion -> champion.setBlessed(false));
+			playerArea.setBlessed(false);
 		}
 		
 		playerArea.getDecisions().clear();
