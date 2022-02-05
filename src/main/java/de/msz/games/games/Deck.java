@@ -2,6 +2,7 @@ package de.msz.games.games;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -47,9 +48,7 @@ public class Deck<T extends Card> {
 		size = cards.size();
 		
 		if (shuffle) {
-			for (int i=0; i<10; i++) {
-				Collections.shuffle(this.cards);
-			}
+			this.cards = new LinkedList<>(shuffle(cards, 10));
 		}
 	}
 	
@@ -80,6 +79,36 @@ public class Deck<T extends Card> {
 	public void clear() {
 		cards.clear();
 		size = 0;
+	}
+	
+	private List<T> shuffle(List<T> deck, int cycles) {
+		
+		List<T> shuffledDeck = new ArrayList<>(deck);
+		
+		for (int i=0; i<cycles; i++) {
+			shuffledDeck = riffleShuffle(shuffledDeck);
+			Collections.shuffle(shuffledDeck);
+		}
+		
+		return shuffledDeck;
+	}
+	
+	private List<T> riffleShuffle(List<T> deck) {
+		
+		List<T> shuffledDeck = new ArrayList<>(deck.size());
+		
+		Iterator<T> half1 = deck.subList(0, deck.size()/2).iterator();
+		Iterator<T> half2 = deck.subList(deck.size()/2, deck.size()).iterator();
+		while (half1.hasNext() || half2.hasNext()) {
+			if (half1.hasNext()) {
+				shuffledDeck.add(half1.next());
+			}
+			if (half2.hasNext()) {
+				shuffledDeck.add(half2.next());
+			}
+		} 
+		
+		return shuffledDeck;
 	}
 	
 	@SuppressWarnings("unchecked")
