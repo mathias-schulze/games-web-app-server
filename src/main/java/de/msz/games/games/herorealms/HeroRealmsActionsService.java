@@ -1359,7 +1359,9 @@ public class HeroRealmsActionsService {
 		
 		Player nextPlayer = getNextPlayerAlive(table, activePlayer);
 		table.setActivePlayer(nextPlayer);
-		table.getPlayerAreas().get(nextPlayer.getId()).setActive(true);
+		PlayerArea playerArea = table.getPlayerAreas().get(nextPlayer.getId());
+		playerArea.setActive(true);
+		playerArea.setBlessed(false);
 	}
 	
 	private static Player getNextPlayerAlive(HeroRealmsTable table, Player activePlayer) {
