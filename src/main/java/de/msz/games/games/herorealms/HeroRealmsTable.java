@@ -111,6 +111,8 @@ public class HeroRealmsTable extends GameTable {
 		
 		private int combat;
 		
+		private int totalCombatTurn;
+		
 		private int gold;
 		
 		private int handSize;
@@ -153,6 +155,34 @@ public class HeroRealmsTable extends GameTable {
 			this.playerId = player.getId();
 			this.playerName = player.getName();
 			this.position = position;
+		}
+		
+		/** @use {@link #addCombat(int)} or {@link #removeCombat(int)} */
+		@SuppressWarnings("unused")
+		private void setCombat(int combat) {/**/}
+		
+		/**
+		 * Adds combat to combat and total combat for turn.
+		 * 
+		 * @param diffCombat additional combat
+		 */
+		public void addCombat(int diffCombat) {
+			this.combat += diffCombat;
+			this.totalCombatTurn += diffCombat;
+		}
+		
+		/**
+		 * Removes combat only from combat, not from total combat for turn.
+		 * 
+		 * @param diffCombat amount to remove from combat
+		 */
+		public void decreaseCombat(int diffCombat) {
+			this.combat -= diffCombat;
+		}
+		
+		public void resetCombat() {
+			this.combat = 0;
+			this.totalCombatTurn = 0;
 		}
 		
 		@SuppressWarnings("unchecked")
@@ -212,6 +242,7 @@ public class HeroRealmsTable extends GameTable {
 					.position(((Long) map.get("position")).intValue())
 					.health(((Long) map.get("health")).intValue())
 					.combat(((Long) map.get("combat")).intValue())
+					.totalCombatTurn(Optional.ofNullable(((Long) map.get("totalCombatTurn"))).orElse(0L).intValue())
 					.gold(((Long) map.get("gold")).intValue())
 					.handSize(((Long) map.get("handSize")).intValue())
 					.hand(hand)

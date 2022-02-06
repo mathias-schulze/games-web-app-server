@@ -598,7 +598,7 @@ public class HeroRealmsActionsService {
 				area.setGold(area.getGold()+value);
 				break;
 			case COMBAT:
-				area.setCombat(area.getCombat()+value);
+				area.addCombat(value);
 				break;
 			case HEALTH_EACH_CHAMPION:
 				area.setHealth(area.getHealth() + (area.getChampions().size() * value));
@@ -622,7 +622,7 @@ public class HeroRealmsActionsService {
 				area.getHand().addAll(draw(area, value));
 				break;
 			case DRAW_CARD_IF_COMBAT_7:
-				if (area.getCombat() >= 7) {
+				if (area.getTotalCombatTurn() >= 7) {
 					area.getHand().addAll(draw(area, value));
 				}
 				break;
@@ -725,7 +725,7 @@ public class HeroRealmsActionsService {
 				.filter(champion -> !(onlyOther && champion.getId().equals(card.getId())))
 				.count());
 		
-		area.setCombat(area.getCombat() + combatValue);
+		area.addCombat(combatValue);
 	}
 	
 	private static void addCombatEachOtherFaction(PlayerArea area, HeroRealmsCard card, int value) {
@@ -737,7 +737,7 @@ public class HeroRealmsActionsService {
 				.filter(otherCard -> !card.getId().equals(otherCard.getId()))
 				.count());
 		
-		area.setCombat(area.getCombat() + combatValue);
+		area.addCombat(combatValue);
 	}
 	
 	private static void addCombatEachKnife(PlayerArea area, int value) {
@@ -746,7 +746,7 @@ public class HeroRealmsActionsService {
 				.filter(playedCardCard -> playedCardCard.getSubType() == HeroRealmsCardSubType.KNIFE)
 				.count());
 		
-		area.setCombat(area.getCombat() + combatValue);
+		area.addCombat( combatValue);
 	}
 	
 	private HeroRealmsDecision addOptionalDecision(PlayerArea area, HeroRealmsCard card, HeroRealmsAbilityType type, int value) {
@@ -830,7 +830,7 @@ public class HeroRealmsActionsService {
 			}
 			
 			if (!fireball) {
-				activePlayerArea.setCombat(playerCombat - attackPlayerValue);
+				activePlayerArea.decreaseCombat(attackPlayerValue);
 			}
 		} else {
 			int attackChampionValue = NumberUtils.min(championDefense, playerCombat);
@@ -845,7 +845,7 @@ public class HeroRealmsActionsService {
 			}
 			
 			if (!fireball) {
-				activePlayerArea.setCombat(playerCombat - attackChampionValue);
+				activePlayerArea.decreaseCombat(attackChampionValue);
 			}
 		}
 	}
@@ -1289,7 +1289,7 @@ public class HeroRealmsActionsService {
 		PlayerArea playerArea = table.getPlayerAreas().get(activePlayer.getId());
 		playerArea.setActive(false);
 		playerArea.setGold(0);
-		playerArea.setCombat(0);
+		playerArea.resetCombat();
 		playerArea.setActionMode(null);
 		playerArea.setBuyModeTarget(null);
 		playerArea.setBuyModeDiscount(null);
