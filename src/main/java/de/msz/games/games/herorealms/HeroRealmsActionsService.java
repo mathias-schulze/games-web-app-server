@@ -1331,6 +1331,8 @@ public class HeroRealmsActionsService {
 				.forEach(champion -> champion.setDamage(0));
 		
 		activateNextPlayer(table, activePlayer);
+		
+		table.setCurrentTurnStart(System.currentTimeMillis());
 	}
 	
 	private static HeroRealmsCard draw(PlayerArea playerArea) {

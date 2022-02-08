@@ -97,6 +97,8 @@ public class HeroRealmsTableService extends GameTableService {
 			table.getPlayerAreas().put(player.getId(), area);
 		}
 		
+		table.setCurrentTurnStart(System.currentTimeMillis());
+		
 		return table;
 	}
 	
@@ -131,6 +133,7 @@ public class HeroRealmsTableService extends GameTableService {
 				.market(table.getMarket())
 				.marketDeck(createHiddenDeck(table.getMarketDeck().getSize()))
 				.sacrificePile(table.getSacrificePile())
+				.currentTurnStart(table.getCurrentTurnStart())
 				.build();
 		
 		PlayerArea sourceArea = table.getPlayerAreas().get(playerId);

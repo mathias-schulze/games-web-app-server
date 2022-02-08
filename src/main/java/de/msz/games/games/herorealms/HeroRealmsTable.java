@@ -39,6 +39,9 @@ public class HeroRealmsTable extends GameTable {
 	
 	private Map<String, PlayerArea> playerAreas;
 	
+	@Builder.Default
+	private long currentTurnStart = 0;
+	
 	HeroRealmsTable(String gameId, List<Player> players) {
 		super(gameId, players);
 	}
@@ -70,6 +73,7 @@ public class HeroRealmsTable extends GameTable {
 				.marketDeck(Deck.from((Map<String, Object>) map.get("marketDeck"), HeroRealmsCard.class))
 				.sacrificePile(Deck.from((Map<String, Object>) map.get("sacrificePile"), HeroRealmsCard.class))
 				.playerAreas(playerAreas)
+				.currentTurnStart(((Long) Optional.ofNullable(map.get("currentTurnStart")).orElse(0)).intValue())
 				.build();
 	}
 	
