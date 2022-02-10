@@ -36,7 +36,7 @@ public class Counter {
 	    
 	    counter.update("value", FieldValue.increment(1)).get();
 	    
-	    return (long) Optional.ofNullable(counter.get().get().get("value")).orElse(0);
+	    return (long) Optional.ofNullable(counter.get().get().get("value")).orElse(0L);
 	}
 	
 	public static enum CounterName {

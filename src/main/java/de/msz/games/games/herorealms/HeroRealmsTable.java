@@ -65,7 +65,7 @@ public class HeroRealmsTable extends GameTable {
 				.gameId(gameId)
 				.players(players)
 				.activePlayer(Player.from((Map<String, Object>) map.get("activePlayer")))
-				.round(((Long) Optional.ofNullable(map.get("round")).orElse(0)).intValue())
+				.round(((Long) Optional.ofNullable(map.get("round")).orElse(0L)).intValue())
 				.cardBack((String) map.get("cardBack"))
 				.emptyDeck((String) map.get("emptyDeck"))
 				.fireGemsDeck(Deck.from((Map<String, Object>) map.get("fireGemsDeck"), HeroRealmsCard.class))
@@ -73,7 +73,7 @@ public class HeroRealmsTable extends GameTable {
 				.marketDeck(Deck.from((Map<String, Object>) map.get("marketDeck"), HeroRealmsCard.class))
 				.sacrificePile(Deck.from((Map<String, Object>) map.get("sacrificePile"), HeroRealmsCard.class))
 				.playerAreas(playerAreas)
-				.currentTurnStart(((Long) Optional.ofNullable(map.get("currentTurnStart")).orElse(0)).intValue())
+				.currentTurnStart(((Long) Optional.ofNullable(map.get("currentTurnStart")).orElse(0L)).intValue())
 				.build();
 	}
 	
