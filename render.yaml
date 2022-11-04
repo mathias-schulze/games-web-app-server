@@ -11,20 +11,3 @@ services:
     envVars:
       - key: GRADLE_TASK # Imported from Heroku app
         value: build sonarqube -x check
-      - key: NEW_RELIC_LOG # Imported from Heroku app
-        value: stdout
-      - key: SERVICE_ACCOUNT_JSON # Imported from Heroku app
-        value: {
-  &quot;type&quot;: &quot;service_account&quot;,
-  &quot;project_id&quot;: &quot;msz-games&quot;,
-  &quot;private_key_id&quot;: &quot;29a757d56f208eacdf3a04d248e79384480c06c0&quot;,
-  &quot;private_key&quot;: &quot;-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDOsjKf6BitzGUJ\nZKqRgfmwoAsYFdiR3kOu+MTLsPVjdobi/JNDQ3PD/AQaH5Fdip76mR0Tca89yPzv\nq4EYi1H6YOfLMGOuFsgRaXrq2NKFi9EdC+CsHC7OQsrTdNKByYLWcNDSNjehKgR8\nisEeSG7wItvZZ+U2UAfGDjz0+7M6xdMkTMl+frznxNG4QXRaeOMjLSkk0kIONBFM\nTQfd3rhLtqmvYqdSZuQGpjsZK3dqbdWvPFuEm9D3WIpRrh8DeSyGcIXPc32uc7RI\n8Fc/XFD2mhouHWPPhk5Lis4Sg4kTxTaYhpT6Px8XtL9dgAa1pLJe746mOqcEo2oI\nlLOxEKJhAgMBAAECggEAXgWiUKn/u+NLnIu9qSXiIk2S7lhVpPjhefCweGWdIiry\n7cLt6/19Zgu4A/gTJGVfrufCWatvhx/rqswtk7AgUNAO8Jco6LJ1PLJqFvUdQmFY\n9KkIANJrGik44Rp1fVNgYFJ+Mvk1seqOkuZ9NVzGlhaNQiZoFh4ugxHL+babD2LG\nO7K7iQn0041tiiDH2FTqMcD4fs1VqIDcNy4kimP1jpFiTzN9NRncEp3TP3+h5Y4n\nPame8Wi6pII4zG3C0RknNn1baW2qK3sOhsPFSsdqnjA3N5mUd1+oxk+7PB6kUOI1\nse9DgSUh1ky60sMFScjtshMII7hPmKbQXcCh+BpvBwKBgQD+B3XbC3vrCyWQuySl\nbUk/1XEFmCV/KuW4tWezR2ZJ3Ahs+cUyPABwrx4WtqW7i9hqfKjE/+iSK6+jfugq\nGqNvWzsj6nvJ5vKf6ROTUe3p3bOdcyqqIqAa1YuMVWK/CUjW11SFHomxgtTHOohm\n3wzOZdRG4BvlT7+IWnczTIVRuwKBgQDQTLoVsNtT9qXh6OZL4izJZTpzk5A1eUu4\ng28XEos87iecZ8x8iCsX/ZOXFAXQbzXbWWI3/lZxJ1a+kbGolAtVdpDRAL4VwlDH\nwpv+xpbS8JoDkLACk9yleYFEmYE4gw4yzIkRoveN/Hv4H7Ay+68ru5S6g96fwujh\nFBXES3LckwKBgDSQZKG7wZuERfSp1M5qS8LqrqViszeaL8jFuLyPJKpZ3mB2Woin\ng8vNYKOAjdC+Aj0eqGmDLqO4aHKjWvUDaBgtv5IR/iVsJX5TY1qTlHBVEMqevxBP\nc+O5llOmg3VWPX0/N10IUaOql87V3M20j9jRl1hHHV6Y3uAfIBU8W0XrAoGATLWk\n5e4Op5oytsJ1ZUay5awg3YVfW0IDL70/gQi0PEkcT04ukUH4VMpuuvmFtp/t/oyp\nTiOdI+iv2lh/S6zRi7SxWjbiydKYuyghGK97xc0TevKizyAy5sGbaG77lps09GI8\nrEEO17w+zz6kPfJQLVPUTufXaZB3AMTLy1FZyH8CgYAURwE3kmGqhDD7g1rvCbOh\nyGylFjXsX/2sgmP93pNOqIeMwPNppZO+0Vb1ZTn0B2K2gEF3pAJIbza4c2EG1eT/\nU7DT+iau+RGVPDnMb9nCE6daacEkOlkeJTsGo0TKgTzG1iaAUZzgYO9osYSjfPpV\nTZK0iZbJ3Eun5D4FyUKIpw&#x3D;&#x3D;\n-----END PRIVATE KEY-----\n&quot;,
-  &quot;client_email&quot;: &quot;firebase-adminsdk-rsjyo@msz-games.iam.gserviceaccount.com&quot;,
-  &quot;client_id&quot;: &quot;102120863655772957058&quot;,
-  &quot;auth_uri&quot;: &quot;https://accounts.google.com/o/oauth2/auth&quot;,
-  &quot;token_uri&quot;: &quot;https://oauth2.googleapis.com/token&quot;,
-  &quot;auth_provider_x509_cert_url&quot;: &quot;https://www.googleapis.com/oauth2/v1/certs&quot;,
-  &quot;client_x509_cert_url&quot;: &quot;https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-rsjyo%40msz-games.iam.gserviceaccount.com&quot;
-}
-
-
