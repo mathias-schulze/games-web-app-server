@@ -3,7 +3,7 @@
 FROM gradle:6.9-jdk11-alpine AS build
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
-RUN --mount=type=secret,id=env_sh,dst=/home/gradle/src/env_sh && chmod +x env.sh && ./env.sh
+RUN --mount=type=secret,id=secret_properties,dst=/home/gradle/src/secret.properties
 RUN gradle build sonarqube -x check --no-daemon 
 
 FROM openjdk:11-jre-slim
