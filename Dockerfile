@@ -3,8 +3,8 @@
 FROM gradle:6.9-jdk11-alpine AS build
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
-RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env cat /etc/secrets/.env
-RUN gradle build sonarqube -x check -Dsonar.login=$SONAR_TOKEN --no-daemon 
+RUN --mount=type=secret,id=_env,dst=/home/gradle/src/.env
+RUN gradle build sonarqube -x check --no-daemon 
 
 FROM openjdk:11-jre-slim
 
