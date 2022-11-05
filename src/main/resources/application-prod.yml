@@ -2,5 +2,5 @@ management:
   endpoints:
     web:
       cors:
-        allowed-origins: https://msz-games.web.app,https://games.mathias-schulze.de
+        allowed-origins: https://msz-games.web.app,https://games.mathias-schulze.de,http://localhost:3000
         allowed-methods: GET, POST, PATCH, DELETE
