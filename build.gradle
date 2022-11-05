@@ -49,6 +49,9 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
+def secrets = new Properties()
+file("secret.properties").withInputStream { secrets.load(it) }
+
 test {
 	useJUnitPlatform()
 }
@@ -58,5 +61,6 @@ sonarqube {
     property "sonar.projectKey", "mathias-schulze_games-web-app-server"
     property "sonar.organization", "mathias-schulze"
     property "sonar.host.url", "https://sonarcloud.io"
+    property "sonar.login", secrets["sonar.login"]
   }
 }
