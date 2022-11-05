@@ -3,3 +3,4 @@ management:
     web:
       cors:
         allowed-origins: https://msz-games.web.app,https://games.mathias-schulze.de
+        allowed-methods: GET, POST, PATCH, DELETE

@@ -3,3 +3,4 @@ management:
     web:
       cors:
         allowed-origins: http://localhost:3000
+        allowed-methods: GET, POST, PATCH, DELETE
