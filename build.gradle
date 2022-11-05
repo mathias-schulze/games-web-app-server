@@ -4,7 +4,6 @@ plugins {
 	id 'java'
 	id "org.sonarqube" version "3.1.1"
 	id "com.diffplug.eclipse.apt" version "3.28.2"
-	id "co.uzzu.dotenv.gradle" version "2.0.0"
 }
 
 group = 'de.msz'
@@ -59,13 +58,5 @@ sonarqube {
     property "sonar.projectKey", "mathias-schulze_games-web-app-server"
     property "sonar.organization", "mathias-schulze"
     property "sonar.host.url", "https://sonarcloud.io"
-    property "sonar.login", env.SONAR_TOKEN.value
   }
 }
-
-tasks.register('logInfo') {
-    doFirst {
-        println env.SONAR_TOKEN
-    }
-}
-
