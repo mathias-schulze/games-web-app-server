@@ -59,6 +59,13 @@ sonarqube {
     property "sonar.projectKey", "mathias-schulze_games-web-app-server"
     property "sonar.organization", "mathias-schulze"
     property "sonar.host.url", "https://sonarcloud.io"
-    property "sonar.login", env.SONAR_TOKEN
+    property "sonar.login", env.SONAR_TOKEN.value
   }
 }
+
+tasks.register('logInfo') {
+    doFirst {
+        println env.SONAR_TOKEN
+    }
+}
+
