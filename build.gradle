@@ -9,6 +9,7 @@ plugins {
 group = 'de.msz'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
+targetCompatibility = '11'
 
 configurations {
 	compileOnly {
@@ -23,7 +24,7 @@ repositories {
 dependencies {
     def jacksonVersion = '2.12.1'
     def mapstructVersion = '1.4.2.Final'
-    def lombokVersion = '1.18.16'
+    def lombokVersion = '1.18.26'
     def lombokMapstructBindingVersion = '0.2.0'
     
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
